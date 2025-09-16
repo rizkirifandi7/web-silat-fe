@@ -15,6 +15,9 @@ interface KartuAnggotaProps {
 export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+	const qrCodeValue = `${baseUrl}/verify/${anggota.id_token}`;
+
 	const downloadCard = useCallback(() => {
 		if (cardRef.current) {
 			toPng(cardRef.current, { cacheBust: true, pixelRatio: 4 })
@@ -43,7 +46,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					/>
 					<CardContent className="relative flex flex-col items-center justify-center p-2 space-y-2">
 						<div className="bg-white p-1.5 rounded-md">
-							<QRCodeSVG value={anggota.id_token} size={140} />
+							<QRCodeSVG value={qrCodeValue} size={140} />
 						</div>
 						<p className="text-xs ">{anggota.nama_lengkap}</p>
 						<Image
