@@ -86,7 +86,7 @@ const PageTentang = () => {
 							Perjalanan PUSAMADA dari awal berdiri hingga saat ini.
 						</p>
 					</div>
-					<Card>
+					<Card className="shadow-none">
 						<CardContent className="p-8 space-y-6 text-muted-foreground text-base md:text-lg text-justify">
 							<p>
 								Didirikan pada tahun 1980-an, Perguruan Pencak Silat Pusaka
@@ -106,6 +106,40 @@ const PageTentang = () => {
 							</p>
 						</CardContent>
 					</Card>
+				</section>
+
+				{/* Section Pengurus */}
+				<section id="pengurus">
+					<div className="text-center mb-12">
+						<h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+							Struktur Kepengurusan
+						</h2>
+						<p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+							Orang-orang di balik layar yang berdedikasi memajukan PUSAMADA.
+						</p>
+					</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+						{dataPengurus.map((pengurus, index) => (
+							<Card
+								key={index}
+								className="text-center flex flex-col items-center pt-6 shadow-none"
+							>
+								<CardContent className="flex flex-col items-center">
+									<Avatar className="w-28 h-28 border-4 border-transparent group-hover:border-primary transition-colors">
+										<AvatarImage
+											src={pengurus.fotoUrl}
+											alt={`Foto ${pengurus.nama}`}
+										/>
+										<AvatarFallback>{pengurus.nama.charAt(0)}</AvatarFallback>
+									</Avatar>
+									<h3 className="mt-4 text-lg font-semibold text-foreground">
+										{pengurus.nama}
+									</h3>
+									<p className="text-sm text-primary">{pengurus.jabatan}</p>
+								</CardContent>
+							</Card>
+						))}
+					</div>
 				</section>
 
 				{/* Section: Filosofi Lambang */}
@@ -180,7 +214,7 @@ const PageTentang = () => {
 						</p>
 					</div>
 					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-						<Card>
+						<Card className="shadow-none">
 							<CardHeader>
 								<CardTitle className="text-primary">Visi</CardTitle>
 							</CardHeader>
@@ -192,7 +226,7 @@ const PageTentang = () => {
 								</p>
 							</CardContent>
 						</Card>
-						<Card>
+						<Card className="shadow-none">
 							<CardHeader>
 								<CardTitle className="text-primary">Misi</CardTitle>
 							</CardHeader>
@@ -216,40 +250,6 @@ const PageTentang = () => {
 								</ul>
 							</CardContent>
 						</Card>
-					</div>
-				</section>
-
-				{/* Section Pengurus */}
-				<section id="pengurus">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-							Struktur Kepengurusan
-						</h2>
-						<p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-							Orang-orang di balik layar yang berdedikasi memajukan PUSAMADA.
-						</p>
-					</div>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-						{dataPengurus.map((pengurus, index) => (
-							<Card
-								key={index}
-								className="text-center flex flex-col items-center pt-6"
-							>
-								<CardContent className="flex flex-col items-center">
-									<Avatar className="w-28 h-28 border-4 border-transparent group-hover:border-primary transition-colors">
-										<AvatarImage
-											src={pengurus.fotoUrl}
-											alt={`Foto ${pengurus.nama}`}
-										/>
-										<AvatarFallback>{pengurus.nama.charAt(0)}</AvatarFallback>
-									</Avatar>
-									<h3 className="mt-4 text-lg font-semibold text-foreground">
-										{pengurus.nama}
-									</h3>
-									<p className="text-sm text-primary">{pengurus.jabatan}</p>
-								</CardContent>
-							</Card>
-						))}
 					</div>
 				</section>
 			</div>
