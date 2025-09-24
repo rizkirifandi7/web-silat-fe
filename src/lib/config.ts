@@ -1,12 +1,10 @@
 export const siteConfig = {
-  name: "Aplikasi Dashboard Shadcn",
-  url: "https://ui.shadcn.com",
-  ogImage: "https://ui.shadcn.com/og.jpg",
-  description:
-    "A set of beautifully designed components that you can customize, extend, and build on. Start here then make it your own. Open Source. Open Code.",
+  name: "Pencak Silat PUSAMADA",
+  url: "https://pusamada.com",
+  ogImage: "/favicon.ico",
+  description:"Portal resmi Perguruan Pencak Silat PUSAMADA. Kelola data anggota dan verifikasi keanggotaan dengan mudah.",
   links: {
-    twitter: "https://twitter.com/shadcn",
-    github: "https://github.com/shadcn-ui/ui",
+    twitter: "https://twitter.com/pusamada",
   },
   navItems: [
     {

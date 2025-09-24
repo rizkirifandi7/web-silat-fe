@@ -48,7 +48,6 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 						<div className="bg-white p-1.5 rounded-md">
 							<QRCodeSVG value={qrCodeValue} size={140} />
 						</div>
-						<p className="text-xs ">{anggota.nama_lengkap}</p>
 						<Image
 							src="/pusamada-logo.png"
 							alt="Pusamada Logo"
@@ -59,7 +58,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 						<p className="text-[10px] leading-tight text-gray-300 text-center">
 							Élmu Luhung Jembar Kabisa
 							<br />
-							Budi Suci Geude Bakti
+							Budi Suci Gede Bakti
 						</p>
 					</CardContent>
 				</Card>
