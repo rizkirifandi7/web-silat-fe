@@ -1,11 +1,8 @@
 import { AnggotaProfileCard } from "@/components/anggota-profile-card";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Anggota } from "@/lib/schema";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Terminal } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 // Fungsi ini akan mengambil data anggota di sisi server berdasarkan token
 async function getAnggotaByToken(token: string): Promise<Anggota | null> {
@@ -43,10 +40,6 @@ export default async function AnggotaDetailPage({
 
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
-			<div className="absolute top-4 right-4">
-				<ModeToggle />
-			</div>
-
 			<div className="mb-8 flex flex-col items-center text-center">
 				<Image src="/pusamada-logo.png" alt="PUSAMADA" width={80} height={80} />
 				<h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
@@ -69,9 +62,6 @@ export default async function AnggotaDetailPage({
 						</AlertDescription>
 					</Alert>
 				)}
-				<Button asChild variant="outline" className="mt-6 w-full">
-					<Link href="/">Kembali ke Beranda</Link>
-				</Button>
 			</div>
 		</main>
 	);

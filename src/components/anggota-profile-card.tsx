@@ -38,22 +38,8 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 
 	return (
 		<Card className="w-full max-w-md overflow-hidden rounded-2xl shadow transition-all duration-300 hover:shadow-xl dark:from-gray-800 dark:to-gray-900">
-			<CardHeader className="relative flex flex-col items-center justify-center bg-gray-900/5 p-6 text-center dark:bg-black/10">
-				<div
-					className={`absolute top-4 right-4 flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white ${
-						anggota.status_keanggotaan === "Aktif"
-							? "bg-green-500"
-							: "bg-red-500"
-					}`}
-				>
-					{anggota.status_keanggotaan === "Aktif" ? (
-						<CheckCircle className="h-4 w-4" />
-					) : (
-						<XCircle className="h-4 w-4" />
-					)}
-					<span>{anggota.status_keanggotaan}</span>
-				</div>
-				<Avatar className="h-40 w-40 border-4 border-white shadow-md dark:border-gray-700 rounded-none">
+			<CardHeader className="relative bg-gray-100 flex flex-col items-center justify-center  py-4 text-center dark:bg-black/10">
+				<Avatar className="h-62 w-62 border-4 border-white shadow-md dark:border-gray-700 rounded-lg">
 					<AvatarImage
 						src={anggota.foto}
 						alt={anggota.user.nama}
@@ -66,10 +52,27 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 				<CardTitle className="mt-4 text-2xl font-bold text-gray-800 dark:text-white">
 					{anggota.user.nama}
 				</CardTitle>
+				<div
+					className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white ${
+						anggota.status_keanggotaan === "Aktif"
+							? "bg-green-500"
+							: "bg-red-500"
+					}`}
+				>
+					{anggota.status_keanggotaan === "Aktif" ? (
+						<CheckCircle className="h-4 w-4" />
+					) : (
+						<XCircle className="h-4 w-4" />
+					)}
+					<span>{anggota.status_keanggotaan}</span>
+				</div>
 			</CardHeader>
-			<CardContent className="p-6">
+			<CardContent className="p-6 border-t">
 				<div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
 					<div>
+						<h3 className="mb-2 font-semibold text-sm text-gray-800 dark:text-white text-center">
+							Status Anggota
+						</h3>
 						<div className="space-y-2">
 							<div className="flex items-center">
 								<span className="font-semibold">Tingkatan:</span>
@@ -87,36 +90,31 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 					</div>
 					<Separator />
 					<div>
-						<h3 className="mb-2 font-semibold text-base text-gray-800 dark:text-white">
+						<h3 className="mb-2 font-semibold text-sm text-gray-800 dark:text-white text-center">
 							Identitas Diri
 						</h3>
-						<div className="space-y-2">
-							<div className="flex items-center">
-								<span className="font-semibold">Jenis Kelamin:</span>
-								<span className="ml-auto">{anggota.jenis_kelamin}</span>
+						<div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+							<div className="font-semibold">Jenis Kelamin:</div>
+							<div className="text-right">{anggota.jenis_kelamin}</div>
+
+							<div className="font-semibold">Tempat, Tanggal Lahir</div>
+							<div className="text-right">
+								{anggota.tempat_lahir},{" "}
+								{new Date(anggota.tanggal_lahir).toLocaleDateString("id-ID", {
+									day: "2-digit",
+									month: "long",
+									year: "numeric",
+								})}
 							</div>
-							<div className="flex items-center">
-								<span className="font-semibold">Tempat Lahir:</span>
-								<span className="ml-auto">{anggota.tempat_lahir}</span>
-							</div>
-							<div className="flex items-center">
-								<span className="font-semibold">Tanggal Lahir:</span>
-								<span className="ml-auto">
-									{new Date(anggota.tanggal_lahir).toLocaleDateString("id-ID")}
-								</span>
-							</div>
-							<div className="flex items-center">
-								<span className="font-semibold">Alamat:</span>
-								<span className="ml-auto">{anggota.alamat}</span>
-							</div>
-							<div className="flex items-center">
-								<span className="font-semibold">No. Telepon:</span>
-								<span className="ml-auto">{anggota.no_telepon}</span>
-							</div>
-							<div className="flex items-center">
-								<span className="font-semibold">Agama:</span>
-								<span className="ml-auto">{anggota.agama}</span>
-							</div>
+
+							<div className="font-semibold">Agama:</div>
+							<p className="text-right">{anggota.agama}</p>
+
+							<div className="font-semibold">No. Telepon:</div>
+							<p className="text-right">{anggota.no_telepon}</p>
+
+							<div className="font-semibold">Alamat:</div>
+							<p className="text-right">{anggota.alamat}</p>
 						</div>
 					</div>
 				</div>
