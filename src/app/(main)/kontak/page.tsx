@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,13 +44,7 @@ const PageKontak = () => {
 									</div>
 									<div className="flex items-center">
 										<Phone className="w-5 h-5 text-primary mr-4 flex-shrink-0" />
-										<span className="text-foreground">(021) 123-4567</span>
-									</div>
-									<div className="flex items-center">
-										<Mail className="w-5 h-5 text-primary mr-4 flex-shrink-0" />
-										<span className="text-foreground">
-											info@pencaksilatindonesia.com
-										</span>
+										<span className="text-foreground">(+62) 823-4393-6639</span>
 									</div>
 								</div>
 							</div>

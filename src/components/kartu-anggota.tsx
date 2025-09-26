@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { useCallback, useRef } from "react";
 import { toPng } from "html-to-image";
 import Image from "next/image";
+import { Globe, Instagram, Facebook, Music2 } from "lucide-react";
 
 interface KartuAnggotaProps {
 	anggota: Anggota;
@@ -54,24 +55,45 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					/>
 					<CardContent className="relative flex flex-col items-center justify-center p-2 space-y-2">
 						<div className="bg-white p-1.5 rounded-md mb-6">
-							<QRCodeSVG value={qrCodeValue} size={100} />
+							<QRCodeSVG value={qrCodeValue} size={90} />
 						</div>
 						<Image
 							src="/pusamada-logo.png"
 							alt="Pusamada Logo"
-							width={48}
-							height={48}
+							width={44}
+							height={44}
 						/>
-						<p className="text-sm font-bold tracking-wider">PUSAMADA</p>
-						<p className="text-[10px] leading-tight text-gray-300 text-center">
+						<p className="text-xs font-bold tracking-wider">PUSAMADA</p>
+						<p className="text-[8px] leading-tight text-gray-300 text-center">
 							Élmu Luhung Jembar Kabisa
 							<br />
-							Budi Suci Gede Bakti
+							Gede Bakti
 						</p>
+
+						{/* sosial media */}
+						<div className="grid grid-cols-2 gap-1 text-[5px] text-gray-300 mt-4 mx-auto">
+							<div className="flex items-center gap-0.5">
+								<Globe className="w-2 h-2" size={5} />
+								<span>www.pusamadaind.com</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Music2 className="w-2 h-2" size={5} />
+								<span>@pusamadaindonesia</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Instagram className="w-2 h-2" size={5} />
+								<span>@pusamadaindonesia</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Facebook className="w-2 h-2" size={5} />
+								<span>@pusakamandemuda</span>
+							</div>
+						</div>
 					</CardContent>
 				</Card>
 			</div>
-			<div className="p-2 flex justify-center">
+			<div className="p-2 flex flex-col items-center justify-center">
+				<p className="text-xs">{anggota.user.nama}</p>
 				<Button
 					onClick={downloadCard}
 					className="w-fit bg-muted"
