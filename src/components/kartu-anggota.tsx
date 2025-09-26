@@ -54,15 +54,15 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					/>
 					<CardContent className="relative flex flex-col items-center justify-center p-2 space-y-2">
 						<div className="bg-white p-1.5 rounded-md mb-6">
-							<QRCodeSVG value={qrCodeValue} size={120} />
+							<QRCodeSVG value={qrCodeValue} size={100} />
 						</div>
 						<Image
 							src="/pusamada-logo.png"
 							alt="Pusamada Logo"
-							width={64}
-							height={64}
+							width={48}
+							height={48}
 						/>
-						<p className="text-base font-bold tracking-wider">PUSAMADA</p>
+						<p className="text-sm font-bold tracking-wider">PUSAMADA</p>
 						<p className="text-[10px] leading-tight text-gray-300 text-center">
 							Élmu Luhung Jembar Kabisa
 							<br />
