@@ -38,8 +38,7 @@ const PageKontak = () => {
 									<div className="flex items-start">
 										<MapPin className="w-5 h-5 text-primary mr-4 mt-1 flex-shrink-0" />
 										<span className="text-foreground">
-											Jl. Padepokan Pencak Silat, No. 1, Jakarta Timur,
-											Indonesia
+											Kampung Sukarasa Arjasari Kab. Bandung
 										</span>
 									</div>
 									<div className="flex items-center">
@@ -50,7 +49,15 @@ const PageKontak = () => {
 							</div>
 							{/* Placeholder untuk Peta atau Gambar */}
 							<div className="mt-8 h-48 bg-muted rounded-lg hidden md:block">
-								{/* Anda bisa menaruh komponen peta di sini */}
+								<iframe
+									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.9!2d107.6419995!3d-7.0504958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68eb006b602577%3A0x22f5ce8d2a912d4!2sPerguruan%20Pencak%20Silat%20PUSAMADA!5e0!3m2!1sen!2sid!4v1695480000000!5m2!1sen!2sid"
+									width="100%"
+									height="100%"
+									style={{ border: 0 }}
+									allowFullScreen
+									loading="lazy"
+									referrerPolicy="no-referrer-when-downgrade"
+								></iframe>
 							</div>
 						</div>
 

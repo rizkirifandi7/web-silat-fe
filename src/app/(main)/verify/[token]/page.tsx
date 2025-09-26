@@ -48,13 +48,7 @@ export default async function AnggotaDetailPage({
 			</div>
 
 			<div className="mb-8 flex flex-col items-center text-center">
-				<Image
-					src="/pusamada-logo.png"
-					alt="PUSAMADA"
-					width={80}
-					height={80}
-					className="dark:invert"
-				/>
+				<Image src="/pusamada-logo.png" alt="PUSAMADA" width={80} height={80} />
 				<h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
 					Profil Anggota PUSAMADA
 				</h1>

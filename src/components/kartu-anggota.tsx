@@ -65,7 +65,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 						/>
 						<p className="text-xs font-bold tracking-wider">PUSAMADA</p>
 						<p className="text-[8px] leading-tight text-gray-300 text-center">
-							Élmu Luhung Jembar Kabisa
+							Elmu Luhung Jembar Kabisa Budi Suci
 							<br />
 							Gede Bakti
 						</p>

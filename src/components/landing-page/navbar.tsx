@@ -20,6 +20,7 @@ const navLinks = [
 	{ href: "/tentang", label: "Tentang" },
 	{ href: "/galeri", label: "Galeri" },
 	{ href: "/kontak", label: "Kontak" },
+	{ href: "/seminar", label: "Seminar" },
 	{ href: "/katalog", label: "Katalog" },
 ];
 
