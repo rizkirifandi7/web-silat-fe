@@ -119,7 +119,7 @@ export default function VerifyPage() {
 				{anggotaData && (
 					<div className="flex flex-col items-center gap-4">
 						<AnggotaProfileCard anggota={anggotaData} />
-						<Button onClick={handleReset} className="w-full max-w-sm">
+						<Button onClick={handleReset} className="w-full">
 							Pindai Kartu Lain
 						</Button>
 					</div>
