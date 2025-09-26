@@ -11,7 +11,11 @@ async function getData(): Promise<Anggota[]> {
 			throw new Error("Failed to fetch data");
 		}
 		const data = await res.json();
-		return data; // Assuming the API returns { data: [...] }
+		// Filter data to only include members with role "anggota"
+		const filteredData = data.filter(
+			(item: Anggota) => item.user.role === "anggota"
+		);
+		return filteredData;
 	} catch (error) {
 		console.error("Error fetching data:", error);
 		return []; // Return an empty array on error

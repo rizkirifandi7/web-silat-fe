@@ -7,6 +7,7 @@ export const anggotaSchema = z.object({
 	user: z.object({
 		nama: z.string(),
 		email: z.string().email(),
+		role: z.string(),
 	}),
 	tempat_lahir: z.string(),
 	tanggal_lahir: z.string(),

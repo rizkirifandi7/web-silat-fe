@@ -91,8 +91,6 @@ export function TambahAnggotaDialog({
 		},
 	});
 
-	const statusPerguruan = form.watch("status_perguruan");
-
 	async function onSubmit(values: z.infer<typeof FormSchema>) {
 		setIsSubmitting(true);
 		const formData = new FormData();
@@ -507,32 +505,15 @@ export function TambahAnggotaDialog({
 														<SelectItem value="Pelatih">Pelatih</SelectItem>
 														<SelectItem value="Anggota">Anggota</SelectItem>
 														<SelectItem value="Alumni">Alumni</SelectItem>
-														<SelectItem value="Yang lain">Yang lain</SelectItem>
+														<SelectItem value="Guru Besar">
+															Guru Besar
+														</SelectItem>
 													</SelectContent>
 												</Select>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
-									{statusPerguruan === "Yang lain" && (
-										<FormField
-											control={form.control}
-											name="status_perguruan"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Sebutkan Status Lainnya</FormLabel>
-													<FormControl>
-														<Input
-															placeholder="Status lainnya"
-															{...field}
-															onChange={(e) => field.onChange(e.target.value)}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									)}
 								</div>
 							</div>
 						</ScrollArea>

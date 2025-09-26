@@ -42,7 +42,11 @@ export default function Page() {
 					throw new Error("Failed to fetch data");
 				}
 				const fetchedData = await res.json();
-				setData(fetchedData);
+				// Filter data to only include members with role "anggota"
+				const filteredData = fetchedData.filter(
+					(item: Anggota) => item.user.role === "anggota"
+				);
+				setData(filteredData);
 			} catch (error) {
 				console.error(error);
 			} finally {
