@@ -10,11 +10,15 @@ async function getData(): Promise<Anggota[]> {
 	});
 
 	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
 		throw new Error("Failed to fetch data");
 	}
 
-	return res.json();
+	const data = await res.json();
+	// Filter data to only include members with role "anggota"
+	const filteredData = data.filter(
+		(item: Anggota) => item.user.role === "anggota"
+	);
+	return filteredData;
 }
 
 export default async function Page() {
