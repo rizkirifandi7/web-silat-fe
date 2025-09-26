@@ -16,7 +16,25 @@ interface AnggotaProfileCardProps {
 }
 
 export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
+	if (!anggota) {
+		return (
+			<Card className="w-full max-w-md overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 shadow-lg dark:from-gray-800 dark:to-gray-900">
+				<CardHeader className="flex flex-col items-center justify-center p-6 text-center">
+					<CardTitle>Memuat Data Anggota...</CardTitle>
+				</CardHeader>
+				<CardContent className="p-6">
+					<div className="space-y-4">
+						<div className="h-8 w-full animate-pulse rounded-md bg-gray-200 dark:bg-gray-700"></div>
+						<div className="h-8 w-full animate-pulse rounded-md bg-gray-200 dark:bg-gray-700"></div>
+						<div className="h-8 w-full animate-pulse rounded-md bg-gray-200 dark:bg-gray-700"></div>
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
+
 	const getInitials = (name: string) => {
+		if (!name) return "?";
 		return name
 			.split(" ")
 			.map((n) => n[0])
@@ -58,15 +76,15 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 				<Avatar className="h-28 w-28 border-4 border-white shadow-md dark:border-gray-700">
 					<AvatarImage
 						src={anggota.foto}
-						alt={anggota.nama_lengkap}
+						alt={anggota.user.nama}
 						className="object-cover"
 					/>
 					<AvatarFallback className="text-3xl font-bold">
-						{getInitials(anggota.nama_lengkap)}
+						{getInitials(anggota.user.nama)}
 					</AvatarFallback>
 				</Avatar>
 				<CardTitle className="mt-4 text-2xl font-bold text-gray-800 dark:text-white">
-					{anggota.nama_lengkap}
+					{anggota.user.nama}
 				</CardTitle>
 				<p className="font-mono text-xs text-gray-500 dark:text-gray-400">
 					ID: {anggota.id_token}

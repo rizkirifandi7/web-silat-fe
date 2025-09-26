@@ -11,9 +11,12 @@ import Link from "next/link";
 async function getAnggotaByToken(token: string): Promise<Anggota | null> {
 	try {
 		// URL ini harus dapat diakses oleh server Next.js Anda
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota/token/${token}`, {
-			cache: "no-store", // Opsi ini memastikan data yang ditampilkan selalu yang terbaru
-		});
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/anggota/token/${token}`,
+			{
+				cache: "no-store", // Opsi ini memastikan data yang ditampilkan selalu yang terbaru
+			}
+		);
 
 		if (!res.ok) {
 			// Jika token tidak valid atau ada error dari server, kembalikan null
@@ -32,10 +35,10 @@ async function getAnggotaByToken(token: string): Promise<Anggota | null> {
 export default async function AnggotaDetailPage({
 	params,
 }: {
-	params: { token: string };
+	params: Promise<{ token: string }>;
 }) {
 	// Mengambil token dari URL, contoh: /verify/TOKEN_DISINI
-	const { token } = params;
+	const { token } = await params;
 	const anggota = await getAnggotaByToken(token);
 
 	return (
