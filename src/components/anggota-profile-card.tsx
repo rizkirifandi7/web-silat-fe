@@ -94,10 +94,12 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 							Identitas Diri
 						</h3>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-							<div className="font-semibold">Jenis Kelamin:</div>
+							<div className="font-semibold text-left">Jenis Kelamin:</div>
 							<div className="text-right">{anggota.jenis_kelamin}</div>
 
-							<div className="font-semibold">Tempat, Tanggal Lahir</div>
+							<div className="font-semibold text-left">
+								Tempat, Tanggal Lahir:
+							</div>
 							<div className="text-right">
 								{anggota.tempat_lahir},{" "}
 								{new Date(anggota.tanggal_lahir).toLocaleDateString("id-ID", {
@@ -107,13 +109,13 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 								})}
 							</div>
 
-							<div className="font-semibold">Agama:</div>
+							<div className="font-semibold text-left">Agama:</div>
 							<p className="text-right">{anggota.agama}</p>
 
-							<div className="font-semibold">No. Telepon:</div>
+							<div className="font-semibold text-left">No. Telepon:</div>
 							<p className="text-right">{anggota.no_telepon}</p>
 
-							<div className="font-semibold">Alamat:</div>
+							<div className="font-semibold text-left">Alamat:</div>
 							<p className="text-right">{anggota.alamat}</p>
 						</div>
 					</div>
