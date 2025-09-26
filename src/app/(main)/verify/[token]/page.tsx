@@ -11,7 +11,7 @@ import Link from "next/link";
 async function getAnggotaByToken(token: string): Promise<Anggota | null> {
 	try {
 		// URL ini harus dapat diakses oleh server Next.js Anda
-		const res = await fetch(`http://localhost:8015/anggota/token/${token}`, {
+		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota/token/${token}`, {
 			cache: "no-store", // Opsi ini memastikan data yang ditampilkan selalu yang terbaru
 		});
 

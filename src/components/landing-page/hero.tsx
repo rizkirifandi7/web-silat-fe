@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { LogIn, ScanLine } from "lucide-react";
 import Kujang from "./kujang-bg";
 
-const LandingPage = () => {
+const Hero = () => {
 	return (
 		<main className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden bg-background px-8 text-center">
 			{/* Background Effects */}
@@ -60,4 +60,4 @@ const LandingPage = () => {
 	);
 };
 
-export default LandingPage;
+export default Hero;

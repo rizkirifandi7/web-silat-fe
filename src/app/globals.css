@@ -122,7 +122,7 @@
 }
 
 body {
-	@apply overscroll-none bg-transparent;
+	@apply overscroll-none;
 }
 
 :root {

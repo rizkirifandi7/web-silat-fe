@@ -35,7 +35,7 @@ export default function Page() {
 		async function getData() {
 			try {
 				setLoading(true);
-				const res = await fetch("http://localhost:8015/anggota", {
+				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
 					cache: "no-store",
 				});
 				if (!res.ok) {
@@ -55,7 +55,7 @@ export default function Page() {
 	const filteredData = useMemo(() => {
 		setCurrentPage(1); // Reset to first page on filter change
 		return data.filter((anggota) => {
-			const matchesSearch = anggota.nama_lengkap
+			const matchesSearch = anggota.user.nama
 				.toLowerCase()
 				.includes(searchTerm.toLowerCase());
 			const matchesTingkatan =

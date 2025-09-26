@@ -20,10 +20,17 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 
 	const downloadCard = useCallback(() => {
 		if (cardRef.current) {
-			toPng(cardRef.current, { cacheBust: true, pixelRatio: 4 })
+			toPng(cardRef.current, {
+				cacheBust: true,
+				pixelRatio: 4,
+				style: {
+					borderRadius: "0",
+					border: "none",
+				},
+			})
 				.then((dataUrl) => {
 					const link = document.createElement("a");
-					link.download = `kartu-anggota-${anggota.nama_lengkap}.png`;
+					link.download = `kartu-anggota-${anggota.user.nama}.png`;
 					link.href = dataUrl;
 					link.click();
 				})
@@ -31,22 +38,23 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					console.error("Gagal mengunduh kartu!", err);
 				});
 		}
-	}, [anggota.nama_lengkap]);
+	}, [anggota.user.nama]);
 
 	return (
 		<div className="space-y-2">
 			<div ref={cardRef}>
-				<Card className="relative w-60 aspect-[54/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around">
+				<Card className="relative w-[210px] aspect-[53.98/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around border-none rounded-none">
 					<div
-						className="absolute inset-0 bg-repeat"
+						className="absolute inset-0"
 						style={{
-							backgroundImage:
-								"url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23333333' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E\")",
+							backgroundImage: "url(/bg-card.jpeg)",
+							backgroundSize: "cover",
+							backgroundPosition: "center",
 						}}
 					/>
 					<CardContent className="relative flex flex-col items-center justify-center p-2 space-y-2">
-						<div className="bg-white p-1.5 rounded-md">
-							<QRCodeSVG value={qrCodeValue} size={140} />
+						<div className="bg-white p-1.5 rounded-md mb-6">
+							<QRCodeSVG value={qrCodeValue} size={120} />
 						</div>
 						<Image
 							src="/pusamada-logo.png"
@@ -66,7 +74,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 			<div className="p-2 flex justify-center">
 				<Button
 					onClick={downloadCard}
-					className="w-full bg-muted"
+					className="w-fit bg-muted"
 					variant="outline"
 				>
 					Download Kartu

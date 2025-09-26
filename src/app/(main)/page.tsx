@@ -1,9 +1,9 @@
-import LandingPage from "@/components/landing-page/landing-page";
+import Hero from "@/components/landing-page/hero";
 
 export default function PageHome() {
 	return (
 		<div className="bg-background">
-			<LandingPage />
+			<Hero />
 		</div>
 	);
 }

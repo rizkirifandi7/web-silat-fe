@@ -5,7 +5,7 @@ import { Anggota } from "@/lib/schema";
 
 async function getData(): Promise<Anggota[]> {
 	// Fetch data from your API here.
-	const res = await fetch("http://localhost:8015/anggota", {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
 		cache: "no-store",
 	});
 

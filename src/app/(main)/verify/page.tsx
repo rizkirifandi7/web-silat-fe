@@ -24,7 +24,7 @@ export default function VerifyPage() {
 
 		try {
 			const res = await fetch(
-				`http://localhost:8015/anggota/token/${decodedText}`
+				`${process.env.NEXT_PUBLIC_API_URL}/anggota/token/${decodedText}`
 			);
 			if (!res.ok) {
 				const errorData = await res.json();

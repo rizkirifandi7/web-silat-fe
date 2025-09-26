@@ -16,12 +16,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { UbahPasswordDialog } from "./ubah-password-dialog";
 
 export type AnggotaTableHandlers = {
 	onViewDetails: (anggota: Anggota) => void;
 	onEdit: (anggota: Anggota) => void;
 	onViewCard: (anggota: Anggota) => void;
-	onDelete: (id: string) => void;
+	onDelete: (anggota: Anggota) => void;
 };
 
 export const getAnggotaColumns = ({
@@ -31,14 +32,13 @@ export const getAnggotaColumns = ({
 	onDelete,
 }: AnggotaTableHandlers): ColumnDef<Anggota>[] => [
 	{
-		accessorKey: "nama_lengkap",
+		id: "user.nama",
+		accessorKey: "user.nama",
 		header: "Nama Lengkap",
-		cell: ({ row }) => (
-			<div className="capitalize">{row.getValue("nama_lengkap")}</div>
-		),
 	},
 	{
-		accessorKey: "email",
+		id: "user.email",
+		accessorKey: "user.email",
 		header: "Email",
 	},
 	{
@@ -102,10 +102,15 @@ export const getAnggotaColumns = ({
 					<DropdownMenuItem onClick={() => onViewCard(row.original)}>
 						Lihat Kartu
 					</DropdownMenuItem>
+					<UbahPasswordDialog>
+						<div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+							Ubah Password
+						</div>
+					</UbahPasswordDialog>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						className="text-red-600"
-						onClick={() => onDelete(row.original.id)}
+						onClick={() => onDelete(row.original)}
 					>
 						Hapus
 					</DropdownMenuItem>

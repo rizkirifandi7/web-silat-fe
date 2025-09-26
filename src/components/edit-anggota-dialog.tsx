@@ -31,25 +31,27 @@ import {
 import { ScrollArea } from "./ui/scroll-area";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Anggota } from "@/lib/schema";
+import { Anggota, anggotaSchema } from "@/lib/schema";
+import { toast } from "sonner";
 
-// Skema form sama dengan tambah, tapi kita akan mengisi defaultValues dari props
-const FormSchema = z.object({
-	nama_lengkap: z.string().nonempty("Nama lengkap harus diisi."),
-	nama_panggilan: z.string().nonempty("Nama panggilan harus diisi."),
-	email: z.string().email("Email tidak valid."),
-	tempat_lahir: z.string().nonempty("Tempat lahir harus diisi."),
-	tanggal_lahir: z.string().nonempty("Tanggal lahir harus diisi."),
-	jenis_kelamin: z.string().nonempty("Jenis kelamin harus diisi."),
-	alamat: z.string().nonempty("Alamat harus diisi."),
-	agama: z.string().nonempty("Agama harus diisi."),
-	no_telepon: z.string().nonempty("No. telepon harus diisi."),
-	angkatan_unit: z.string().nonempty("Angkatan unit harus diisi."),
-	status_keanggotaan: z.string().nonempty("Status keanggotaan harus diisi."),
-	status_perguruan: z.string().nonempty("Status di perguruan harus diisi."),
-	tingkatan_sabuk: z.string().nonempty("Tingkatan sabuk harus diisi."),
-	foto: z.any(),
-});
+// Skema hanya untuk data yang bisa diedit di form ini (tanpa password)
+const EditFormSchema = anggotaSchema
+	.omit({
+		id: true,
+		id_user: true,
+		id_token: true,
+		createdAt: true,
+		updatedAt: true,
+		user: true, // Hapus objek user asli
+		foto: true, // Hapus foto asli untuk diganti dengan z.any()
+	})
+	.extend({
+		nama: z.string().nonempty("Nama tidak boleh kosong"),
+		email: z.string().email("Email tidak valid"),
+		foto: z.any().optional(),
+	});
+
+type EditFormData = z.infer<typeof EditFormSchema>;
 
 export function EditAnggotaDialog({
 	anggota,
@@ -63,32 +65,102 @@ export function EditAnggotaDialog({
 	onAnggotaUpdated: (data: Anggota) => void;
 }) {
 	const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
+	const form = useForm<EditFormData>({
+		resolver: zodResolver(EditFormSchema),
 	});
 
+	// Effect untuk me-reset form dan preview saat dialog dibuka atau anggota berubah
 	useEffect(() => {
-		if (anggota) {
-			form.reset(anggota);
-			setFotoPreview(anggota.foto);
+		if (anggota && isOpen) {
+			form.reset({
+				nama: anggota.user.nama || "",
+				email: anggota.user.email || "",
+				tempat_lahir: anggota.tempat_lahir || "",
+				tanggal_lahir: anggota.tanggal_lahir
+					? new Date(anggota.tanggal_lahir).toISOString().split("T")[0]
+					: "",
+				jenis_kelamin: anggota.jenis_kelamin || "Laki-laki",
+				alamat: anggota.alamat || "",
+				agama: anggota.agama || "Islam",
+				no_telepon: anggota.no_telepon || "",
+				angkatan_unit: anggota.angkatan_unit || "",
+				status_keanggotaan: anggota.status_keanggotaan || "Aktif",
+				status_perguruan: anggota.status_perguruan || "Anggota",
+				tingkatan_sabuk: anggota.tingkatan_sabuk || "Belum punya",
+				foto: anggota.foto,
+			});
+			setFotoPreview(anggota.foto || null);
 		}
-	}, [anggota, form]);
+	}, [anggota, isOpen, form]);
+
+	if (!anggota) {
+		return null;
+	}
 
 	const statusPerguruan = form.watch("status_perguruan");
 
-	function onSubmit(values: z.infer<typeof FormSchema>) {
+	async function onSubmit(values: EditFormData) {
 		if (!anggota) return;
 
-		const dataToSubmit = {
-			...anggota,
-			...values,
-			foto:
-				fotoPreview ||
-				`https://via.placeholder.com/150?text=${values.nama_panggilan}`,
-		};
-		onAnggotaUpdated(dataToSubmit);
-		onOpenChange(false);
+		setIsSubmitting(true);
+		const formData = new FormData();
+
+		// Append all form values to FormData
+		Object.entries(values).forEach(([key, value]) => {
+			if (key === "foto") {
+				if (value instanceof File) {
+					formData.append(key, value);
+				}
+			} else if (value) {
+				formData.append(key, value as string);
+			}
+		});
+
+		try {
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/anggota/${anggota.id}`,
+				{
+					method: "PUT",
+					body: formData,
+				}
+			);
+
+			console.log("Response status:", response);
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.message || "Gagal memperbarui anggota.");
+			}
+
+			// **Perbaikan: Buat objek yang diperbarui di client-side**
+			// Ini lebih andal daripada mengandalkan respons API.
+			const updatedAnggotaData: Anggota = {
+				...anggota,
+				...values,
+				user: {
+					...anggota.user,
+					nama: values.nama,
+					email: values.email,
+				},
+				// Jika ada file foto baru, buat URL preview. Jika tidak, gunakan foto lama.
+				foto: fotoPreview || anggota.foto,
+			};
+
+			onAnggotaUpdated(updatedAnggotaData);
+			toast.success("Anggota berhasil diperbarui!");
+			onOpenChange(false);
+		} catch (error) {
+			console.error("Error submitting form:", error);
+			if (error instanceof Error) {
+				toast.error(error.message);
+			} else {
+				toast.error("Terjadi kesalahan yang tidak diketahui.");
+			}
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
 
 	return (
@@ -97,8 +169,7 @@ export function EditAnggotaDialog({
 				<DialogHeader>
 					<DialogTitle>Edit Data Anggota</DialogTitle>
 					<DialogDescription>
-						Perbarui informasi anggota di bawah ini. Klik simpan untuk
-						menerapkan perubahan.
+						Isi formulir di bawah ini untuk memperbarui data anggota.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
@@ -147,7 +218,7 @@ export function EditAnggotaDialog({
 								/>
 								<FormField
 									control={form.control}
-									name="nama_lengkap"
+									name="nama"
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Nama Lengkap</FormLabel>
@@ -158,38 +229,23 @@ export function EditAnggotaDialog({
 										</FormItem>
 									)}
 								/>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="nama_panggilan"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Nama Panggilan</FormLabel>
-												<FormControl>
-													<Input placeholder="Contoh: Budi" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Email</FormLabel>
-												<FormControl>
-													<Input
-														type="email"
-														placeholder="contoh@email.com"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input
+													type="email"
+													placeholder="contoh@email.com"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<div className="grid grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
@@ -440,8 +496,10 @@ export function EditAnggotaDialog({
 								</div>
 							</div>
 						</ScrollArea>
-						<DialogFooter className="pt-4">
-							<Button type="submit">Simpan Perubahan</Button>
+						<DialogFooter className="pt-4 sm:justify-end">
+							<Button type="submit" disabled={isSubmitting}>
+								{isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
+							</Button>
 						</DialogFooter>
 					</form>
 				</Form>

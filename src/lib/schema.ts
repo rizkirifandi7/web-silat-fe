@@ -1,11 +1,13 @@
 import { z } from "zod";
 
 export const anggotaSchema = z.object({
-	id: z.string(),
-	id_token: z.string(),
-	nama_lengkap: z.string(),
-	nama_panggilan: z.string(),
-	email: z.string().email(),
+	id: z.coerce.string(),
+	id_user: z.number(),
+	id_token: z.string().optional(),
+	user: z.object({
+		nama: z.string(),
+		email: z.string().email(),
+	}),
 	tempat_lahir: z.string(),
 	tanggal_lahir: z.string(),
 	jenis_kelamin: z.string(),
@@ -16,7 +18,7 @@ export const anggotaSchema = z.object({
 	status_keanggotaan: z.string(),
 	status_perguruan: z.string(),
 	tingkatan_sabuk: z.string(),
-	foto: z.string().url(),
+	foto: z.string().url().or(z.literal("")),
 	createdAt: z.string().optional(),
 	updatedAt: z.string().optional(),
 });export type Anggota = z.infer<typeof anggotaSchema>;

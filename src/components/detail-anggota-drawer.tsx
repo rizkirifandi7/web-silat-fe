@@ -30,6 +30,8 @@ export function DetailAnggotaDrawer({
 		return null;
 	}
 
+	console.log(anggota);
+
 	return (
 		<Drawer open={isOpen} onOpenChange={onOpenChange}>
 			<DrawerContent>
@@ -37,16 +39,14 @@ export function DetailAnggotaDrawer({
 					<DrawerHeader className="text-center">
 						<div className="flex flex-col items-center gap-4">
 							<Avatar className="h-24 w-24">
-								<AvatarImage src={anggota.foto} alt={anggota.nama_lengkap} />
-								<AvatarFallback>
-									{anggota.nama_lengkap.charAt(0)}
-								</AvatarFallback>
+								<AvatarImage src={anggota.foto} alt={anggota.user.nama} />
+								<AvatarFallback>{anggota.user.nama.charAt(0)}</AvatarFallback>
 							</Avatar>
 							<div>
 								<DrawerTitle className="text-2xl">
-									{anggota.nama_lengkap}
+									{anggota.user.nama}
 								</DrawerTitle>
-								<DrawerDescription>{anggota.email}</DrawerDescription>
+								<DrawerDescription>{anggota.user.email}</DrawerDescription>
 							</div>
 						</div>
 					</DrawerHeader>
@@ -68,11 +68,6 @@ export function DetailAnggotaDrawer({
 						</div>
 						<Separator className="my-4" />
 						<div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-							<div className="font-medium text-muted-foreground">
-								Nama Panggilan
-							</div>
-							<div>{anggota.nama_panggilan}</div>
-
 							<div className="font-medium text-muted-foreground">
 								Jenis Kelamin
 							</div>

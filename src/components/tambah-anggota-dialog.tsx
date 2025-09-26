@@ -8,7 +8,6 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 	DialogFooter,
 } from "@/components/ui/dialog";
 import {
@@ -27,45 +26,57 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { IconPlus } from "@tabler/icons-react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useState } from "react";
 import Image from "next/image";
-import { Anggota } from "@/lib/schema";
+import { Anggota, anggotaSchema } from "@/lib/schema";
 import { toast } from "sonner";
 
 // Skema ini hanya untuk validasi form, tidak termasuk id_token
-const FormSchema = z.object({
-	nama_lengkap: z.string().nonempty("Nama lengkap harus diisi."),
-	nama_panggilan: z.string().nonempty("Nama panggilan harus diisi."),
-	email: z.string().email("Email tidak valid."),
-	tempat_lahir: z.string().nonempty("Tempat lahir harus diisi."),
-	tanggal_lahir: z.string().nonempty("Tanggal lahir harus diisi."),
-	jenis_kelamin: z.string().nonempty("Jenis kelamin harus diisi."),
-	alamat: z.string().nonempty("Alamat harus diisi."),
-	agama: z.string().nonempty("Agama harus diisi."),
-	no_telepon: z.string().nonempty("No. telepon harus diisi."),
-	angkatan_unit: z.string().nonempty("Angkatan unit harus diisi."),
-	status_keanggotaan: z.string().nonempty("Status keanggotaan harus diisi."),
-	status_perguruan: z.string().nonempty("Status di perguruan harus diisi."),
-	tingkatan_sabuk: z.string().nonempty("Tingkatan sabuk harus diisi."),
-	foto: z.any(),
-});
+const FormSchema = z
+	.object({
+		nama: z.string().nonempty("Nama lengkap harus diisi."),
+		email: z.string().email("Email tidak valid."),
+		password: z
+			.string()
+			.min(6, "Password minimal harus 6 karakter.")
+			.nonempty("Password harus diisi."),
+		confirmPassword: z.string().nonempty("Konfirmasi password harus diisi."),
+		tempat_lahir: z.string().nonempty("Tempat lahir harus diisi."),
+		tanggal_lahir: z.string().nonempty("Tanggal lahir harus diisi."),
+		jenis_kelamin: z.string().nonempty("Jenis kelamin harus diisi."),
+		alamat: z.string().nonempty("Alamat harus diisi."),
+		agama: z.string().nonempty("Agama harus diisi."),
+		no_telepon: z.string().nonempty("No. telepon harus diisi."),
+		angkatan_unit: z.string().nonempty("Angkatan unit harus diisi."),
+		status_keanggotaan: z.string().nonempty("Status keanggotaan harus diisi."),
+		status_perguruan: z.string().nonempty("Status di perguruan harus diisi."),
+		tingkatan_sabuk: z.string().nonempty("Tingkatan sabuk harus diisi."),
+		foto: z.any(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Password dan konfirmasi password tidak cocok.",
+		path: ["confirmPassword"],
+	});
 
 export function TambahAnggotaDialog({
+	isOpen,
+	onOpenChange,
 	onAnggotaAdded,
 }: {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
 	onAnggotaAdded: (data: Anggota) => void;
 }) {
-	const [isOpen, setIsOpen] = useState(false);
 	const [fotoPreview, setFotoPreview] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			nama_lengkap: "",
-			nama_panggilan: "",
+			nama: "",
 			email: "",
+			password: "",
+			confirmPassword: "",
 			tempat_lahir: "",
 			tanggal_lahir: "",
 			jenis_kelamin: "Laki-laki",
@@ -75,7 +86,7 @@ export function TambahAnggotaDialog({
 			angkatan_unit: new Date().getFullYear().toString(),
 			status_keanggotaan: "Aktif",
 			status_perguruan: "Anggota",
-			tingkatan_sabuk: undefined,
+			tingkatan_sabuk: "Belum punya",
 			foto: null,
 		},
 	});
@@ -86,51 +97,77 @@ export function TambahAnggotaDialog({
 		setIsSubmitting(true);
 		const formData = new FormData();
 
-		// Append all form values to FormData
-		Object.entries(values).forEach(([key, value]) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { confirmPassword, ...restValues } = values;
+		Object.entries(restValues).forEach(([key, value]) => {
 			if (key === "foto") {
 				if (value instanceof File) {
 					formData.append(key, value);
 				}
 			} else if (value) {
-				formData.append(key, value);
+				formData.append(key, value as string);
 			}
 		});
 
 		try {
-			const response = await fetch("http://localhost:8015/anggota", {
-				method: "POST",
-				body: formData,
-				// Headers are not needed for FormData with fetch, browser sets it
-			});
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+				{
+					method: "POST",
+					body: formData,
+					// Headers are not needed for FormData with fetch, browser sets it
+				}
+			);
 
 			if (!response.ok) {
 				const errorData = await response.json();
 				throw new Error(errorData.message || "Gagal menambahkan anggota.");
 			}
 
-			const newAnggota = await response.json();
-			onAnggotaAdded(newAnggota); // Langsung gunakan objek respons
+			const result = await response.json();
+
+			// Buat objek anggota baru dari form values dan response
+			const newAnggotaData = {
+				id: result.user.id, // Asumsi ID anggota akan sama dengan ID user
+				id_user: result.user.id,
+				user: {
+					nama: values.nama,
+					email: values.email,
+				},
+				...restValues,
+				foto: fotoPreview || "", // Gunakan preview jika ada
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+			};
+
+			// Validasi dengan skema Anggota sebelum memanggil onAnggotaAdded
+			const parsedAnggota = anggotaSchema.parse(newAnggotaData);
+
+			onAnggotaAdded(parsedAnggota);
 			form.reset();
 			setFotoPreview(null);
 			toast.success("Anggota berhasil ditambahkan!");
-			setIsOpen(false); // Tutup dialog setelah berhasil
+			onOpenChange(false); // Tutup dialog setelah berhasil
 		} catch (error) {
 			console.error("Error submitting form:", error);
-			// Here you could show an error message to the user
+			if (error instanceof z.ZodError) {
+				toast.error(
+					`Kesalahan validasi data: ${error.issues
+						.map((e) => e.message)
+						.join(", ")}`
+				);
+			} else if (error instanceof Error) {
+				toast.error(error.message);
+			} else {
+				toast.error("Terjadi kesalahan yang tidak diketahui.");
+			}
 		} finally {
 			setIsSubmitting(false);
 		}
 	}
 
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
-				<Button variant="outline">
-					<IconPlus className="mr-2 h-4 w-4" />
-					Tambah Anggota
-				</Button>
-			</DialogTrigger>
+		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[600px]">
 				<DialogHeader>
 					<DialogTitle>Tambah Anggota Baru</DialogTitle>
@@ -185,7 +222,7 @@ export function TambahAnggotaDialog({
 								/>
 								<FormField
 									control={form.control}
-									name="nama_lengkap"
+									name="nama"
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Nama Lengkap</FormLabel>
@@ -196,16 +233,36 @@ export function TambahAnggotaDialog({
 										</FormItem>
 									)}
 								/>
-								{/* Tambahkan field lainnya di sini */}
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input
+													type="email"
+													placeholder="contoh@email.com"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<div className="grid grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
-										name="nama_panggilan"
+										name="password"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Nama Panggilan</FormLabel>
+												<FormLabel>Password</FormLabel>
 												<FormControl>
-													<Input placeholder="Contoh: Budi" {...field} />
+													<Input
+														type="password"
+														placeholder="******"
+														{...field}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -213,14 +270,14 @@ export function TambahAnggotaDialog({
 									/>
 									<FormField
 										control={form.control}
-										name="email"
+										name="confirmPassword"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Email</FormLabel>
+												<FormLabel>Konfirmasi Password</FormLabel>
 												<FormControl>
 													<Input
-														type="email"
-														placeholder="contoh@email.com"
+														type="password"
+														placeholder="******"
 														{...field}
 													/>
 												</FormControl>

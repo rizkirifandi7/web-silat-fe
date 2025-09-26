@@ -1,5 +1,6 @@
 "use client";
 
+import { Anggota } from "@/lib/schema";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -15,6 +16,7 @@ interface DeleteAnggotaDialogProps {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	onConfirm: () => void;
+	anggota: Anggota | null;
 }
 
 export function DeleteAnggotaDialog({

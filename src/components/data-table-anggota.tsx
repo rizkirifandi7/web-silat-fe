@@ -1,6 +1,7 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
+
 import {
 	flexRender,
 	getCoreRowModel,
@@ -8,6 +9,8 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
+	SortingState,
+	ColumnFiltersState,
 } from "@tanstack/react-table";
 import { IconLayoutColumns } from "@tabler/icons-react";
 import { Anggota } from "@/lib/schema";
@@ -32,56 +35,29 @@ import { EditAnggotaDialog } from "./edit-anggota-dialog";
 import { KartuAnggotaDialog } from "./kartu-anggota-dialog";
 import { TambahAnggotaDialog } from "./tambah-anggota-dialog";
 import { Card } from "./ui/card";
-import { useAnggotaTable } from "@/hooks/use-anggota-table";
+import { useAnggotaCRUD } from "@/hooks/use-anggota-crud";
 import { getAnggotaColumns } from "./data-table-anggota-columns";
+import { DeleteAnggotaDialog } from "./delete-anggota-dialog";
 
 export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
-	const {
-		data,
-		sorting,
-		columnFilters,
-		columnVisibility,
-		setSorting,
-		setColumnFilters,
-		setColumnVisibility,
-		handleAddAnggota,
-		handleUpdateAnggota,
-		handleDeleteAnggota,
-	} = useAnggotaTable(initialData);
+	const { data, dialog, actions, handleAdd, handleUpdate, handleDelete } =
+		useAnggotaCRUD(initialData);
 
-	const [detailAnggota, setDetailAnggota] = React.useState<Anggota | null>(
-		null
+	const [sorting, setSorting] = React.useState<SortingState>([]);
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+		[]
 	);
-	const [editAnggota, setEditAnggota] = React.useState<Anggota | null>(null);
-	const [kartuAnggota, setKartuAnggota] = React.useState<Anggota | null>(null);
-	const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-	const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
-	const [isKartuDialogOpen, setIsKartuDialogOpen] = React.useState(false);
-
-	const handleViewDetails = React.useCallback((anggota: Anggota) => {
-		setDetailAnggota(anggota);
-		setIsDrawerOpen(true);
-	}, []);
-
-	const handleEdit = React.useCallback((anggota: Anggota) => {
-		setEditAnggota(anggota);
-		setIsEditDialogOpen(true);
-	}, []);
-
-	const handleViewCard = React.useCallback((anggota: Anggota) => {
-		setKartuAnggota(anggota);
-		setIsKartuDialogOpen(true);
-	}, []);
+	const [columnVisibility, setColumnVisibility] = React.useState({});
 
 	const columns = React.useMemo(
 		() =>
 			getAnggotaColumns({
-				onViewDetails: handleViewDetails,
-				onEdit: handleEdit,
-				onViewCard: handleViewCard,
-				onDelete: handleDeleteAnggota,
+				onViewDetails: actions.openView,
+				onEdit: actions.openEdit,
+				onViewCard: actions.openCard,
+				onDelete: actions.openDelete,
 			}),
-		[handleViewDetails, handleEdit, handleViewCard, handleDeleteAnggota]
+		[actions]
 	);
 
 	const table = useReactTable({
@@ -107,15 +83,15 @@ export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
 				<Input
 					placeholder="Cari berdasarkan nama..."
 					value={
-						(table.getColumn("nama_lengkap")?.getFilterValue() as string) ?? ""
+						(table.getColumn("user.nama")?.getFilterValue() as string) ?? ""
 					}
 					onChange={(event) =>
-						table.getColumn("nama_lengkap")?.setFilterValue(event.target.value)
+						table.getColumn("user.nama")?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
 				<div className="ml-auto flex items-center gap-2 w-full py-2 md:w-auto md:py-0">
-					<TambahAnggotaDialog onAnggotaAdded={handleAddAnggota} />
+					<Button onClick={actions.openAdd}>Tambah Anggota</Button>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -218,21 +194,42 @@ export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
 					</Button>
 				</div>
 			</div>
-			<DetailAnggotaDrawer
-				anggota={detailAnggota}
-				isOpen={isDrawerOpen}
-				onOpenChange={setIsDrawerOpen}
+
+			{/* Dialogs and Drawers */}
+			<TambahAnggotaDialog
+				isOpen={dialog?.type === "add"}
+				onOpenChange={actions.close}
+				onAnggotaAdded={handleAdd}
 			/>
+
 			<EditAnggotaDialog
-				anggota={editAnggota}
-				isOpen={isEditDialogOpen}
-				onOpenChange={setIsEditDialogOpen}
-				onAnggotaUpdated={handleUpdateAnggota}
+				anggota={dialog?.type === "edit" ? dialog.anggota : null}
+				isOpen={dialog?.type === "edit"}
+				onOpenChange={actions.close}
+				onAnggotaUpdated={handleUpdate}
 			/>
+
+			<DetailAnggotaDrawer
+				anggota={dialog?.type === "view" ? dialog.anggota : null}
+				isOpen={dialog?.type === "view"}
+				onOpenChange={actions.close}
+			/>
+
 			<KartuAnggotaDialog
-				anggota={kartuAnggota}
-				isOpen={isKartuDialogOpen}
-				onOpenChange={setIsKartuDialogOpen}
+				anggota={dialog?.type === "card" ? dialog.anggota : null}
+				isOpen={dialog?.type === "card"}
+				onOpenChange={actions.close}
+			/>
+
+			<DeleteAnggotaDialog
+				anggota={dialog?.type === "delete" ? dialog.anggota : null}
+				isOpen={dialog?.type === "delete"}
+				onOpenChange={actions.close}
+				onConfirm={() => {
+					if (dialog?.type === "delete") {
+						handleDelete(dialog.anggota.id);
+					}
+				}}
 			/>
 		</div>
 	);
