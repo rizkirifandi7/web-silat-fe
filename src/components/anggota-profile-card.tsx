@@ -42,15 +42,15 @@ export function AnggotaProfileCard({ anggota }: AnggotaProfileCardProps) {
 				<Avatar className="h-62 w-62 border-4 border-white shadow-md dark:border-gray-700 rounded-lg">
 					<AvatarImage
 						src={anggota.foto}
-						alt={anggota.user.nama}
+						alt={anggota.nama}
 						className="object-cover"
 					/>
 					<AvatarFallback className="text-3xl font-bold">
-						{getInitials(anggota.user.nama)}
+						{getInitials(anggota.nama)}
 					</AvatarFallback>
 				</Avatar>
 				<CardTitle className="mt-4 text-2xl font-bold text-gray-800 dark:text-white">
-					{anggota.user.nama}
+					{anggota.nama}
 				</CardTitle>
 				<div
 					className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white ${

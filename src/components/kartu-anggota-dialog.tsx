@@ -28,7 +28,7 @@ export function KartuAnggotaDialog({
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle>Kartu Anggota - {anggota.user.nama}</DialogTitle>
+					<DialogTitle>Kartu Anggota - {anggota.nama}</DialogTitle>
 				</DialogHeader>
 				<div className="flex justify-center p-4">
 					<KartuAnggota anggota={anggota} />

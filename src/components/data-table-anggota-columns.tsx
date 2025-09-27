@@ -32,13 +32,13 @@ export const getAnggotaColumns = ({
 	onDelete,
 }: AnggotaTableHandlers): ColumnDef<Anggota>[] => [
 	{
-		id: "user.nama",
-		accessorKey: "user.nama",
+		id: "nama",
+		accessorKey: "nama",
 		header: "Nama Lengkap",
 	},
 	{
-		id: "user.email",
-		accessorKey: "user.email",
+		id: "email",
+		accessorKey: "email",
 		header: "Email",
 	},
 	{

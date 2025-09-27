@@ -38,10 +38,31 @@ import { Card } from "./ui/card";
 import { useAnggotaCRUD } from "@/hooks/use-anggota-crud";
 import { getAnggotaColumns } from "./data-table-anggota-columns";
 import { DeleteAnggotaDialog } from "./delete-anggota-dialog";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchAnggota } from "@/lib/anggota-api";
+import { Plus } from "lucide-react";
 
 export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
-	const { data, dialog, actions, handleAdd, handleUpdate, handleDelete } =
-		useAnggotaCRUD(initialData);
+	const queryClient = useQueryClient();
+
+	const {
+		data: anggotaData,
+		isLoading,
+		isError,
+	} = useQuery({
+		queryKey: ["anggota"],
+		queryFn: fetchAnggota,
+		initialData: initialData,
+	});
+
+	const handleSuccess = () => {
+		queryClient.invalidateQueries({ queryKey: ["anggota"] });
+	};
+
+	const { dialog, actions, handleAdd, handleDelete } = useAnggotaCRUD(
+		anggotaData,
+		handleSuccess
+	);
 
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -61,7 +82,7 @@ export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
 	);
 
 	const table = useReactTable({
-		data,
+		data: anggotaData,
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -77,21 +98,27 @@ export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
 		},
 	});
 
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		return <div>Error fetching data</div>;
+	}
+
 	return (
 		<div className="w-full">
 			<div className="flex flex-col md:flex-row items-center py-4">
 				<Input
 					placeholder="Cari berdasarkan nama..."
-					value={
-						(table.getColumn("user.nama")?.getFilterValue() as string) ?? ""
-					}
+					value={(table.getColumn("nama")?.getFilterValue() as string) ?? ""}
 					onChange={(event) =>
-						table.getColumn("user.nama")?.setFilterValue(event.target.value)
+						table.getColumn("nama")?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
 				<div className="ml-auto flex items-center gap-2 w-full py-2 md:w-auto md:py-0">
-					<Button onClick={actions.openAdd}>Tambah Anggota</Button>
+					<Button onClick={actions.openAdd}><Plus/>Tambah Anggota</Button>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -206,7 +233,7 @@ export function DataTableAnggota({ data: initialData }: { data: Anggota[] }) {
 				anggota={dialog?.type === "edit" ? dialog.anggota : null}
 				isOpen={dialog?.type === "edit"}
 				onOpenChange={actions.close}
-				onAnggotaUpdated={handleUpdate}
+				onSuccess={handleSuccess}
 			/>
 
 			<DetailAnggotaDrawer

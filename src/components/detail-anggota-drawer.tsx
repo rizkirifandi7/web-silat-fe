@@ -39,14 +39,12 @@ export function DetailAnggotaDrawer({
 					<DrawerHeader className="text-center">
 						<div className="flex flex-col items-center gap-4">
 							<Avatar className="h-24 w-24">
-								<AvatarImage src={anggota.foto} alt={anggota.user.nama} />
-								<AvatarFallback>{anggota.user.nama.charAt(0)}</AvatarFallback>
+								<AvatarImage src={anggota.foto} alt={anggota.nama} />
+								<AvatarFallback>{anggota.nama.charAt(0)}</AvatarFallback>
 							</Avatar>
 							<div>
-								<DrawerTitle className="text-2xl">
-									{anggota.user.nama}
-								</DrawerTitle>
-								<DrawerDescription>{anggota.user.email}</DrawerDescription>
+								<DrawerTitle className="text-2xl">{anggota.nama}</DrawerTitle>
+								<DrawerDescription>{anggota.email}</DrawerDescription>
 							</div>
 						</div>
 					</DrawerHeader>

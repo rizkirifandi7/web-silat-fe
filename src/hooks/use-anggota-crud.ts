@@ -17,13 +17,16 @@ export type DialogState =
  * Hook untuk mengelola state dan logika CRUD untuk tabel Anggota.
  * @param initialData - Data awal anggota.
  */
-export function useAnggotaCRUD(initialData: Anggota[]) {
+export function useAnggotaCRUD(
+	initialData: Anggota[],
+	onSuccess?: () => void,
+) {
 	const [data, setData] = useState<Anggota[]>(initialData);
 	const [dialog, setDialog] = useState<DialogState>(null);
 
-	// Handler untuk menambahkan anggota baru ke state (optimistic update)
-	const handleAdd = (newAnggota: Anggota) => {
-		setData((currentData) => [newAnggota, ...currentData]);
+	// Handler untuk menambahkan anggota baru
+	const handleAdd = () => {
+		onSuccess?.(); // Panggil callback onSuccess untuk memicu refetch dari React Query
 		toast.success("Anggota baru berhasil ditambahkan!");
 		setDialog(null); // Tutup dialog setelah berhasil
 	};
@@ -33,12 +36,13 @@ export function useAnggotaCRUD(initialData: Anggota[]) {
 		setData((currentData) =>
 			currentData.map((a) => (a.id === updatedAnggota.id ? updatedAnggota : a)),
 		);
+		onSuccess?.(); // Panggil callback onSuccess untuk memicu refetch dari React Query
 		toast.success("Data anggota berhasil diperbarui!");
 		setDialog(null); // Tutup dialog setelah berhasil
 	};
 
 	// Handler untuk menghapus anggota
-	const handleDelete = async (id: string) => {
+	const handleDelete = async (id: number) => {
 		const originalData = data;
 		// Optimistic update: Hapus data dari UI terlebih dahulu
 		setData((currentData) => currentData.filter((a) => a.id !== id));
@@ -55,6 +59,7 @@ export function useAnggotaCRUD(initialData: Anggota[]) {
 			}
 
 			toast.success("Anggota berhasil dihapus.");
+			onSuccess?.(); // Panggil callback onSuccess jika ada
 		} catch (error) {
 			// Rollback jika terjadi error
 			setData(originalData);

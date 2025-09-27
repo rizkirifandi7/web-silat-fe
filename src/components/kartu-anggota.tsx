@@ -31,7 +31,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 			})
 				.then((dataUrl) => {
 					const link = document.createElement("a");
-					link.download = `kartu-anggota-${anggota.user.nama}.png`;
+					link.download = `kartu-anggota-${anggota.nama}.png`;
 					link.href = dataUrl;
 					link.click();
 				})
@@ -39,7 +39,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					console.error("Gagal mengunduh kartu!", err);
 				});
 		}
-	}, [anggota.user.nama]);
+	}, [anggota.nama]);
 
 	return (
 		<div className="space-y-2">
@@ -93,7 +93,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 				</Card>
 			</div>
 			<div className="p-2 flex flex-col items-center justify-center">
-				<p className="text-xs">{anggota.user.nama}</p>
+				<p className="text-xs">{anggota.nama}</p>
 				<Button
 					onClick={downloadCard}
 					className="w-fit bg-muted"

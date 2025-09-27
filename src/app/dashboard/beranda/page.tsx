@@ -1,28 +1,10 @@
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTableAnggota } from "@/components/data-table-anggota";
 import { SectionCards } from "@/components/section-cards";
-import { Anggota } from "@/lib/schema";
-
-async function getData(): Promise<Anggota[]> {
-	// Fetch data from your API here.
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
-		cache: "no-store",
-	});
-
-	if (!res.ok) {
-		throw new Error("Failed to fetch data");
-	}
-
-	const data = await res.json();
-	// Filter data to only include members with role "anggota"
-	const filteredData = data.filter(
-		(item: Anggota) => item.user.role === "anggota"
-	);
-	return filteredData;
-}
+import { getAnggotaData } from "@/lib/anggota-api";
 
 export default async function Page() {
-	const data = await getData();
+	const data = await getAnggotaData();
 	return (
 		<div className="flex flex-1 flex-col">
 			<div className="@container/main flex flex-1 flex-col gap-2">
