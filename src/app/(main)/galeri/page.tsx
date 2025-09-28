@@ -20,7 +20,9 @@ export default function GaleriPage() {
 		setIsMounted(true);
 		const fetchGalleryData = async () => {
 			try {
-				const response = await fetch("http://localhost:8015/galeri");
+				const response = await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/galeri`
+				);
 				if (!response.ok) {
 					throw new Error(
 						"Gagal mengambil data galeri. Pastikan API server berjalan."
