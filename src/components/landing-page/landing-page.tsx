@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { LogIn, ScanLine } from "lucide-react";
 import Kujang from "./kujang-bg";
+import CarouselGaleri from "../carousel-galeri";
+import { dataCarousel } from "@/lib/dataLandingPage";
 
 const LandingPage = () => {
 	return (
@@ -41,7 +43,7 @@ const LandingPage = () => {
 				<Link href="/verify" passHref>
 					<Button
 						size="lg"
-						className="w-full sm:w-auto transition-transform hover:-translate-y-1"
+						className="w-full sm:w-auto transition-transform hover:-translate-y-1 cursor-pointer"
 					>
 						Verifikasi Anggota <ScanLine className="ml-2 h-4 w-4" />
 					</Button>
@@ -50,7 +52,7 @@ const LandingPage = () => {
 					<Button
 						size="lg"
 						variant="outline"
-						className="w-full sm:w-auto transition-transform hover:-translate-y-1"
+						className="w-full sm:w-auto transition-transform hover:-translate-y-1 cursor-pointer"
 					>
 						Gabung Sekarang <LogIn className="ml-2 h-4 w-4" />
 					</Button>
