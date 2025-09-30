@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
 import CarouselGaleri from "../carousel-galeri";
-import { dataCarousel } from "@/lib/dataLandingPage";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Label } from "@radix-ui/react-label";
@@ -44,7 +43,7 @@ const Body = () => {
 
             <div className="max-w-5xl mt-30 mx-auto px-4">
                 <h2 className="mb-10 text-4xl font-bold text-foreground text-center">Kegiatan Kami</h2>
-                <CarouselGaleri  data={dataCarousel} />
+                <CarouselGaleri  />
             </div>
 
             <div className="max-w-5xl mx-auto mt-25 px-4">
