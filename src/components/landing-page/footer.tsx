@@ -5,7 +5,7 @@ const Footer = () => {
 	return (
 		
 
-<footer className="bg-white dark:bg-gray-900">
+<footer className="bg-white dark:bg-gray-900 border-t-2">
     <div className="mx-auto w-full max-w-5xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between gap-50">
           <div className="mb-6 md:mb-0 w-1/2">
@@ -14,7 +14,7 @@ const Footer = () => {
                   <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">PUSAMADA</span>
               </a>
 
-			  <p className="mt-4 text-gray-500 dark:text-gray-400 font-medium max-w-xs text-justify">
+			  <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-xs text-justify">
 				Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam alias obcaecati blanditiis dolorum magnam dolores deserunt fugit consequuntur dolorem saepe!
 			  </p>
           </div>

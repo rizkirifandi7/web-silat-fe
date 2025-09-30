@@ -49,7 +49,7 @@ const Body = () => {
 
             <div className="max-w-5xl mx-auto mt-25 px-4">
                 <h2 className="mb-10 text-4xl font-bold text-foreground text-center">Informasi Kontak</h2>
-                <Card className="max-w-5xl mx-auto bg-transparent border-none">
+                <Card className="max-w-5xl mx-auto bg-transparent border-none shadow-none">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 						{/* Kolom Informasi Kontak */}
 						<div className="flex flex-col justify-between">
