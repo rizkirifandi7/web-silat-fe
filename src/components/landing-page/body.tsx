@@ -12,21 +12,11 @@ import { Card } from "../ui/card";
 
 const Body = () => {
   return (
-    <div className="w-full min-h-dvh bg-background mb-16">
+    <div className="w-full bg-background mb-16">
         <div className="container mx-auto max-w-5xl">
-            <div className="flex flex-col-revese md:flex-row items-center justify-center px-4">
-                <div className="md:w-1/3 w-full flex justify-center items-center p-6">
-                    <Image
-                        src="/silat.png"
-                        alt="Sejarah Pusamada"
-                        width={350}
-                        height={300}
-                        className="rounded-lg shadow-lg"
-                    />
-
-                </div>
-                <div className="w-full p-6">
-                    <h2 className="mb-4 text-2xl font-bold text-foreground text-center md:text-left">Tentang</h2>
+            <h2 className="mb-10 text-4xl font-bold text-foreground mt-6 text-center">Tentang</h2>
+            <div className="justify-center item-center flex flex-col-reverse md:flex-row px-4 gap-6">
+                <div className="w-full">
                     <h3 className="mb-2 text-lg text-muted-foreground text-justify">
                         Didirikan oleh murid-murid langsung para maestro silat terdahulu,
                         PUSAMADA berpegang pada ajaran luhur para guru agar ilmu dan
@@ -39,22 +29,32 @@ const Body = () => {
                     </h3>
                     
                 </div> 
+                <div className="md:w-1/2 w-full flex justify-center items-center px-6">
+                    <Image
+                        src="/silat.png"
+                        alt="Sejarah Pusamada"
+                        width={350}
+                        height={300}
+                        className="rounded-lg shadow-lg"
+                    />
+
+                </div>
             </div>
 
 
-            <div className="max-w-5xl mx-auto px-4">
-                <h2 className="mb-4 text-2xl font-bold text-foreground text-center md:text-left">Kegiatan Kami</h2>
-                <CarouselGaleri data={dataCarousel} />
+            <div className="max-w-5xl mt-30 mx-auto px-4">
+                <h2 className="mb-10 text-4xl font-bold text-foreground text-center">Kegiatan Kami</h2>
+                <CarouselGaleri  data={dataCarousel} />
             </div>
 
-            <div className="max-w-5xl mx-auto px-4">
-                <h2 className="mb-4 text-2xl font-bold text-foreground text-center md:text-left">Informasi Kontak</h2>
-                <Card className="max-w-5xl mx-auto">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-8 md:p-12">
+            <div className="max-w-5xl mx-auto mt-25 px-4">
+                <h2 className="mb-10 text-4xl font-bold text-foreground text-center">Informasi Kontak</h2>
+                <Card className="max-w-5xl mx-auto bg-transparent border-none">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 						{/* Kolom Informasi Kontak */}
 						<div className="flex flex-col justify-between">
 							<div>
-								<p className="text-muted-foreground mb-8">
+								<p className="text-muted-foreground text-justify mb-8">
 									Anda juga bisa mengunjungi kami langsung di alamat berikut
 									atau menghubungi kami melalui telepon dan email.
 								</p>
@@ -118,6 +118,10 @@ const Body = () => {
 				</Card>
             
             </div>
+
+			<div>
+
+			</div>
         </div>
 
     </div>
