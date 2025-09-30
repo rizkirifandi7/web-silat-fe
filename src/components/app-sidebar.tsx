@@ -28,11 +28,7 @@ const data = {
 			url: "/dashboard/beranda",
 			icon: IconDashboard,
 		},
-		{
-			title: "Anggota",
-			url: "/dashboard/anggota",
-			icon: IconUsers,
-		},
+
 		{
 			title: "Kartu Anggota",
 			url: "/dashboard/kartu-anggota",
@@ -50,8 +46,21 @@ const data = {
 		},
 		{
 			title: "Materi",
-			url: "/dashboard/materi",
+			url: "#",
 			icon: IconFolder,
+			items: [
+				{ title: "Kategori Materi", url: "/dashboard/kategori-materi" },
+				{ title: "Daftar Materi", url: "/dashboard/daftar-materi" },
+			],
+		},
+		{
+			title: "Pengguna",
+			url: "#",
+			icon: IconUsers,
+			items: [
+				{ title: "Daftar Anggota", url: "/dashboard/anggota" },
+				{ title: "Daftar Admin", url: "/dashboard/admin" },
+			],
 		},
 	],
 };
