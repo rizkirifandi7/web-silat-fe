@@ -1,5 +1,7 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,64 +10,156 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 	DialogFooter,
 } from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { IconPlus } from "@tabler/icons-react";
-import { ScrollArea } from "./ui/scroll-area";
-import { useState } from "react";
-import Image from "next/image";
-import { Anggota } from "@/lib/schema";
+import { Anggota, anggotaSchema } from "@/lib/schema";
 import { toast } from "sonner";
+import Resizer from "react-image-file-resizer";
+import { useState } from "react";
+import { AnggotaForm } from "./anggota-form"; // Import komponen form baru
 
 // Skema ini hanya untuk validasi form, tidak termasuk id_token
-const FormSchema = z.object({
-	nama_lengkap: z.string().nonempty("Nama lengkap harus diisi."),
-	nama_panggilan: z.string().nonempty("Nama panggilan harus diisi."),
-	email: z.string().email("Email tidak valid."),
-	tempat_lahir: z.string().nonempty("Tempat lahir harus diisi."),
-	tanggal_lahir: z.string().nonempty("Tanggal lahir harus diisi."),
-	jenis_kelamin: z.string().nonempty("Jenis kelamin harus diisi."),
-	alamat: z.string().nonempty("Alamat harus diisi."),
-	agama: z.string().nonempty("Agama harus diisi."),
-	no_telepon: z.string().nonempty("No. telepon harus diisi."),
-	angkatan_unit: z.string().nonempty("Angkatan unit harus diisi."),
-	status_keanggotaan: z.string().nonempty("Status keanggotaan harus diisi."),
-	status_perguruan: z.string().nonempty("Status di perguruan harus diisi."),
-	tingkatan_sabuk: z.string().nonempty("Tingkatan sabuk harus diisi."),
-	foto: z.any(),
-});
+const FormSchema = z
+	.object({
+		nama: z.string().nonempty("Nama lengkap harus diisi."),
+		email: z.string().email("Email tidak valid."),
+		password: z
+			.string()
+			.min(6, "Password minimal harus 6 karakter.")
+			.nonempty("Password harus diisi."),
+		confirmPassword: z.string().nonempty("Konfirmasi password harus diisi."),
+		tempat_lahir: z.string().nonempty("Tempat lahir harus diisi."),
+		tanggal_lahir: z.string().nonempty("Tanggal lahir harus diisi."),
+		jenis_kelamin: z.string().nonempty("Jenis kelamin harus diisi."),
+		alamat: z.string().nonempty("Alamat harus diisi."),
+		agama: z.string().nonempty("Agama harus diisi."),
+		no_telepon: z.string().nonempty("No. telepon harus diisi."),
+		angkatan_unit: z.string().nonempty("Angkatan unit harus diisi."),
+		status_keanggotaan: z.string().nonempty("Status keanggotaan harus diisi."),
+		status_perguruan: z.string().nonempty("Status di perguruan harus diisi."),
+		tingkatan_sabuk: z.string().nonempty("Tingkatan sabuk harus diisi."),
+		foto: z.any(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Password dan konfirmasi password tidak cocok.",
+		path: ["confirmPassword"],
+	});
+
+type FormData = z.infer<typeof FormSchema>;
 
 export function TambahAnggotaDialog({
+	isOpen,
+	onOpenChange,
 	onAnggotaAdded,
 }: {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
 	onAnggotaAdded: (data: Anggota) => void;
 }) {
-	const [isOpen, setIsOpen] = useState(false);
-	const [fotoPreview, setFotoPreview] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const form = useForm<z.infer<typeof FormSchema>>({
+
+	// State dan logika untuk image cropper
+	const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+	const [showCrop, setShowCrop] = useState(false);
+	const [crop, setCrop] = useState({ x: 0, y: 0 });
+	const [zoom, setZoom] = useState(1);
+	const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+		width: number;
+		height: number;
+		x: number;
+		y: number;
+	} | null>(null);
+	const [imageSrc, setImageSrc] = useState<string | null>(null);
+
+	const onCropComplete = (
+		croppedArea: { width: number; height: number; x: number; y: number },
+		croppedAreaPixels: { width: number; height: number; x: number; y: number }
+	) => {
+		setCroppedAreaPixels(croppedAreaPixels);
+	};
+
+	const getCroppedImg = (
+		imageSrc: string,
+		crop: { width: number; height: number; x: number; y: number }
+	): Promise<string> => {
+		return new Promise((resolve, reject) => {
+			const image = new Image();
+			image.src = imageSrc;
+			image.crossOrigin = "anonymous";
+			image.onload = () => {
+				const canvas = document.createElement("canvas");
+				const ctx = canvas.getContext("2d");
+				if (!ctx) {
+					return reject(new Error("Failed to get canvas context"));
+				}
+
+				canvas.width = crop.width;
+				canvas.height = crop.height;
+
+				ctx.drawImage(
+					image,
+					crop.x,
+					crop.y,
+					crop.width,
+					crop.height,
+					0,
+					0,
+					crop.width,
+					crop.height
+				);
+
+				canvas.toBlob((blob) => {
+					if (!blob) {
+						return reject(new Error("Failed to create blob"));
+					}
+					resolve(URL.createObjectURL(blob));
+				}, "image/jpeg");
+			};
+			image.onerror = (error) => reject(error);
+		});
+	};
+
+	const handleCropApply = async () => {
+		if (imageSrc && croppedAreaPixels) {
+			try {
+				const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+				Resizer.imageFileResizer(
+					await (await fetch(croppedImage)).blob(),
+					300,
+					300,
+					"JPEG",
+					80,
+					0,
+					(uri) => {
+						if (typeof uri === "string") {
+							setFotoPreview(uri);
+							setShowCrop(false);
+							fetch(uri)
+								.then((res) => res.blob())
+								.then((blob) => {
+									const file = new File([blob], "resized-image.jpg", {
+										type: "image/jpeg",
+									});
+									form.setValue("foto", file);
+								});
+						}
+					},
+					"base64"
+				);
+			} catch (error) {
+				console.error("Error cropping image:", error);
+				toast.error("Gagal memotong gambar.");
+			}
+		}
+	};
+
+	const form = useForm<FormData>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			nama_lengkap: "",
-			nama_panggilan: "",
+			nama: "",
 			email: "",
+			password: "",
+			confirmPassword: "",
 			tempat_lahir: "",
 			tanggal_lahir: "",
 			jenis_kelamin: "Laki-laki",
@@ -75,417 +169,127 @@ export function TambahAnggotaDialog({
 			angkatan_unit: new Date().getFullYear().toString(),
 			status_keanggotaan: "Aktif",
 			status_perguruan: "Anggota",
-			tingkatan_sabuk: undefined,
+			tingkatan_sabuk: "Belum punya",
 			foto: null,
 		},
 	});
 
-	const statusPerguruan = form.watch("status_perguruan");
+	const resetFormState = () => {
+		form.reset();
+		setFotoPreview(null);
+		setShowCrop(false);
+		setCrop({ x: 0, y: 0 });
+		setZoom(1);
+		setCroppedAreaPixels(null);
+		setImageSrc(null);
+	};
 
-	async function onSubmit(values: z.infer<typeof FormSchema>) {
+	async function onSubmit(values: FormData) {
 		setIsSubmitting(true);
 		const formData = new FormData();
 
-		// Append all form values to FormData
-		Object.entries(values).forEach(([key, value]) => {
-			if (key === "foto") {
-				if (value instanceof File) {
-					formData.append(key, value);
-				}
-			} else if (value) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { confirmPassword, ...restValues } = values;
+		Object.entries(restValues).forEach(([key, value]) => {
+			if (key === "foto" && value instanceof File) {
 				formData.append(key, value);
+			} else if (value) {
+				formData.append(key, value as string);
 			}
 		});
 
 		try {
-			const response = await fetch("http://localhost:8015/anggota", {
-				method: "POST",
-				body: formData,
-				// Headers are not needed for FormData with fetch, browser sets it
-			});
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+				{
+					method: "POST",
+					body: formData,
+				}
+			);
 
 			if (!response.ok) {
 				const errorData = await response.json();
 				throw new Error(errorData.message || "Gagal menambahkan anggota.");
 			}
 
-			const newAnggota = await response.json();
-			onAnggotaAdded(newAnggota); // Langsung gunakan objek respons
-			form.reset();
-			setFotoPreview(null);
-			toast.success("Anggota berhasil ditambahkan!");
-			setIsOpen(false); // Tutup dialog setelah berhasil
+			const result = await response.json();
+
+			// The API response on success doesn't seem to return the created user.
+			// We'll use the form data to optimistically update the UI.
+			const newAnggotaFromForm: Anggota = {
+				...values,
+				id: Date.now(), // Temporary ID for UI update
+				id_token: "", // Not available from form
+				role: "Anggota", // Default role
+				foto: fotoPreview || "", // Use previewed photo
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+			};
+
+			const parsedAnggota = anggotaSchema.parse(newAnggotaFromForm);
+
+			onAnggotaAdded(parsedAnggota);
+			resetFormState();
+			toast.success(result.message || "Anggota berhasil ditambahkan!");
+			onOpenChange(false);
 		} catch (error) {
 			console.error("Error submitting form:", error);
-			// Here you could show an error message to the user
+			if (error instanceof z.ZodError) {
+				toast.error(
+					`Kesalahan validasi data: ${error.issues
+						.map((e) => e.message)
+						.join(", ")}`
+				);
+			} else if (error instanceof Error) {
+				toast.error(error.message);
+			} else {
+				toast.error("Terjadi kesalahan yang tidak diketahui.");
+			}
 		} finally {
 			setIsSubmitting(false);
 		}
 	}
 
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
-				<Button variant="outline">
-					<IconPlus className="mr-2 h-4 w-4" />
-					Tambah Anggota
-				</Button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[600px]">
+		<Dialog
+			open={isOpen}
+			onOpenChange={(open) => {
+				if (!open) {
+					resetFormState();
+				}
+				onOpenChange(open);
+			}}
+		>
+			<DialogContent className="sm:max-w-[600px] max-w-[95vw] max-h-[90vh]">
 				<DialogHeader>
 					<DialogTitle>Tambah Anggota Baru</DialogTitle>
 					<DialogDescription>
-						Isi formulir di bawah ini untuk menambahkan anggota baru ke dalam
-						sistem.
+						Isi formulir di bawah ini untuk menambahkan anggota baru.
 					</DialogDescription>
 				</DialogHeader>
-				<Form {...form}>
+				<FormProvider {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<ScrollArea className="h-96 w-full p-4">
-							<div className="space-y-4">
-								<FormField
-									control={form.control}
-									name="foto"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Foto</FormLabel>
-											<div className="flex items-center gap-4">
-												{fotoPreview ? (
-													<Image
-														src={fotoPreview}
-														alt="Preview Foto"
-														width={80}
-														height={80}
-														className="rounded-md object-cover"
-													/>
-												) : (
-													<div className="h-20 w-20 rounded-md bg-secondary"></div>
-												)}
-												<FormControl>
-													<Input
-														type="file"
-														accept="image/*"
-														onChange={(e) => {
-															const file = e.target.files?.[0];
-															if (file) {
-																const reader = new FileReader();
-																reader.onloadend = () => {
-																	setFotoPreview(reader.result as string);
-																	field.onChange(file);
-																};
-																reader.readAsDataURL(file);
-															}
-														}}
-													/>
-												</FormControl>
-											</div>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="nama_lengkap"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Nama Lengkap</FormLabel>
-											<FormControl>
-												<Input placeholder="Contoh: Budi Santoso" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								{/* Tambahkan field lainnya di sini */}
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="nama_panggilan"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Nama Panggilan</FormLabel>
-												<FormControl>
-													<Input placeholder="Contoh: Budi" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Email</FormLabel>
-												<FormControl>
-													<Input
-														type="email"
-														placeholder="contoh@email.com"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="tempat_lahir"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Tempat Lahir</FormLabel>
-												<FormControl>
-													<Input placeholder="Contoh: Jakarta" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="tanggal_lahir"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Tanggal Lahir</FormLabel>
-												<FormControl>
-													<Input type="date" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<FormField
-									control={form.control}
-									name="alamat"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Alamat</FormLabel>
-											<FormControl>
-												<Input placeholder="Jl. Merpati No. 10" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="jenis_kelamin"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Jenis Kelamin</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Pilih jenis kelamin" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Laki-laki">Laki-laki</SelectItem>
-														<SelectItem value="Perempuan">Perempuan</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="agama"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Agama</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Pilih agama" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Islam">Islam</SelectItem>
-														<SelectItem value="Kristen">Kristen</SelectItem>
-														<SelectItem value="Katolik">Katolik</SelectItem>
-														<SelectItem value="Hindu">Hindu</SelectItem>
-														<SelectItem value="Buddha">Buddha</SelectItem>
-														<SelectItem value="Konghucu">Konghucu</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<FormField
-									control={form.control}
-									name="no_telepon"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>No. Telepon</FormLabel>
-											<FormControl>
-												<Input
-													type="tel"
-													placeholder="081234567890"
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="angkatan_unit"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Angkatan Unit</FormLabel>
-												<FormControl>
-													<Input type="number" placeholder="2021" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="tingkatan_sabuk"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Tingkatan Sabuk</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Pilih tingkatan sabuk" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Belum punya">
-															Belum punya
-														</SelectItem>
-														<SelectItem value="LULUS Binfistal">
-															LULUS Binfistal
-														</SelectItem>
-														<SelectItem value="Sabuk Hitam Wiraga 1">
-															Sabuk Hitam Wiraga 1
-														</SelectItem>
-														<SelectItem value="Sabuk Hitam Wiraga 2">
-															Sabuk Hitam Wiraga 2
-														</SelectItem>
-														<SelectItem value="Sabuk Hitam Wiraga 3">
-															Sabuk Hitam Wiraga 3
-														</SelectItem>
-														<SelectItem value="Sabuk Hijau">
-															Sabuk Hijau
-														</SelectItem>
-														<SelectItem value="Sabuk Merah">
-															Sabuk Merah
-														</SelectItem>
-														<SelectItem value="Sabuk Putih">
-															Sabuk Putih
-														</SelectItem>
-														<SelectItem value="Sabuk Kuning">
-															Sabuk Kuning
-														</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="status_keanggotaan"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Status Keanggotaan</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Pilih status" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Aktif">Aktif</SelectItem>
-														<SelectItem value="Pasif">Pasif</SelectItem>
-														<SelectItem value="Non Aktif">Non Aktif</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="status_perguruan"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Status di Perguruan</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger className="w-full">
-															<SelectValue placeholder="Pilih status" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Pelatih">Pelatih</SelectItem>
-														<SelectItem value="Anggota">Anggota</SelectItem>
-														<SelectItem value="Alumni">Alumni</SelectItem>
-														<SelectItem value="Yang lain">Yang lain</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									{statusPerguruan === "Yang lain" && (
-										<FormField
-											control={form.control}
-											name="status_perguruan"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Sebutkan Status Lainnya</FormLabel>
-													<FormControl>
-														<Input
-															placeholder="Status lainnya"
-															{...field}
-															onChange={(e) => field.onChange(e.target.value)}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									)}
-								</div>
-							</div>
-						</ScrollArea>
+						<AnggotaForm
+							isEditMode={false}
+							fotoPreview={fotoPreview}
+							showCrop={showCrop}
+							imageSrc={imageSrc}
+							crop={crop}
+							zoom={zoom}
+							onCropChange={setCrop}
+							onZoomChange={setZoom}
+							onCropComplete={onCropComplete}
+							handleCropApply={handleCropApply}
+							setShowCrop={setShowCrop}
+							setImageSrc={setImageSrc}
+						/>
 						<DialogFooter className="pt-4">
 							<Button type="submit" disabled={isSubmitting}>
 								{isSubmitting ? "Menyimpan..." : "Simpan"}
 							</Button>
 						</DialogFooter>
 					</form>
-				</Form>
+				</FormProvider>
 			</DialogContent>
 		</Dialog>
 	);

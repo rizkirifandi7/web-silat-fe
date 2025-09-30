@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { useCallback, useRef } from "react";
 import { toPng } from "html-to-image";
 import Image from "next/image";
+import { Globe, Instagram, Facebook, Music2 } from "lucide-react";
 
 interface KartuAnggotaProps {
 	anggota: Anggota;
@@ -20,10 +21,17 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 
 	const downloadCard = useCallback(() => {
 		if (cardRef.current) {
-			toPng(cardRef.current, { cacheBust: true, pixelRatio: 4 })
+			toPng(cardRef.current, {
+				cacheBust: true,
+				pixelRatio: 4,
+				style: {
+					borderRadius: "0",
+					border: "none",
+				},
+			})
 				.then((dataUrl) => {
 					const link = document.createElement("a");
-					link.download = `kartu-anggota-${anggota.nama_lengkap}.png`;
+					link.download = `kartu-anggota-${anggota.nama}.png`;
 					link.href = dataUrl;
 					link.click();
 				})
@@ -31,42 +39,64 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					console.error("Gagal mengunduh kartu!", err);
 				});
 		}
-	}, [anggota.nama_lengkap]);
+	}, [anggota.nama]);
 
 	return (
 		<div className="space-y-2">
 			<div ref={cardRef}>
-				<Card className="relative w-60 aspect-[54/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around">
+				<Card className="relative w-[210px] aspect-[53.98/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around border-none rounded-none">
 					<div
-						className="absolute inset-0 bg-repeat"
+						className="absolute inset-0"
 						style={{
-							backgroundImage:
-								"url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23333333' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E\")",
+							backgroundImage: "url(/bg-card.jpeg)",
+							backgroundSize: "cover",
+							backgroundPosition: "center",
 						}}
 					/>
 					<CardContent className="relative flex flex-col items-center justify-center p-2 space-y-2">
-						<div className="bg-white p-1.5 rounded-md">
-							<QRCodeSVG value={qrCodeValue} size={140} />
+						<div className="bg-white p-1.5 rounded-md mb-6">
+							<QRCodeSVG value={qrCodeValue} size={90} />
 						</div>
 						<Image
 							src="/pusamada-logo.png"
 							alt="Pusamada Logo"
-							width={64}
-							height={64}
+							width={44}
+							height={44}
 						/>
-						<p className="text-base font-bold tracking-wider">PUSAMADA</p>
-						<p className="text-[10px] leading-tight text-gray-300 text-center">
-							Élmu Luhung Jembar Kabisa
+						<p className="text-xs font-bold tracking-wider">PUSAMADA</p>
+						<p className="text-[8px] leading-tight text-gray-300 text-center">
+							Elmu Luhung Jembar Kabisa Budi Suci
 							<br />
-							Budi Suci Gede Bakti
+							Gede Bakti
 						</p>
+
+						{/* sosial media */}
+						<div className="grid grid-cols-2 gap-1 text-[5px] text-gray-300 mt-4 mx-auto">
+							<div className="flex items-center gap-0.5">
+								<Globe className="w-2 h-2" size={5} />
+								<span>www.pusamadaind.com</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Music2 className="w-2 h-2" size={5} />
+								<span>@pusamadaindonesia</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Instagram className="w-2 h-2" size={5} />
+								<span>@pusamadaindonesia</span>
+							</div>
+							<div className="flex items-center gap-0.5">
+								<Facebook className="w-2 h-2" size={5} />
+								<span>@pusakamandemuda</span>
+							</div>
+						</div>
 					</CardContent>
 				</Card>
 			</div>
-			<div className="p-2 flex justify-center">
+			<div className="p-2 flex flex-col items-center justify-center">
+				<p className="text-xs">{anggota.nama}</p>
 				<Button
 					onClick={downloadCard}
-					className="w-full bg-muted"
+					className="w-fit bg-muted"
 					variant="outline"
 				>
 					Download Kartu

@@ -1,25 +1,9 @@
 import React from "react";
-import { Anggota } from "@/lib/schema";
 import { DataTableAnggota } from "@/components/data-table-anggota";
-
-async function getData(): Promise<Anggota[]> {
-	try {
-		const res = await fetch("http://localhost:8015/anggota", {
-			cache: "no-store",
-		});
-		if (!res.ok) {
-			throw new Error("Failed to fetch data");
-		}
-		const data = await res.json();
-		return data; // Assuming the API returns { data: [...] }
-	} catch (error) {
-		console.error("Error fetching data:", error);
-		return []; // Return an empty array on error
-	}
-}
+import { getAnggotaData } from "@/lib/anggota-api";
 
 const PageAnggota = async () => {
-	const data = await getData();
+	const data = await getAnggotaData();
 
 	return (
 		<div className="flex flex-1 flex-col p-4 md:p-6">

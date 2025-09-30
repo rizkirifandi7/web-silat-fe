@@ -6,7 +6,7 @@ const Kujang = () => {
 		<div>
 			<div className="pointer-events-none absolute bottom-10 -left-30 opacity-5">
 				<Image
-					src="/kujang-bg.png"
+					src="/kujang.png"
 					alt="Background Pattern"
 					width={850}
 					height={850}
@@ -17,7 +17,7 @@ const Kujang = () => {
 			{/* Kujang Background Right */}
 			<div className="pointer-events-none absolute bottom-10 -right-30 opacity-5">
 				<Image
-					src="/kujang-bg.png"
+					src="/kujang.png"
 					alt="Background Pattern"
 					width={850}
 					height={850}

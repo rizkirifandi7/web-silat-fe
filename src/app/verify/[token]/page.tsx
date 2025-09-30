@@ -1,19 +1,19 @@
 import { AnggotaProfileCard } from "@/components/anggota-profile-card";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Anggota } from "@/lib/schema";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Terminal } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 // Fungsi ini akan mengambil data anggota di sisi server berdasarkan token
 async function getAnggotaByToken(token: string): Promise<Anggota | null> {
 	try {
 		// URL ini harus dapat diakses oleh server Next.js Anda
-		const res = await fetch(`http://localhost:8015/anggota/token/${token}`, {
-			cache: "no-store", // Opsi ini memastikan data yang ditampilkan selalu yang terbaru
-		});
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/anggota/token/${token}`,
+			{
+				cache: "no-store", // Opsi ini memastikan data yang ditampilkan selalu yang terbaru
+			}
+		);
 
 		if (!res.ok) {
 			// Jika token tidak valid atau ada error dari server, kembalikan null
@@ -32,26 +32,16 @@ async function getAnggotaByToken(token: string): Promise<Anggota | null> {
 export default async function AnggotaDetailPage({
 	params,
 }: {
-	params: { token: string };
+	params: Promise<{ token: string }>;
 }) {
 	// Mengambil token dari URL, contoh: /verify/TOKEN_DISINI
-	const { token } = params;
+	const { token } = await params;
 	const anggota = await getAnggotaByToken(token);
 
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
-			<div className="absolute top-4 right-4">
-				<ModeToggle />
-			</div>
-
 			<div className="mb-8 flex flex-col items-center text-center">
-				<Image
-					src="/pusamada-logo.png"
-					alt="PUSAMADA"
-					width={80}
-					height={80}
-					className="dark:invert"
-				/>
+				<Image src="/pusamada-logo.png" alt="PUSAMADA" width={80} height={80} />
 				<h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
 					Profil Anggota PUSAMADA
 				</h1>
@@ -72,9 +62,6 @@ export default async function AnggotaDetailPage({
 						</AlertDescription>
 					</Alert>
 				)}
-				<Button asChild variant="outline" className="mt-6 w-full">
-					<Link href="/">Kembali ke Beranda</Link>
-				</Button>
 			</div>
 		</main>
 	);

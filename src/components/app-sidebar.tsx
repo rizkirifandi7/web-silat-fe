@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { IconDashboard, IconFolder, IconUsers } from "@tabler/icons-react";
+import { IconDashboard, IconFolder, IconLibraryPhoto, IconUsers } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -32,6 +32,11 @@ const data = {
 			title: "Kartu Anggota",
 			url: "/dashboard/kartu-anggota",
 			icon: IconFolder,
+		},
+		{
+			title: "Galeri",
+			url: "/dashboard/galeri",
+			icon: IconLibraryPhoto,
 		},
 	],
 };

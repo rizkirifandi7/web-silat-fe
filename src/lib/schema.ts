@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const anggotaSchema = z.object({
-	id: z.string(),
-	id_token: z.string(),
-	nama_lengkap: z.string(),
-	nama_panggilan: z.string(),
+	id: z.number(),
+	nama: z.string(),
 	email: z.string().email(),
+	role: z.string(),
+	id_token: z.string(),
 	tempat_lahir: z.string(),
 	tanggal_lahir: z.string(),
 	jenis_kelamin: z.string(),
@@ -16,9 +16,9 @@ export const anggotaSchema = z.object({
 	status_keanggotaan: z.string(),
 	status_perguruan: z.string(),
 	tingkatan_sabuk: z.string(),
-	foto: z.string().url(),
-	createdAt: z.string().optional(),
-	updatedAt: z.string().optional(),
+	foto: z.string(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
 });export type Anggota = z.infer<typeof anggotaSchema>;
 
 export const loginSchema = z.object({
@@ -29,3 +29,14 @@ export const loginSchema = z.object({
 });
 
 export type LoginData = z.infer<typeof loginSchema>;
+
+export const galeriSchema = z.object({
+	id: z.number(),
+	gambar: z.string(),
+	judul: z.string(),
+	deskripsi: z.string(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+});
+
+export type Galeri = z.infer<typeof galeriSchema>;

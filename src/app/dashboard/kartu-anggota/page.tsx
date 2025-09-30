@@ -21,7 +21,7 @@ import {
 import { Anggota } from "@/lib/schema";
 import { useEffect, useMemo, useState } from "react";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 6;
 
 export default function Page() {
 	const [data, setData] = useState<Anggota[]>([]);
@@ -35,14 +35,18 @@ export default function Page() {
 		async function getData() {
 			try {
 				setLoading(true);
-				const res = await fetch("http://localhost:8015/anggota", {
+				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
 					cache: "no-store",
 				});
 				if (!res.ok) {
 					throw new Error("Failed to fetch data");
 				}
 				const fetchedData = await res.json();
-				setData(fetchedData);
+				// Filter data to only include members with role "anggota"
+				const filteredData = fetchedData.filter(
+					(item: Anggota) => item.role === "anggota"
+				);
+				setData(filteredData);
 			} catch (error) {
 				console.error(error);
 			} finally {
@@ -55,7 +59,7 @@ export default function Page() {
 	const filteredData = useMemo(() => {
 		setCurrentPage(1); // Reset to first page on filter change
 		return data.filter((anggota) => {
-			const matchesSearch = anggota.nama_lengkap
+			const matchesSearch = anggota.nama
 				.toLowerCase()
 				.includes(searchTerm.toLowerCase());
 			const matchesTingkatan =
