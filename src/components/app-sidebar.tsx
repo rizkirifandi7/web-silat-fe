@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { IconDashboard, IconFolder, IconLibraryPhoto, IconUsers } from "@tabler/icons-react";
+import {
+	IconDashboard,
+	IconFolder,
+	IconLibraryPhoto,
+	IconUsers,
+} from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -37,6 +42,16 @@ const data = {
 			title: "Galeri",
 			url: "/dashboard/galeri",
 			icon: IconLibraryPhoto,
+		},
+		{
+			title: "Seminar",
+			url: "/dashboard/seminar",
+			icon: IconFolder,
+		},
+		{
+			title: "Materi",
+			url: "/dashboard/materi",
+			icon: IconFolder,
 		},
 	],
 };
