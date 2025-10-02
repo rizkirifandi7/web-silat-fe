@@ -4,12 +4,10 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { LogIn, ScanLine } from "lucide-react";
 import Kujang from "./kujang-bg";
-import CarouselGaleri from "../carousel-galeri";
-import { dataCarousel } from "@/lib/dataLandingPage";
 
 const Hero = () => {
 	return (
-		<main className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden bg-background px-8 text-center">
+		<main className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden bg-background px-4 sm:px-6 md:px-8 text-center">
 			{/* Background Effects */}
 			<div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
 			<div className="absolute -z-10 inset-0 h-full w-full bg-background [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
@@ -19,22 +17,22 @@ const Hero = () => {
 
 			<div className="relative flex flex-col items-center animate-in fade-in zoom-in-95 duration-700">
 				{/* Logo Glow Effect */}
-				<div className="absolute -z-10 mt-4 h-48 w-48 bg-primary/20 blur-3xl rounded-full" />
+				<div className="absolute -z-10 mt-4 h-36 w-36 sm:h-48 sm:w-48 bg-primary/20 blur-3xl rounded-full" />
 				<Image
 					src="/pusamada-logo.png"
 					alt="PUSAMADA"
-					width={180}
-					height={180}
+					width={160}
+					height={160}
 					priority
-					className="drop-shadow-lg"
+					className="drop-shadow-lg sm:w-44 sm:h-44"
 				/>
-				<p className="mt-6 text-2xl font-semibold tracking-wide">
+				<p className="mt-6 text-xl sm:text-2xl font-semibold tracking-wide">
 					Pencak Silat
 				</p>
-				<h1 className="mt-2 text-5xl font-extrabold tracking-tight text-foreground md:text-6xl">
+				<h1 className="mt-2 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground">
 					Pusaka Mande Muda Indonesia
 				</h1>
-				<p className="mt-4 max-w-2xl text-xl text-muted-foreground italic">
+				<p className="mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground italic">
 					&quot;Élmu Luhung Jembar Kabisa, Budi Suci Gede Bakti&quot;
 				</p>
 			</div>

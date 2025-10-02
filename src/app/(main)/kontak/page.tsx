@@ -22,7 +22,7 @@ const PageKontak = () => {
 				</div>
 
 				{/* Konten Utama */}
-				<Card className="max-w-5xl mx-auto">
+				<Card className="max-w-6xl mx-auto shadow-none">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-8 md:p-12">
 						{/* Kolom Informasi Kontak */}
 						<div className="flex flex-col justify-between">

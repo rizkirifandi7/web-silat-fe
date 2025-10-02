@@ -1,4 +1,4 @@
-import { Anggota } from "@/lib/schema";
+import { Anggota, AdminData } from "@/lib/schema";
 
 export async function getAnggotaData(): Promise<Anggota[]> {
 	try {
@@ -104,4 +104,57 @@ export async function fetchAdmin(): Promise<Anggota[]> {
 	const result = await response.json();
 	const filterData = result.filter((item: Anggota) => item.role === "admin");
 	return filterData;
+}
+
+export async function addAdmin(data: AdminData) {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/auth/register-admin`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		}
+	);
+
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message || "Gagal menambahkan admin.");
+	}
+
+	return response.json();
+}
+
+export async function updateAdmin(id: string, data: AdminData) {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
+		{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		}
+	);
+
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message || "Gagal memperbarui admin.");
+	}
+
+	return response.json();
+}
+
+export async function deleteAdmin(id: string): Promise<void> {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
+		{
+			method: "DELETE",
+		}
+	);
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message || "Gagal menghapus admin.");
+	}
 }

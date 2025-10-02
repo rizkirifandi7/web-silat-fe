@@ -27,7 +27,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
 	// Setelah loading selesai, periksa pengguna dan alihkan jika perlu.
 	// Pengalihan ini terjadi murni di sisi klien.
-	if (!user || user.role !== "admin") {
+	if (!user || user.role !== "admin" && user.role !== "superadmin") {
 		router.replace("/login");
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center gap-4">

@@ -75,7 +75,7 @@ const dataPengurus: PengurusItem[] = [
 const PageTentang = () => {
 	return (
 		<div className="bg-background text-foreground">
-			<div className="container mx-auto max-w-5xl space-y-24 px-4 py-12 sm:px-6 lg:px-8 lg:py-24">
+			<div className="container mx-auto max-w-6xl space-y-24 px-4 py-12 sm:px-6 lg:px-8 lg:py-24">
 				{/* Section Sejarah */}
 				<section id="sejarah">
 					<div className="text-center mb-12">

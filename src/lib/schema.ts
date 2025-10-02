@@ -40,3 +40,12 @@ export const galeriSchema = z.object({
 });
 
 export type Galeri = z.infer<typeof galeriSchema>;
+
+export const adminSchema = z.object({
+	nama: z.string().min(1, { message: "Nama tidak boleh kosong." }),
+	email: z.string().email({ message: "Email tidak valid." }),
+	password: z.string().min(6, { message: "Password minimal harus 6 karakter." }),
+});
+
+export type AdminData = z.infer<typeof adminSchema>;
+
