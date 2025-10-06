@@ -16,7 +16,7 @@ const PageKontak = () => {
 						Hubungi Kami
 					</h1>
 					<p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-						Punya pertanyaan atau ingin bergabung? Jangan ragu untuk mengirim
+						Punya pertanyaan atau ingin bergabung?<br />Jangan ragu untuk mengirim
 						pesan kepada kami.
 					</p>
 				</div>
@@ -30,7 +30,7 @@ const PageKontak = () => {
 								<h2 className="text-2xl font-semibold mb-2">
 									Informasi Kontak
 								</h2>
-								<p className="text-muted-foreground mb-8">
+								<p className="text-muted-foreground text-justify mb-8">
 									Anda juga bisa mengunjungi kami langsung di alamat berikut
 									atau menghubungi kami melalui telepon dan email.
 								</p>
@@ -53,7 +53,7 @@ const PageKontak = () => {
 									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.9!2d107.6419995!3d-7.0504958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68eb006b602577%3A0x22f5ce8d2a912d4!2sPerguruan%20Pencak%20Silat%20PUSAMADA!5e0!3m2!1sen!2sid!4v1695480000000!5m2!1sen!2sid"
 									width="100%"
 									height="100%"
-									style={{ border: 0 }}
+									style={{ border: 0, borderRadius: "1rem" }}
 									allowFullScreen
 									loading="lazy"
 									referrerPolicy="no-referrer-when-downgrade"
