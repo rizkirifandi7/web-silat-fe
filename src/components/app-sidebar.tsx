@@ -46,12 +46,8 @@ const data = {
 		},
 		{
 			title: "Materi",
-			url: "#",
+			url: "/dashboard/materi",
 			icon: IconFolder,
-			items: [
-				{ title: "Kategori Materi", url: "/dashboard/kategori-materi" },
-				{ title: "Daftar Materi", url: "/dashboard/daftar-materi" },
-			],
 		},
 		{
 			title: "Pengguna",

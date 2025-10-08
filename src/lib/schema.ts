@@ -49,3 +49,34 @@ export const adminSchema = z.object({
 
 export type AdminData = z.infer<typeof adminSchema>;
 
+export const materiSchema = z.object({
+	id: z.number(),
+	judul: z.string(),
+	tipeKonten: z.enum(["video", "pdf"]),
+	konten: z.string(),
+	id_course: z.number(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+});
+
+export const materiFormSchema = materiSchema
+	.omit({
+		id: true,
+		createdAt: true,
+		updatedAt: true,
+	})
+	.extend({
+		konten: z.any(),
+	});
+
+export type Materi = z.infer<typeof materiSchema>;
+
+export const kategoriMateriSchema = z.object({
+	id: z.number(),
+	judul: z.string(),
+	deskripsi: z.string(),
+	materi: z.array(materiSchema).optional(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+});
+export type KategoriMateri = z.infer<typeof kategoriMateriSchema>;

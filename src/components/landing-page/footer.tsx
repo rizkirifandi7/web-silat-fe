@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
 	return (
@@ -73,12 +72,18 @@ const Footer = () => {
 							</h2>
 							<ul className="text-gray-500 dark:text-gray-400 font-medium">
 								<li className="mb-2">
-									<Link href="#" className="hover:underline">
+									<Link
+										href="https://www.instagram.com/pusamadaindonesia?igsh=MTFkam94ZDdkZ3g0NQ=="
+										className="hover:underline"
+									>
 										Instagram
 									</Link>
 								</li>
 								<li className="mb-2">
-									<Link href="#" className="hover:underline">
+									<Link
+										href="https://www.facebook.com/share/1ECfhVUFRx/"
+										className="hover:underline"
+									>
 										Facebook
 									</Link>
 								</li>
@@ -88,7 +93,10 @@ const Footer = () => {
 									</Link>
 								</li>
 								<li className="mb-2">
-									<Link href="#" className="hover:underline">
+									<Link
+										href="https://www.tiktok.com/@pusamadaindonesia?_t=ZS-90IWTnMc3NZ&_r=1"
+										className="hover:underline"
+									>
 										Tiktok
 									</Link>
 								</li>
@@ -97,7 +105,7 @@ const Footer = () => {
 					</div>
 				</div>
 				<hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-				<div className="sm:flex sm:items-center sm:justify-between">
+				<div className="flex justify-center items-center">
 					<span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
 						© 2025{" "}
 						<a href="https://pusamadaind.com/" className="hover:underline">
@@ -105,29 +113,6 @@ const Footer = () => {
 						</a>
 						. All Rights Reserved.
 					</span>
-					<div className="flex mt-4 sm:justify-center sm:mt-0 space-x-5 rtl:space-x-reverse">
-						<Link
-							href="#"
-							className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-						>
-							<Facebook className="w-5 h-5" />
-							<span className="sr-only">Facebook page</span>
-						</Link>
-						<Link
-							href="#"
-							className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-						>
-							<Instagram className="w-5 h-5" />
-							<span className="sr-only">Instagram page</span>
-						</Link>
-						<Link
-							href="#"
-							className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-						>
-							<Youtube className="w-5 h-5" />
-							<span className="sr-only">YouTube channel</span>
-						</Link>
-					</div>
 				</div>
 			</div>
 		</footer>

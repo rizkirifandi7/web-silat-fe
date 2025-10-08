@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<div className="relative flex min-h-screen flex-col bg-background">
+			<div className="relative flex min-h-dvh flex-col bg-background">
 				<Navbar />
 				<div className="relative min-h-[calc(100svh-4rem)] overflow-hidden flex-1">
 					{children}
