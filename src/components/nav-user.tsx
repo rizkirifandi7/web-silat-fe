@@ -111,9 +111,9 @@ export function NavUser() {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem disabled>
+						<DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
 							<IconUserShield className="mr-2" />
-							Profil (Segera Hadir)
+							Profil
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleLogout} className="text-red-500">
