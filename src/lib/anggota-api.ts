@@ -1,160 +1,72 @@
-import { Anggota, AdminData } from "@/lib/schema";
+import { api, handleApiError } from "@/lib/utils";
+import { Anggota } from "./schema";
 
-export async function getAnggotaData(): Promise<Anggota[]> {
+/**
+ * Mengambil daftar semua anggota.
+ * @returns {Promise<Anggota[]>} List anggota.
+ * @throws {Error} Jika terjadi kegagalan saat mengambil data.
+ */
+export const getAnggotas = async (): Promise<Anggota[]> => {
 	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
-			cache: "no-store",
-		});
-		if (!res.ok) {
-			throw new Error("Failed to fetch data");
-		}
-		const data = await res.json();
-		// Filter data to only include members with role "anggota"
-		const filteredData = data.filter(
-			(item: Anggota) => item.role === "anggota"
-		);
-		return filteredData;
+		const response = await api.get("/anggota");
+		return response.data;
 	} catch (error) {
-		console.error("Error fetching data:", error);
-		return []; // Return an empty array on error
+		handleApiError(error, "Gagal mengambil data anggota");
 	}
-}
+};
 
-export async function getAdminData(): Promise<Anggota[]> {
+/**
+ * Membuat anggota baru.
+ * @param {FormData} formData - Data untuk anggota baru, termasuk file foto.
+ * @returns {Promise<Anggota>} Data anggota yang baru dibuat.
+ * @throws {Error} Jika terjadi kegagalan saat membuat anggota.
+ */
+export const createAnggota = async (formData: FormData): Promise<Anggota> => {
 	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
-			cache: "no-store",
+		const response = await api.post("/auth/register", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
 		});
-		if (!res.ok) {
-			throw new Error("Failed to fetch data");
-		}
-		const data = await res.json();
-		// Filter data to only include members with role "admin"
-		const filteredData = data.filter((item: Anggota) => item.role === "admin");
-		return filteredData;
+		return response.data;
 	} catch (error) {
-		console.error("Error fetching data:", error);
-		return []; // Return an empty array on error
+		handleApiError(error, "Gagal membuat anggota baru");
 	}
-}
+};
 
-export async function fetchAnggota(): Promise<Anggota[]> {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`);
-	if (!response.ok) {
-		throw new Error("Gagal mengambil data anggota");
-	}
-	const result = await response.json();
-	const filterData = result.filter((item: Anggota) => item.role === "anggota");
-	return filterData; // Langsung kembalikan array
-}
-
-export async function createAnggota(formData: FormData): Promise<Anggota> {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-		{
-			method: "POST",
-			body: formData,
-		}
-	);
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal menambahkan anggota.");
-	}
-	const result = await response.json();
-	return result.data;
-}
-
-export async function updateAnggota(
+/**
+ * Memperbarui data anggota yang ada.
+ * @param {number} id - ID anggota yang akan diperbarui.
+ * @param {FormData} formData - Data yang akan diperbarui.
+ * @returns {Promise<Anggota>} Data anggota yang telah diperbarui.
+ * @throws {Error} Jika terjadi kegagalan saat memperbarui anggota.
+ */
+export const updateAnggota = async (
 	id: number,
 	formData: FormData
-): Promise<Anggota> {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
-		{
-			method: "PUT",
-			body: formData,
-		}
-	);
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal memperbarui anggota.");
-	}
-	const result = await response.json();
-	return result; // Langsung kembalikan objek data
-}
-
-export async function deleteAnggota(id: number): Promise<void> {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
-		{
-			method: "DELETE",
-		}
-	);
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal menghapus anggota.");
-	}
-}
-
-export async function fetchAdmin(): Promise<Anggota[]> {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`);
-	if (!response.ok) {
-		throw new Error("Gagal mengambil data admin");
-	}
-	const result = await response.json();
-	const filterData = result.filter((item: Anggota) => item.role === "admin");
-	return filterData;
-}
-
-export async function addAdmin(data: AdminData) {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/auth/register-admin`,
-		{
-			method: "POST",
+): Promise<Anggota> => {
+	try {
+		const response = await api.put(`/anggota/${id}`, formData, {
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "multipart/form-data",
 			},
-			body: JSON.stringify(data),
-		}
-	);
-
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal menambahkan admin.");
+		});
+		return response.data;
+	} catch (error) {
+		handleApiError(error, `Gagal memperbarui anggota dengan ID ${id}`);
 	}
+};
 
-	return response.json();
-}
-
-export async function updateAdmin(id: string, data: AdminData) {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
-		{
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		}
-	);
-
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal memperbarui admin.");
+/**
+ * Menghapus anggota.
+ * @param {number} id - ID anggota yang akan dihapus.
+ * @returns {Promise<void>}
+ * @throws {Error} Jika terjadi kegagalan saat menghapus anggota.
+ */
+export const deleteAnggota = async (id: number): Promise<void> => {
+	try {
+		await api.delete(`/anggota/${id}`);
+	} catch (error) {
+		handleApiError(error, `Gagal menghapus anggota dengan ID ${id}`);
 	}
-
-	return response.json();
-}
-
-export async function deleteAdmin(id: string): Promise<void> {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/anggota/${id}`,
-		{
-			method: "DELETE",
-		}
-	);
-	if (!response.ok) {
-		const errorData = await response.json();
-		throw new Error(errorData.message || "Gagal menghapus admin.");
-	}
-}
+};

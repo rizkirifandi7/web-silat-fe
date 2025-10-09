@@ -54,7 +54,7 @@ const data = {
 			url: "#",
 			icon: IconUsers,
 			items: [
-				{ title: "Daftar Anggota", url: "/dashboard/anggota" },
+				{ title: "Anggota", url: "/dashboard/anggota" },
 				{ title: "Admin", url: "/dashboard/admin" },
 			],
 		},

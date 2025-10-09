@@ -1,6 +1,5 @@
 "use client";
 
-import { Anggota } from "@/lib/schema";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -11,36 +10,40 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useAnggotaCrud } from "@/hooks/use-anggota-crud";
+import { Anggota } from "@/lib/schema";
 
 interface DeleteAnggotaDialogProps {
-	isOpen: boolean;
-	onOpenChange: (isOpen: boolean) => void;
-	onConfirm: () => void;
-	anggota: Anggota | null;
+	anggota: Anggota;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
 }
 
 export function DeleteAnggotaDialog({
-	isOpen,
+	anggota,
+	open,
 	onOpenChange,
-	onConfirm,
 }: DeleteAnggotaDialogProps) {
+	const { removeAnggota, isDeleting } = useAnggotaCrud();
+
+	const handleConfirm = () => {
+		removeAnggota(anggota.id);
+	};
+
 	return (
-		<AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+		<AlertDialog open={open} onOpenChange={onOpenChange}>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Apakah Anda benar-benar yakin?</AlertDialogTitle>
+					<AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
 					<AlertDialogDescription>
-						Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data anggota
-						secara permanen dari server.
+						Tindakan ini tidak dapat dibatalkan. Ini akan menghapus anggota
+						<strong>{anggota?.nama}</strong> secara permanen.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Batal</AlertDialogCancel>
-					<AlertDialogAction
-						onClick={onConfirm}
-						className="bg-red-600 hover:bg-red-700"
-					>
-						Hapus
+					<AlertDialogAction onClick={handleConfirm} disabled={isDeleting}>
+						{isDeleting ? "Menghapus..." : "Hapus"}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

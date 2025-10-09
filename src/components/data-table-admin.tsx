@@ -1,28 +1,18 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import {
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
+	VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
-	SortingState,
-	ColumnFiltersState,
-	ColumnDef,
-	VisibilityState,
 } from "@tanstack/react-table";
-import { IconLayoutColumns } from "@tabler/icons-react";
-
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import {
 	Table,
 	TableBody,
@@ -30,16 +20,24 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-
-import { TambahAnggotaDialog } from "./tambah-anggota-dialog";
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { IconLayoutColumns } from "@tabler/icons-react";
+import { TambahAdminDialog } from "./tambah-admin-dialog";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
 
-export function DataTableAnggota<TData, TValue>({
+export function DataTableAdmin<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
@@ -82,7 +80,7 @@ export function DataTableAnggota<TData, TValue>({
 					className="max-w-sm"
 				/>
 				<div className="ml-auto flex items-center gap-2 w-full py-2 md:w-auto md:py-0">
-					<TambahAnggotaDialog />
+					<TambahAdminDialog />
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
