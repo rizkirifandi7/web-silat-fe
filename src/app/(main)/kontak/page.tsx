@@ -1,12 +1,39 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
+import emailjs from "@emailjs/browser";
 import { MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const PageKontak = () => {
+	const form = useRef<HTMLFormElement>(null);
+
+	const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (!form.current) return;
+
+		emailjs
+			.sendForm("service_pusamada", "template_hzw6te4", form.current, {
+				publicKey: "mzBQjN8b5UKxMGE28",
+			})
+			.then(
+				() => {
+					console.log("SUCCESS!");
+					toast("Pesan berhasil dikirim!");
+					form.current?.reset();
+				},
+				(error) => {
+					console.log("FAILED...", error.text);
+					toast("Gagal mengirim pesan. Silakan coba lagi.");
+				}
+			);
+	};
+
 	return (
 		<div className="w-full min-h-dvh bg-background">
 			<div className="container mx-auto px-4 py-16 md:py-24">
@@ -50,6 +77,7 @@ const PageKontak = () => {
 							{/* Placeholder untuk Peta atau Gambar */}
 							<div className="mt-8 h-48 bg-muted rounded-lg hidden md:block">
 								<iframe
+									title="Lokasi Perguruan Pencak Silat PUSAMADA"
 									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.9!2d107.6419995!3d-7.0504958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68eb006b602577%3A0x22f5ce8d2a912d4!2sPerguruan%20Pencak%20Silat%20PUSAMADA!5e0!3m2!1sen!2sid!4v1695480000000!5m2!1sen!2sid"
 									width="100%"
 									height="100%"
@@ -62,25 +90,35 @@ const PageKontak = () => {
 						</div>
 
 						{/* Kolom Form Kontak */}
-						<form className="space-y-6">
+						<form ref={form} className="space-y-6" onSubmit={sendEmail}>
 							<div className="grid w-full items-center gap-1.5">
 								<Label htmlFor="name">Nama Lengkap</Label>
 								<Input
 									type="text"
 									id="name"
+									name="from_name"
 									placeholder="Masukkan nama lengkap Anda"
+									required
 								/>
 							</div>
 							<div className="grid w-full items-center gap-1.5">
 								<Label htmlFor="email">Alamat Email</Label>
-								<Input type="email" id="email" placeholder="contoh@email.com" />
+								<Input
+									type="email"
+									id="email"
+									name="from_email"
+									placeholder="contoh@email.com"
+									required
+								/>
 							</div>
 							<div className="grid w-full items-center gap-1.5">
 								<Label htmlFor="message">Pesan Anda</Label>
 								<Textarea
 									id="message"
+									name="message"
 									placeholder="Tuliskan pesan Anda di sini..."
 									rows={5}
+									required
 								/>
 							</div>
 							<div>

@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, {useRef} from "react";
+import emailjs from "@emailjs/browser";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { MapPin, Phone, Mail } from "lucide-react";
@@ -9,7 +11,31 @@ import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 
 const Kontak = () => {
+	const form = useRef<HTMLFormElement>(null);
+	
+		const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+	
+			if (!form.current) return;
+	
+			emailjs
+				.sendForm("service_pusamada", "template_hzw6te4", form.current, {
+					publicKey: "mzBQjN8b5UKxMGE28",
+				})
+				.then(
+					() => {
+						console.log("SUCCESS!");
+						toast("Pesan berhasil dikirim!");
+						form.current?.reset();
+					},
+					(error) => {
+						console.log("FAILED...", error.text);
+						toast("Gagal mengirim pesan. Silakan coba lagi.");
+					}
+				);
+		};
 	return (
+		
 		<section className="w-full py-16 md:py-24 bg-background overflow-hidden">
 			<div className="container mx-auto max-w-6xl gap-8 px-4 sm:px-6 lg:px-8 text-center">
 				<div className={`space-y-3 animate-fade-in-up mb-8 md:mb-12`}>
@@ -86,15 +112,16 @@ const Kontak = () => {
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<form className="space-y-4">
+								<form className="space-y-4" ref={form} onSubmit={sendEmail}>
 									<div className="space-y-2 text-left">
 										<Label htmlFor="nama">Nama</Label>
-										<Input id="nama" placeholder="John" />
+										<Input id="nama" name="from_name" placeholder="John" />
 									</div>
 									<div className="space-y-2 text-left">
 										<Label htmlFor="email">Email</Label>
 										<Input
 											id="email"
+											name="from_email"
 											type="email"
 											placeholder="johndoe@example.com"
 										/>
@@ -103,6 +130,7 @@ const Kontak = () => {
 										<Label htmlFor="message">Pesan</Label>
 										<Textarea
 											id="message"
+											name="message"
 											placeholder="Tulis pesan Anda di sini..."
 											className="min-h-[120px]"
 										/>
