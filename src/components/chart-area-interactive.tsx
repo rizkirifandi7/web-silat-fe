@@ -64,7 +64,7 @@ export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
 	}, [data]);
 
 	return (
-		<Card className="@container/card">
+		<Card className="@container/card shadow-none">
 			<CardHeader>
 				<CardTitle>Pendaftaran Anggota Baru</CardTitle>
 				<CardDescription>

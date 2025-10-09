@@ -3,6 +3,9 @@ import {
 	IconUserCheck,
 	IconUserExclamation,
 	IconUserPlus,
+	IconBook,
+	IconPhoto,
+	IconUserShield,
 } from "@tabler/icons-react";
 
 import {
@@ -11,32 +14,40 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Anggota } from "@/lib/schema";
+import { getAnggotas } from "@/lib/anggota-api";
+import { getKategoriMateri } from "@/lib/kategori-materi-api";
+import { getGaleri } from "@/lib/galeri-api";
+import { getAdmins } from "@/lib/admin-api";
 
-interface SectionCardsProps {
-	data: Anggota[];
-}
+export async function SectionCards() {
+	const dataAnggota = await getAnggotas();
+	const dataMateri = await getKategoriMateri();
+	const dataGaleri = await getGaleri();
+	const dataAdmin = await getAdmins();
 
-export function SectionCards({ data }: SectionCardsProps) {
-	const totalAnggota = data.length;
-	const anggotaAktif = data.filter(
+	const totalAnggota = dataAnggota.length;
+	const anggotaAktif = dataAnggota.filter(
 		(anggota) => anggota.status_keanggotaan === "Aktif"
 	).length;
-	const anggotaPasif = data.filter(
+	const anggotaPasif = dataAnggota.filter(
 		(anggota) =>
 			anggota.status_keanggotaan === "Pasif" ||
 			anggota.status_keanggotaan === "Tidak Aktif"
 	).length;
-
-	// Asumsi 'createdAt' ada di data Anda untuk menghitung anggota baru
-	const anggotaBaruTahunIni = data.filter((anggota) => {
+	const anggotaBaruTahunIni = dataAnggota.filter((anggota) => {
 		if (!anggota.createdAt) return false;
-		return new Date(anggota.createdAt).getFullYear() === new Date().getFullYear();
+		return (
+			new Date(anggota.createdAt).getFullYear() === new Date().getFullYear()
+		);
 	}).length;
+
+	const totalMateri = dataMateri.length;
+	const totalGaleri = dataGaleri.length;
+	const totalAdmin = dataAdmin.length;
 
 	return (
 		<div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-			<Card className="@container/card">
+			<Card className="@container/card shadow-none">
 				<CardHeader>
 					<div className="flex items-center justify-between">
 						<CardDescription>Total Anggota</CardDescription>
@@ -77,6 +88,39 @@ export function SectionCards({ data }: SectionCardsProps) {
 					</div>
 					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
 						{anggotaBaruTahunIni}
+					</CardTitle>
+				</CardHeader>
+			</Card>
+			<Card className="@container/card">
+				<CardHeader>
+					<div className="flex items-center justify-between">
+						<CardDescription>Total Materi</CardDescription>
+						<IconBook className="h-6 w-6 text-blue-500" />
+					</div>
+					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+						{totalMateri}
+					</CardTitle>
+				</CardHeader>
+			</Card>
+			<Card className="@container/card">
+				<CardHeader>
+					<div className="flex items-center justify-between">
+						<CardDescription>Total Galeri</CardDescription>
+						<IconPhoto className="h-6 w-6 text-green-500" />
+					</div>
+					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+						{totalGaleri}
+					</CardTitle>
+				</CardHeader>
+			</Card>
+			<Card className="@container/card">
+				<CardHeader>
+					<div className="flex items-center justify-between">
+						<CardDescription>Total Admin</CardDescription>
+						<IconUserShield className="h-6 w-6 text-red-500" />
+					</div>
+					<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+						{totalAdmin}
 					</CardTitle>
 				</CardHeader>
 			</Card>
