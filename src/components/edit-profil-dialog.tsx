@@ -17,6 +17,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { toast } from "sonner"
 
 interface User {
@@ -143,7 +150,17 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
   // Reset photo states when dialog opens with user data
   useEffect(() => {
     if (user && isOpen) {
-      setFotoPreview(user.foto ? `${process.env.NEXT_PUBLIC_API_URL}/anggota/${user.id}/${user.foto}` : null);
+      const getPhotoUrl = (foto: string) => {
+        if (!foto) return null;
+        // If foto is already a full URL (starts with http), use it directly
+        if (foto.startsWith('http')) {
+          return foto;
+        }
+        // Otherwise, construct the local API URL
+        return `${process.env.NEXT_PUBLIC_API_URL}/anggota/${user.id}/${foto}`;
+      };
+      
+      setFotoPreview(getPhotoUrl(user.foto || ""));
       setShowCrop(false);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
@@ -280,7 +297,7 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
                 <div className="flex flex-col items-center gap-4">
                   <Avatar className="h-24 w-24">
                     <AvatarImage 
-                      src={user.foto} 
+                      src={user.foto?.startsWith('http') ? user.foto : `${process.env.NEXT_PUBLIC_API_URL}/anggota/${user.id}/${user.foto}`} 
                       alt={user.nama} 
                     />
                     <AvatarFallback className="text-2xl">
@@ -387,19 +404,31 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-3">
                   <Label htmlFor="agama">Agama</Label>
-                  <Input 
-                    id="agama" 
-                    name="agama" 
-                    defaultValue={user.agama || ""} 
-                  />
+                  <Select name="agama" defaultValue={user.agama || ""}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih agama" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Islam">Islam</SelectItem>
+                      <SelectItem value="Kristen">Kristen</SelectItem>
+                      <SelectItem value="Katolik">Katolik</SelectItem>
+                      <SelectItem value="Hindu">Hindu</SelectItem>
+                      <SelectItem value="Buddha">Buddha</SelectItem>
+                      <SelectItem value="Konghucu">Konghucu</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="jenis_kelamin">Jenis Kelamin</Label>
-                  <Input 
-                    id="jenis_kelamin" 
-                    name="jenis_kelamin" 
-                    defaultValue={user.jenis_kelamin || ""} 
-                  />
+                  <Select name="jenis_kelamin" defaultValue={user.jenis_kelamin || ""}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih jenis kelamin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Laki-laki">Laki-laki</SelectItem>
+                      <SelectItem value="Perempuan">Perempuan</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -425,29 +454,56 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-3">
                   <Label htmlFor="status_keanggotaan">Status Keanggotaan</Label>
-                  <Input 
-                    id="status_keanggotaan" 
-                    name="status_keanggotaan" 
-                    defaultValue={user.status_keanggotaan || ""} 
-                  />
+                  <Select name="status_keanggotaan" defaultValue={user.status_keanggotaan || ""}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih status keanggotaan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Aktif">Aktif</SelectItem>
+                      <SelectItem value="Tidak Aktif">Tidak Aktif</SelectItem>
+                      <SelectItem value="Cuti">Cuti</SelectItem>
+                      <SelectItem value="Alumni">Alumni</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="tingkatan_sabuk">Tingkatan Sabuk</Label>
-                  <Input 
-                    id="tingkatan_sabuk" 
-                    name="tingkatan_sabuk" 
-                    defaultValue={user.tingkatan_sabuk || ""} 
-                  />
+                  <Select name="tingkatan_sabuk" defaultValue={user.tingkatan_sabuk || ""}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih tingkatan sabuk" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
+                      <SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
+                      <SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
+                      <SelectItem value="Sabuk Biru">Sabuk Biru</SelectItem>
+                      <SelectItem value="Sabuk Coklat">Sabuk Coklat</SelectItem>
+                      <SelectItem value="Sabuk Hitam 1 Dan">Sabuk Hitam 1 Dan</SelectItem>
+                      <SelectItem value="Sabuk Hitam 2 Dan">Sabuk Hitam 2 Dan</SelectItem>
+                      <SelectItem value="Sabuk Hitam 3 Dan">Sabuk Hitam 3 Dan</SelectItem>
+                      <SelectItem value="Sabuk Hitam 4 Dan">Sabuk Hitam 4 Dan</SelectItem>
+                      <SelectItem value="Sabuk Hitam 5 Dan">Sabuk Hitam 5 Dan</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               <div className="grid gap-3">
                 <Label htmlFor="status_perguruan">Status Perguruan</Label>
-                <Input 
-                  id="status_perguruan" 
-                  name="status_perguruan" 
-                  defaultValue={user.status_perguruan || ""} 
-                />
+                <Select name="status_perguruan" defaultValue={user.status_perguruan || ""}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih status perguruan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Anggota">Anggota</SelectItem>
+                    <SelectItem value="Pengurus">Pengurus</SelectItem>
+                    <SelectItem value="Pelatih">Pelatih</SelectItem>
+                    <SelectItem value="Ketua">Ketua</SelectItem>
+                    <SelectItem value="Wakil Ketua">Wakil Ketua</SelectItem>
+                    <SelectItem value="Sekretaris">Sekretaris</SelectItem>
+                    <SelectItem value="Bendahara">Bendahara</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             

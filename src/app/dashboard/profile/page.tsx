@@ -90,79 +90,78 @@ const Page = () => {
 	return (
 		<div className="space-y-4 p-4 md:p-6">
 			<h1 className="text-2xl font-bold">Profil</h1>
-			<Card className="p-4">
-				<CardContent className="text-lg font-semibold">
-					<div className="flex flex-col justify-center items-center">
-						<Avatar className="mb-5 h-32 w-32">
-                            <AvatarImage 
-								src={user?.foto}
-								alt={user?.nama} 
-								className="object-cover"
-							/>
-							<AvatarFallback className="text-4xl">{user?.nama?.charAt(0)}</AvatarFallback>
-						</Avatar>
-					</div>
-					<div className="space-y-2 grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 gap-4">
-						<div>
-							<h2 className="text-sm font-semibold">Nama</h2>
-							<p className="text-sm font-medium text-muted-foreground">{user?.nama || "Unknown"}</p>
+			<Card className="p-8">
+					<div className="flex flex-col md:flex-row items-center md:items-start gap-4">
+						<div className="flex flex-col md:flex-row items-center md:items-start gap-6 flex-1">
+							<Avatar className="h-32 w-32 flex-shrink-0">
+								<AvatarImage
+									src={user?.foto}
+									alt={user?.nama} 
+									className="object-cover"
+								/>
+								<AvatarFallback className="text-4xl">{user?.nama?.charAt(0)}</AvatarFallback>
+							</Avatar>
+
+							<div className="flex flex-col justify-center space-y-1 items-center md:items-start self-center">
+								<p className="text-lg font-bold">{user?.nama || "Unknown"}</p>
+								<p className="text-sm text-muted-foreground">{user?.email || "Unknown"}</p>
+								<p className="text-sm text-muted-foreground">Bergabung pada: {formattedJoinDate || "Unknown"}</p>
+							</div>
 						</div>
-						<div>
-							<h2 className="text-sm font-semibold">Email</h2>
-							<p className="text-sm font-medium text-muted-foreground">{user?.email || "Unknown"}</p>
-						</div>
-						<div>
-							<h2 className="text-sm font-semibold">Tanggal Bergabung</h2>
-							<p className="text-sm font-medium text-muted-foreground">{formattedJoinDate}</p>
-						</div>
-						<div>
-							<h2 className="text-sm font-semibold">Tempat, Tanggal Lahir</h2>
-							<p className="text-sm font-medium text-muted-foreground">{user ? `${user.tempat_lahir}, ${formattedBirthDate}` : "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Alamat</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.alamat || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Agama</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.agama || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Jenis Kelamin</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.jenis_kelamin || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">No. Telepon</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.no_telepon || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Angkatan/Unit</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.angkatan_unit || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Status Keanggotaan</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.status_keanggotaan || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Tingkatan Sabuk</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.tingkatan_sabuk || "Unknown"}</p>
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-semibold">Status Perguruan</h2>
-                            <p className="text-sm font-medium text-muted-foreground">{user?.status_perguruan || "Unknown"}</p>
-                        </div>
-						<div>
-							<h2 className="text-sm font-semibold">Role</h2>
-							<p className="text-sm font-medium text-muted-foreground">{user?.role || "Unknown"}</p>
+
+						<div className="flex items-center">
+							<EditProfilDialog onEditSuccess={handleEditSuccess}/>
 						</div>
 					</div>
-				</CardContent>
-                <CardFooter className="">
-					<EditProfilDialog 
-						onEditSuccess={handleEditSuccess}
-					/>
-                </CardFooter>
 			</Card>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<Card className="space-y-2 px-4 gap-4 p-8">
+					<h2 className="text-lg font-bold">Informasi Pribadi</h2>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Jenis Kelamin</h2>
+								<p className="text-sm font-semibold">{user?.jenis_kelamin || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Tempat, Tanggal Lahir</h2>
+								<p className="text-sm font-semibold">{user ? `${user.tempat_lahir}, ${formattedBirthDate}` : "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Alamat</h2>
+								<p className="text-sm font-semibold">{user?.alamat || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Agama</h2>
+								<p className="text-sm font-semibold">{user?.agama || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">No. Telepon</h2>
+								<p className="text-sm font-semibold">{user?.no_telepon || "Unknown"}</p>
+							</div>
+				</Card>
+
+				<Card className="space-y-2 px-4 gap-4 p-8">
+					<h2 className="text-lg font-bold">Informasi Akademik</h2>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Angkatan/Unit</h2>
+								<p className="text-sm font-semibold">{user?.angkatan_unit || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Status Keanggotaan</h2>
+								<p className="text-sm font-semibold">{user?.status_keanggotaan || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Status Perguruan</h2>
+								<p className="text-sm font-semibold">{user?.status_perguruan || "Unknown"}</p>
+							</div>
+							<div>
+								<h2 className="text-sm font-medium text-muted-foreground">Tingkatan Sabuk</h2>
+								<p className="text-sm font-semibold">{user?.tingkatan_sabuk || "Unknown"}</p>
+							</div>
+				</Card>
+
+			</div>
+
 		</div>
 	);
 };
