@@ -106,7 +106,7 @@ export function DataTableMateri<TData, TValue>({
 					</DropdownMenu>
 				</div>
 			</div>
-			<Card className="rounded-md border py-0">
+			<Card className="rounded-md border py-0 shadow-none">
 				<Table>
 					<TableHeader className="bg-muted">
 						{table.getHeaderGroups().map((headerGroup) => (

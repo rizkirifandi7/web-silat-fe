@@ -2,9 +2,11 @@
 
 import * as React from "react";
 import {
+	IconBooks,
+	IconCalendarEvent,
 	IconDashboard,
-	IconFolder,
 	IconLibraryPhoto,
+	IconPlayCard1,
 	IconUsers,
 } from "@tabler/icons-react";
 
@@ -28,12 +30,6 @@ const data = {
 			url: "/dashboard/beranda",
 			icon: IconDashboard,
 		},
-
-		{
-			title: "Kartu Anggota",
-			url: "/dashboard/kartu-anggota",
-			icon: IconFolder,
-		},
 		{
 			title: "Galeri",
 			url: "/dashboard/galeri",
@@ -42,12 +38,17 @@ const data = {
 		{
 			title: "Seminar",
 			url: "/dashboard/seminar",
-			icon: IconFolder,
+			icon: IconCalendarEvent,
 		},
 		{
 			title: "Materi",
 			url: "/dashboard/materi",
-			icon: IconFolder,
+			icon: IconBooks,
+		},
+		{
+			title: "Kartu Anggota",
+			url: "/dashboard/kartu-anggota",
+			icon: IconPlayCard1,
 		},
 		{
 			title: "Pengguna",

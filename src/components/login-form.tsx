@@ -48,17 +48,27 @@ export function LoginForm({
 
 			const result = await res.json();
 
+			console.log("Login response:", result);
+
 			if (!res.ok) {
 				throw new Error(result.message || "Login gagal");
 			}
 
-			if (result && result.token) {
+			if (result && result.token && result.role) {
 				Cookies.set("token", result.token, { expires: 7, path: "/" });
+				Cookies.set("role", result.role, { expires: 7, path: "/" }); // Simpan role di cookie
+
 				setIsRedirecting(true);
 				toast.success("Login berhasil!");
-				router.push("/dashboard/beranda");
+
+				// Arahkan berdasarkan role
+				if (result.role === "anggota") {
+					router.push("/dashboard-anggota/anggota");
+				} else {
+					router.push("/dashboard/beranda");
+				}
 			} else {
-				throw new Error("Token tidak diterima dari server");
+				throw new Error("Token atau role tidak diterima dari server");
 			}
 		} catch (err: any) {
 			setServerError(err.message);

@@ -11,9 +11,18 @@ import { cn } from "@/lib/utils";
 import {
 	Sheet,
 	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
 	SheetTrigger,
-	SheetClose,
 } from "@/components/ui/sheet";
+import {
+	NavigationMenu,
+	NavigationMenuItem,
+	NavigationMenuLink,
+	NavigationMenuList,
+	navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 const navLinks = [
 	{ href: "/", label: "Beranda" },
@@ -24,28 +33,67 @@ const navLinks = [
 	{ href: "/katalog", label: "Katalog" },
 ];
 
-const Navbar = () => {
+const Logo = () => (
+	<Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+		<Image
+			src="/pusamada-logo.png"
+			alt="Pusaka Mande Muda Logo"
+			width={28}
+			height={28}
+			className="h-7 w-7"
+		/>
+		<span className="font-bold text-base tracking-wider">PUSAMADA</span>
+	</Link>
+);
+
+const DesktopNav = () => {
 	const pathname = usePathname();
-
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
-			<div className="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between">
-				<Link
-					href="/"
-					className="flex items-center space-x-3 rtl:space-x-reverse"
-				>
-					<Image
-						src="/pusamada-logo.png"
-						alt="Pusaka Mande Muda Logo"
-						width={28}
-						height={28}
-						className="h-7 w-7"
-					/>
-					<span className="font-bold text-base tracking-wider">PUSAMADA</span>
-				</Link>
+		<NavigationMenu className="hidden md:flex">
+			<NavigationMenuList>
+				{navLinks.map((link) => (
+					<NavigationMenuItem key={link.href}>
+						<NavigationMenuLink asChild>
+							<Link
+								href={link.href}
+								className={cn(
+									navigationMenuTriggerStyle(),
+									"data-[active]:bg-accent/50"
+								)}
+								aria-current={pathname === link.href ? "page" : undefined}
+							>
+								{link.label}
+							</Link>
+						</NavigationMenuLink>
+					</NavigationMenuItem>
+				))}
+			</NavigationMenuList>
+		</NavigationMenu>
+	);
+};
 
-				{/* Desktop Navigation */}
-				<nav className="hidden items-center gap-4 text-sm font-medium md:flex">
+const MobileNav = () => {
+	const pathname = usePathname();
+	return (
+		<Sheet>
+			<SheetTrigger asChild>
+				<Button
+					variant="ghost"
+					size="icon"
+					aria-label="Toggle menu"
+					className="md:hidden"
+				>
+					<Menu className="h-6 w-6" />
+				</Button>
+			</SheetTrigger>
+			<SheetContent side="left" className="w-full max-w-xs p-4">
+				<SheetHeader>
+					<SheetTitle>
+						<Logo />
+					</SheetTitle>
+					<SheetDescription>Menu navigasi utama</SheetDescription>
+				</SheetHeader>
+				<nav className="mt-4 flex flex-col items-stretch space-y-2">
 					{navLinks.map((link) => {
 						const isActive = pathname === link.href;
 						return (
@@ -53,10 +101,10 @@ const Navbar = () => {
 								key={link.href}
 								href={link.href}
 								className={cn(
-									"transition-colors px-3 py-1.5 rounded-md hover:text-primary",
+									"block px-3 py-2 rounded-md text-base font-medium transition-colors",
 									isActive
-										? "bg-muted text-primary font-semibold"
-										: "text-muted-foreground"
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
 								)}
 							>
 								{link.label}
@@ -64,68 +112,31 @@ const Navbar = () => {
 						);
 					})}
 				</nav>
+				<div className="mt-auto flex flex-col gap-2 pt-4">
+					<Button variant="outline" asChild>
+						<Link href="/login">Login</Link>
+					</Button>
+					<ModeToggle />
+				</div>
+			</SheetContent>
+		</Sheet>
+	);
+};
 
+const Navbar = () => {
+	return (
+		<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
+			<div className="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between">
+				<Logo />
+				<DesktopNav />
 				<div className="flex items-center gap-2">
-					{/* Desktop Buttons */}
 					<div className="hidden md:flex md:items-center md:gap-2">
 						<Button variant="outline" size="sm" asChild>
 							<Link href="/login">Login</Link>
 						</Button>
 						<ModeToggle />
 					</div>
-
-					{/* Mobile Menu using Sheet */}
-					<div className="md:hidden">
-						<Sheet>
-							<SheetTrigger asChild>
-								<Button variant="ghost" size="icon" aria-label="Toggle menu">
-									<Menu className="h-6 w-6" />
-								</Button>
-							</SheetTrigger>
-							<SheetContent side="left" className="w-full max-w-xs p-4">
-								<div className="flex items-center space-x-3 rtl:space-x-reverse mb-6">
-									<Image
-										src="/pusamada-logo.png"
-										alt="Pusaka Mande Muda Logo"
-										width={28}
-										height={28}
-										className="h-7 w-7"
-									/>
-									<span className="font-bold text-base tracking-wider">
-										PUSAMADA
-									</span>
-								</div>
-								<nav className="flex flex-col items-stretch space-y-2">
-									{navLinks.map((link) => {
-										const isActive = pathname === link.href;
-										return (
-											<SheetClose asChild key={link.href}>
-												<Link
-													href={link.href}
-													className={cn(
-														"text-base transition-colors hover:text-primary p-3 rounded-md",
-														isActive
-															? "bg-muted text-primary font-semibold"
-															: "text-muted-foreground"
-													)}
-												>
-													{link.label}
-												</Link>
-											</SheetClose>
-										);
-									})}
-								</nav>
-								<div className="border-t mt-6 pt-6 flex flex-col items-center gap-4">
-									<SheetClose asChild>
-										<Button variant="outline" className="w-full" asChild>
-											<Link href="/login">Login</Link>
-										</Button>
-									</SheetClose>
-									<ModeToggle />
-								</div>
-							</SheetContent>
-						</Sheet>
-					</div>
+					<MobileNav />
 				</div>
 			</div>
 		</header>

@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -14,9 +15,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	const router = useRouter();
 	const { user, isLoading } = useUser(); // Gunakan hook kustom
 
-	// Selama pengecekan (isLoading), tampilkan loading state.
-	// Ini adalah kunci untuk menghindari hydration error.
-	if (isLoading) {
+	useEffect(() => {
+		// Jika proses loading data user belum selesai, jangan lakukan apa-apa.
+		if (isLoading) {
+			return;
+		}
+
+		// Setelah loading selesai, periksa apakah user tidak ada atau rolenya tidak sesuai.
+		// Jika ya, alihkan ke halaman login.
+		if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
+			router.replace("/login");
+		}
+	}, [user, isLoading, router]); // Efek ini bergantung pada status user, loading, dan router.
+
+	// Selama data masih loading atau user belum divalidasi (sebelum dialihkan),
+	// tampilkan layar loading untuk mencegah render layout dashboard sesaat.
+	if (
+		isLoading ||
+		!user ||
+		(user.role !== "admin" && user.role !== "superadmin")
+	) {
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center gap-4">
 				<Loader2 className="h-8 w-8 animate-spin" />
@@ -25,21 +43,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 		);
 	}
 
-	// Setelah loading selesai, periksa pengguna dan alihkan jika perlu.
-	// Pengalihan ini terjadi murni di sisi klien.
-	if (!user || user.role !== "admin" && user.role !== "superadmin") {
-		router.replace("/login");
-		return (
-			<div className="flex min-h-screen flex-col items-center justify-center gap-4">
-				<Loader2 className="h-8 w-8 animate-spin" />
-				<p className="text-muted-foreground">
-					Akses ditolak. Mengarahkan ke halaman login...
-				</p>
-			</div>
-		);
-	}
-
-	// Jika pengguna adalah ADMIN, tampilkan layout dashboard
+	// Jika pengguna valid, tampilkan layout dashboard
 	return (
 		<QueryClientProvider client={queryClient}>
 			<SidebarProvider

@@ -19,7 +19,7 @@ export async function RecentAnggota() {
 		.slice(0, 5);
 
 	return (
-		<Card>
+		<Card className="shadow-none">
 			<CardHeader>
 				<CardTitle>Anggota Baru</CardTitle>
 				<CardDescription>
@@ -40,7 +40,7 @@ export async function RecentAnggota() {
 								</p>
 								<p className="text-sm text-muted-foreground">{anggota.email}</p>
 							</div>
-							<div className="ml-auto font-medium">
+							<div className="ml-auto text-sm text-muted-foreground">
 								{new Date(anggota.createdAt).toLocaleDateString()}
 							</div>
 						</div>

@@ -26,6 +26,7 @@ import {
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
 import { materiFormSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,7 +56,10 @@ export function TambahMateriDialog() {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Tambah Materi</Button>
+				<Button>
+					<Plus />
+					Tambah Materi
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>

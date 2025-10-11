@@ -40,6 +40,14 @@ export function NavUser() {
 		router.replace("/login");
 	};
 
+	const handleProfileClick = () => {
+		if (user?.role === "anggota") {
+			router.push("/dashboard-anggota/profile");
+		} else {
+			router.push("/dashboard/profile");
+		}
+	};
+
 	const getInitials = (name: string) => {
 		if (!name) return "AD";
 		return name
@@ -71,13 +79,13 @@ export function NavUser() {
 	const getPhotoUrl = (foto: string) => {
 		if (!foto) return "";
 		// If foto is already a full URL (starts with http), use it directly
-		if (foto.startsWith('http')) {
+		if (foto.startsWith("http")) {
 			return foto;
 		}
 		// Otherwise, construct the local API URL
 		return `${process.env.NEXT_PUBLIC_API_URL}/anggota/${user.id}/${foto}`;
 	};
-	
+
 	const photoUrl = getPhotoUrl(user?.foto || "");
 	console.log("User data:", user);
 	console.log("Photo URL:", photoUrl);
@@ -92,8 +100,8 @@ export function NavUser() {
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage 
-									src={photoUrl} 
+								<AvatarImage
+									src={photoUrl}
 									alt={user?.nama}
 									onError={(e) => {
 										console.log("Avatar image failed to load:", photoUrl);
@@ -122,11 +130,14 @@ export function NavUser() {
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage 
-										src={photoUrl} 
+									<AvatarImage
+										src={photoUrl}
 										alt={user?.nama}
 										onError={(e) => {
-											console.log("Dropdown avatar image failed to load:", photoUrl);
+											console.log(
+												"Dropdown avatar image failed to load:",
+												photoUrl
+											);
 											console.log("Error:", e);
 										}}
 									/>
@@ -143,7 +154,7 @@ export function NavUser() {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
+						<DropdownMenuItem onClick={handleProfileClick}>
 							<IconUserShield className="mr-2" />
 							Profil
 						</DropdownMenuItem>

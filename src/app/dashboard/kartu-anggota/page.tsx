@@ -1,15 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
 import { KartuAnggota } from "@/components/kartu-anggota";
+import {
+	FilterSkeleton,
+	KartuAnggotaSkeleton,
+} from "@/components/kartu-anggota-skeleton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import {
 	Pagination,
 	PaginationContent,
@@ -18,65 +16,161 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useAnggotaData } from "@/hooks/use-anggota-data";
+import { AlertTriangle, SearchX } from "lucide-react";
 import { Anggota } from "@/lib/schema";
-import { useEffect, useMemo, useState } from "react";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 12; // Increased items per page for better layout
 
-export default function Page() {
-	const [data, setData] = useState<Anggota[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [searchTerm, setSearchTerm] = useState("");
-	const [tingkatanFilter, setTingkatanFilter] = useState("all");
-	const [statusFilter, setStatusFilter] = useState("all");
-	const [currentPage, setCurrentPage] = useState(1);
+function AnggotaFilter({
+	searchTerm,
+	setSearchTerm,
+	tingkatanFilter,
+	setTingkatanFilter,
+	statusFilter,
+	setStatusFilter,
+	uniqueTingkatan,
+	uniqueStatus,
+	isLoading,
+}: {
+	searchTerm: string;
+	setSearchTerm: (value: string) => void;
+	tingkatanFilter: string;
+	setTingkatanFilter: (value: string) => void;
+	statusFilter: string;
+	setStatusFilter: (value: string) => void;
+	uniqueTingkatan: string[];
+	uniqueStatus: string[];
+	isLoading: boolean;
+}) {
+	if (isLoading) {
+		return <FilterSkeleton />;
+	}
 
-	useEffect(() => {
-		async function getData() {
-			try {
-				setLoading(true);
-				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
-					cache: "no-store",
-				});
-				if (!res.ok) {
-					throw new Error("Failed to fetch data");
-				}
-				const fetchedData = await res.json();
-				// Filter data to only include members with role "anggota"
-				const filteredData = fetchedData.filter(
-					(item: Anggota) => item.role === "anggota"
-				);
-				setData(filteredData);
-			} catch (error) {
-				console.error(error);
-			} finally {
-				setLoading(false);
-			}
-		}
-		getData();
-	}, []);
+	return (
+		<Card className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3 shadow-none">
+			<Input
+				placeholder="Cari nama anggota..."
+				value={searchTerm}
+				onChange={(e) => setSearchTerm(e.target.value)}
+				disabled={isLoading}
+			/>
+			<Select
+				value={tingkatanFilter}
+				onValueChange={setTingkatanFilter}
+				disabled={isLoading}
+			>
+				<SelectTrigger className="w-full">
+					<SelectValue placeholder="Filter berdasarkan tingkatan" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value="all">Semua Tingkatan</SelectItem>
+					{uniqueTingkatan.map((tingkatan) => (
+						<SelectItem key={tingkatan} value={tingkatan}>
+							{tingkatan}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+			<Select
+				value={statusFilter}
+				onValueChange={setStatusFilter}
+				disabled={isLoading}
+			>
+				<SelectTrigger className="w-full">
+					<SelectValue placeholder="Filter berdasarkan status" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value="all">Semua Status</SelectItem>
+					{uniqueStatus.map((status) => (
+						<SelectItem key={status} value={status}>
+							{status}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</Card>
+	);
+}
 
-	const filteredData = useMemo(() => {
-		setCurrentPage(1); // Reset to first page on filter change
-		return data.filter((anggota) => {
-			const matchesSearch = anggota.nama
-				.toLowerCase()
-				.includes(searchTerm.toLowerCase());
-			const matchesTingkatan =
-				tingkatanFilter === "all" ||
-				anggota.tingkatan_sabuk === tingkatanFilter;
-			const matchesStatus =
-				statusFilter === "all" || anggota.status_keanggotaan === statusFilter;
-			return matchesSearch && matchesTingkatan && matchesStatus;
-		});
-	}, [data, searchTerm, tingkatanFilter, statusFilter]);
-
+function AnggotaGrid({
+	filteredData,
+	isLoading,
+	error,
+	currentPage,
+}: {
+	filteredData: Anggota[];
+	isLoading: boolean;
+	error: Error | null;
+	currentPage: number;
+}) {
 	const paginatedData = useMemo(() => {
 		const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-		const endIndex = startIndex + ITEMS_PER_PAGE;
-		return filteredData.slice(startIndex, endIndex);
+		return filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 	}, [filteredData, currentPage]);
 
+	if (isLoading) {
+		return (
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+				{Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+					<KartuAnggotaSkeleton key={index} />
+				))}
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-4 text-center h-64">
+				<AlertTriangle className="w-12 h-12 text-destructive" />
+				<h2 className="text-xl font-semibold">Gagal Memuat Data</h2>
+				<p className="text-muted-foreground">
+					Terjadi kesalahan saat mengambil data anggota. Silakan coba lagi
+					nanti.
+				</p>
+			</div>
+		);
+	}
+
+	if (paginatedData.length === 0) {
+		return (
+			<div className="flex flex-col items-center justify-center gap-4 text-center h-64">
+				<SearchX className="w-12 h-12 text-muted-foreground" />
+				<h2 className="text-xl font-semibold">Anggota Tidak Ditemukan</h2>
+				<p className="text-muted-foreground">
+					Tidak ada anggota yang cocok dengan kriteria filter Anda.
+				</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+			{paginatedData.map((anggota) => (
+				<KartuAnggota key={anggota.id} anggota={anggota} />
+			))}
+		</div>
+	);
+}
+
+function AnggotaPagination({
+	filteredData,
+	currentPage,
+	setCurrentPage,
+	isLoading,
+}: {
+	filteredData: Anggota[];
+	currentPage: number;
+	setCurrentPage: (page: number) => void;
+	isLoading: boolean;
+}) {
 	const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
 	const handlePageChange = (page: number) => {
@@ -85,126 +179,107 @@ export default function Page() {
 		}
 	};
 
-	const uniqueTingkatan = useMemo(() => {
-		const tingkatan = new Set(data.map((a) => a.tingkatan_sabuk));
-		return Array.from(tingkatan);
-	}, [data]);
-
-	const uniqueStatus = useMemo(() => {
-		const status = new Set(data.map((a) => a.status_keanggotaan));
-		return Array.from(status);
-	}, [data]);
+	if (isLoading || totalPages <= 1) {
+		return null;
+	}
 
 	return (
-		<div className="space-y-4 p-4 md:p-6">
-			<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-				<div>
-					<h1 className="text-2xl font-bold">Cetak Kartu Anggota</h1>
-					<p className="text-muted-foreground">
-						Filter dan temukan kartu anggota yang ingin Anda cetak.
-					</p>
-				</div>
-			</div>
+		<Pagination>
+			<PaginationContent>
+				<PaginationItem>
+					<PaginationPrevious
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							handlePageChange(currentPage - 1);
+						}}
+						className={
+							currentPage === 1 ? "pointer-events-none opacity-50" : ""
+						}
+					/>
+				</PaginationItem>
+				{[...Array(totalPages)].map((_, i) => (
+					<PaginationItem key={i}>
+						<PaginationLink
+							href="#"
+							onClick={(e) => {
+								e.preventDefault();
+								handlePageChange(i + 1);
+							}}
+							isActive={currentPage === i + 1}
+						>
+							{i + 1}
+						</PaginationLink>
+					</PaginationItem>
+				))}
+				<PaginationItem>
+					<PaginationNext
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							handlePageChange(currentPage + 1);
+						}}
+						className={
+							currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+						}
+					/>
+				</PaginationItem>
+			</PaginationContent>
+		</Pagination>
+	);
+}
 
-			<Card className="grid grid-cols-1 gap-4 md:grid-cols-3 p-4">
-				<Input
-					placeholder="Cari nama anggota..."
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-				/>
-				<Select value={tingkatanFilter} onValueChange={setTingkatanFilter}>
-					<SelectTrigger className="w-full">
-						<SelectValue placeholder="Filter berdasarkan tingkatan" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="all">Semua Tingkatan</SelectItem>
-						{uniqueTingkatan.map((tingkatan) => (
-							<SelectItem key={tingkatan} value={tingkatan}>
-								{tingkatan}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-				<Select value={statusFilter} onValueChange={setStatusFilter}>
-					<SelectTrigger className="w-full">
-						<SelectValue placeholder="Filter berdasarkan status" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="all">Semua Status</SelectItem>
-						{uniqueStatus.map((status) => (
-							<SelectItem key={status} value={status}>
-								{status}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</Card>
+export default function Page() {
+	const {
+		searchTerm,
+		setSearchTerm,
+		tingkatanFilter,
+		setTingkatanFilter,
+		statusFilter,
+		setStatusFilter,
+		currentPage,
+		setCurrentPage,
+		filteredData,
+		uniqueTingkatan,
+		uniqueStatus,
+		isLoading,
+		error,
+	} = useAnggotaData();
 
-			{loading ? (
-				<p>Memuat data...</p>
-			) : (
-				<>
-					<Card className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-						{paginatedData.length > 0 ? (
-							paginatedData.map((anggota) => (
-								<KartuAnggota key={anggota.id} anggota={anggota} />
-							))
-						) : (
-							<p className="col-span-full text-center text-muted-foreground">
-								Tidak ada anggota yang cocok dengan filter.
-							</p>
-						)}
-					</Card>
-					{totalPages > 1 && (
-						<Pagination>
-							<PaginationContent>
-								<PaginationItem>
-									<PaginationPrevious
-										href="#"
-										onClick={(e) => {
-											e.preventDefault();
-											handlePageChange(currentPage - 1);
-										}}
-										className={
-											currentPage === 1
-												? "pointer-events-none text-muted-foreground"
-												: ""
-										}
-									/>
-								</PaginationItem>
-								{[...Array(totalPages)].map((_, i) => (
-									<PaginationItem key={i}>
-										<PaginationLink
-											href="#"
-											onClick={(e) => {
-												e.preventDefault();
-												handlePageChange(i + 1);
-											}}
-											isActive={currentPage === i + 1}
-										>
-											{i + 1}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-								<PaginationItem>
-									<PaginationNext
-										href="#"
-										onClick={(e) => {
-											e.preventDefault();
-											handlePageChange(currentPage + 1);
-										}}
-										className={
-											currentPage === totalPages
-												? "pointer-events-none text-muted-foreground"
-												: ""
-										}
-									/>
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
-					)}
-				</>
-			)}
+	return (
+		<div className="space-y-6 p-4 md:p-6">
+			<header>
+				<h1 className="text-3xl font-bold tracking-tight">
+					Cetak Kartu Anggota
+				</h1>
+				<p className="text-muted-foreground">
+					Filter dan temukan kartu anggota yang ingin Anda cetak.
+				</p>
+			</header>
+
+			<AnggotaFilter
+				searchTerm={searchTerm}
+				setSearchTerm={setSearchTerm}
+				tingkatanFilter={tingkatanFilter}
+				setTingkatanFilter={setTingkatanFilter}
+				statusFilter={statusFilter}
+				setStatusFilter={setStatusFilter}
+				uniqueTingkatan={uniqueTingkatan}
+				uniqueStatus={uniqueStatus}
+				isLoading={isLoading}
+			/>
+			<AnggotaGrid
+				filteredData={filteredData}
+				isLoading={isLoading}
+				error={error}
+				currentPage={currentPage}
+			/>
+			<AnggotaPagination
+				filteredData={filteredData}
+				currentPage={currentPage}
+				setCurrentPage={setCurrentPage}
+				isLoading={isLoading}
+			/>
 		</div>
 	);
 }

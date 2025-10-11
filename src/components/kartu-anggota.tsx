@@ -44,7 +44,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 	return (
 		<div className="space-y-2">
 			<div ref={cardRef}>
-				<Card className="relative w-[210px] aspect-[53.98/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around border-none rounded-none">
+				<Card className="relative w-full aspect-[53.98/85.6] overflow-hidden bg-[#1c1c1c] text-white flex flex-col justify-around border-none rounded-none">
 					<div
 						className="absolute inset-0"
 						style={{
@@ -96,7 +96,7 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 				<p className="text-xs">{anggota.nama}</p>
 				<Button
 					onClick={downloadCard}
-					className="w-fit bg-muted"
+					className="w-full bg-muted"
 					variant="outline"
 				>
 					Download Kartu
