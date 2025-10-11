@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Skeleton } from "./ui/skeleton";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 export function NavUser() {
 	const router = useRouter();
@@ -66,6 +67,21 @@ export function NavUser() {
 		return null;
 	}
 
+	// Debug logging
+	const getPhotoUrl = (foto: string) => {
+		if (!foto) return "";
+		// If foto is already a full URL (starts with http), use it directly
+		if (foto.startsWith('http')) {
+			return foto;
+		}
+		// Otherwise, construct the local API URL
+		return `${process.env.NEXT_PUBLIC_API_URL}/anggota/${user.id}/${foto}`;
+	};
+	
+	const photoUrl = getPhotoUrl(user?.foto || "");
+	console.log("User data:", user);
+	console.log("Photo URL:", photoUrl);
+
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -76,14 +92,22 @@ export function NavUser() {
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
+								<AvatarImage 
+									src={photoUrl} 
+									alt={user?.nama}
+									onError={(e) => {
+										console.log("Avatar image failed to load:", photoUrl);
+										console.log("Error:", e);
+									}}
+								/>
 								<AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
-									{getInitials(user.nama)}
+									{getInitials(user?.nama)}
 								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-medium">{user.nama}</span>
+								<span className="truncate font-medium">{user?.nama}</span>
 								<span className="text-muted-foreground truncate text-xs">
-									{user.role}
+									{user?.role}
 								</span>
 							</div>
 							<IconDotsVertical className="ml-auto size-4" />
@@ -98,14 +122,22 @@ export function NavUser() {
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
+									<AvatarImage 
+										src={photoUrl} 
+										alt={user?.nama}
+										onError={(e) => {
+											console.log("Dropdown avatar image failed to load:", photoUrl);
+											console.log("Error:", e);
+										}}
+									/>
 									<AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
-										{getInitials(user.nama)}
+										{getInitials(user?.nama)}
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">{user.nama}</span>
+									<span className="truncate font-medium">{user?.nama}</span>
 									<span className="text-muted-foreground truncate text-xs">
-										{user.role}
+										{user?.role}
 									</span>
 								</div>
 							</div>
