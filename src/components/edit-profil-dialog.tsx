@@ -57,6 +57,7 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   // Photo editing states
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
   const [showCrop, setShowCrop] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
