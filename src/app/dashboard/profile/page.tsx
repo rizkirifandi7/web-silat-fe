@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EditProfilDialog } from "@/components/edit-profil-dialog";
 
