@@ -1,8 +1,8 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Materi } from "@/lib/schema";
-import { EditMateriDialog } from "./edit-materi-dialog";
-import { DeleteMateriDialog } from "./delete-materi-dialog";
+import { EditMateriDialog } from "@/components/edit-materi-dialog";
+import { DeleteMateriDialog } from "@/components/delete-dialog/delete-materi-dialog";
 
 import {
 	DropdownMenu,
@@ -12,7 +12,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<Materi>[] = [

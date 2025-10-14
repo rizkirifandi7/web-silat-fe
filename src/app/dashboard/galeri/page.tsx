@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTableGaleri } from "@/components/data-table-galeri";
+import { DataTableGaleri } from "@/components/data-table/data-table-galeri";
 import { useGaleriCrud } from "@/hooks/use-galeri-crud";
 import { Skeleton } from "@/components/ui/skeleton";
 

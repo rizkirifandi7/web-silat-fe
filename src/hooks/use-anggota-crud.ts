@@ -66,12 +66,16 @@ export function useAnggotaCrud() {
 	const { mutate: removeAnggota, isPending: isDeleting } = useMutation<
 		void,
 		Error,
-		number
+		number,
+		{ onSuccess?: () => void }
 	>({
 		mutationFn: deleteAnggota,
-		onSuccess: () => {
+		onSuccess: (_, __, context) => {
 			queryClient.invalidateQueries({ queryKey: ["anggota"] });
 			toast.success("Anggota berhasil dihapus");
+			if (context.onSuccess) {
+				context.onSuccess();
+			}
 		},
 		onError: (error) => {
 			toast.error("Gagal menghapus anggota: " + error.message);

@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { GraduationCap, MoreVertical } from "lucide-react";
 import { EditKategoriMateriDialog } from "./edit-kategori-materi-dialog";
-import { DeleteKategoriMateriDialog } from "./delete-kategori-materi-dialog";
+import { DeleteKategoriMateriDialog } from "./delete-dialog/delete-kategori-materi-dialog";
 import Link from "next/link";
 
 interface KategoriMateriCardProps {

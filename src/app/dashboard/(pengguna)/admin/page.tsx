@@ -1,9 +1,9 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { columns } from "@/components/data-table-admin-columns";
-import { DataTableAdmin } from "@/components/data-table-admin";
+import { DataTableAdmin } from "@/components/data-table/data-table-admin";
 import { useAdminCrud } from "@/hooks/use-admin-crud";
+import { columns } from "@/components/data-table-colum/data-table-admin-columns";
 
 const queryClient = new QueryClient();
 

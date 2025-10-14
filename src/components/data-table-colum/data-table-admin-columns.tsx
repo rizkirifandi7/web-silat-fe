@@ -2,18 +2,18 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { AdminData } from "@/lib/schema";
-import { EditAdminDialog } from "./edit-admin-dialog";
-import { DeleteAdminDialog } from "./delete-admin-dialog";
 import { Badge } from "@/components/ui/badge";
+import { IconDotsVertical } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { IconDotsVertical } from "@tabler/icons-react";
+} from "@/components/ui/dropdown-menu";
+import { EditAdminDialog } from "../edit-admin-dialog";
+import { DeleteAdminDialog } from "../delete-dialog/delete-admin-dialog";
 
 export const columns: ColumnDef<AdminData>[] = [
 	{

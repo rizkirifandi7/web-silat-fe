@@ -7,16 +7,16 @@ import {
 	IconLoader,
 } from "@tabler/icons-react";
 import { Anggota } from "@/lib/schema";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { UbahPasswordDialog } from "./ubah-password-dialog";
+} from "@/components/ui/dropdown-menu";
+import { UbahPasswordDialog } from "@/components/ubah-password-dialog";
 
 export type AnggotaTableHandlers = {
 	onViewDetails: (anggota: Anggota) => void;

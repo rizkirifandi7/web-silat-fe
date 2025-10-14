@@ -122,7 +122,7 @@ export function TambahMateriDialog() {
 							<FormField
 								control={form.control}
 								name="konten"
-								render={({ field: { onChange, ...field } }) => (
+								render={({ field: { onChange, ...rest } }) => (
 									<FormItem>
 										<FormLabel>Konten</FormLabel>
 										<FormControl>
@@ -130,9 +130,9 @@ export function TambahMateriDialog() {
 												type="file"
 												accept="application/pdf"
 												onChange={(e) => {
-													onChange(e.target.files);
+													onChange(e.target.files ? e.target.files[0] : null);
 												}}
-												{...field}
+												{...rest}
 											/>
 										</FormControl>
 										<FormMessage />

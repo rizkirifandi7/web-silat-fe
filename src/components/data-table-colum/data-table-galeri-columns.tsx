@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
 
 export type GaleriTableHandlers = {
@@ -28,10 +28,11 @@ export const getGaleriColumns = ({
     header: "Gambar",
     cell: ({ row }) => (
       <Image
-        src={row.getValue("gambar")}
+        src={row.original.gambar || "/no-image.jpg"}
         alt={row.original.judul}
-        width={100}
-        height={100}
+        width={80}
+        height={80}
+        priority
         className="rounded-md"
       />
     ),

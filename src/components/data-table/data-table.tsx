@@ -1,28 +1,18 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import {
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
+	VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
-	SortingState,
-	ColumnFiltersState,
-	ColumnDef,
-	VisibilityState,
 } from "@tanstack/react-table";
-import { IconLayoutColumns } from "@tabler/icons-react";
-
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import {
 	Table,
 	TableBody,
@@ -30,18 +20,32 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-
-import { TambahAnggotaDialog } from "./tambah-anggota-dialog";
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IconLayoutColumns } from "@tabler/icons-react";
+import { Card } from "../ui/card";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	filterColumn: string;
+	filterPlaceholder?: string;
+	toolbar?: React.ReactNode;
 }
 
-export function DataTableAnggota<TData, TValue>({
+export function DataTable<TData, TValue>({
 	columns,
 	data,
+	filterColumn,
+	filterPlaceholder = "Cari...",
+	toolbar,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -54,11 +58,11 @@ export function DataTableAnggota<TData, TValue>({
 	const table = useReactTable({
 		data,
 		columns,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
+		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
@@ -74,15 +78,17 @@ export function DataTableAnggota<TData, TValue>({
 		<div className="w-full">
 			<div className="flex flex-col md:flex-row items-center py-4">
 				<Input
-					placeholder="Cari berdasarkan nama..."
-					value={(table.getColumn("nama")?.getFilterValue() as string) ?? ""}
+					placeholder={filterPlaceholder}
+					value={
+						(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""
+					}
 					onChange={(event) =>
-						table.getColumn("nama")?.setFilterValue(event.target.value)
+						table.getColumn(filterColumn)?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
 				<div className="ml-auto flex items-center gap-2 w-full py-2 md:w-auto md:py-0">
-					<TambahAnggotaDialog />
+					{toolbar}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -112,7 +118,7 @@ export function DataTableAnggota<TData, TValue>({
 					</DropdownMenu>
 				</div>
 			</div>
-			<div className="rounded-md border">
+			<Card className="rounded-md border py-0 shadow-none">
 				<Table>
 					<TableHeader className="bg-muted">
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -161,30 +167,28 @@ export function DataTableAnggota<TData, TValue>({
 						)}
 					</TableBody>
 				</Table>
-			</div>
+			</Card>
 			<div className="flex items-center justify-end space-x-2 py-4">
 				<div className="flex-1 text-sm text-muted-foreground">
 					{table.getFilteredSelectedRowModel().rows.length} of{" "}
 					{table.getFilteredRowModel().rows.length} row(s) selected.
 				</div>
-				<div className="space-x-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						Previous
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						Next
-					</Button>
-				</div>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => table.previousPage()}
+					disabled={!table.getCanPreviousPage()}
+				>
+					Previous
+				</Button>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => table.nextPage()}
+					disabled={!table.getCanNextPage()}
+				>
+					Next
+				</Button>
 			</div>
 		</div>
 	);

@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { EditKategoriMateriDialog } from "./edit-kategori-materi-dialog";
-import { DeleteKategoriMateriDialog } from "./delete-kategori-materi-dialog";
+import { EditKategoriMateriDialog } from "@/components/edit-kategori-materi-dialog";
+import { DeleteKategoriMateriDialog } from "../delete-dialog/delete-kategori-materi-dialog";
 
 export const columns: ColumnDef<KategoriMateri>[] = [
 	{

@@ -2,13 +2,13 @@
 
 import React from "react";
 import { useAnggotaCrud } from "@/hooks/use-anggota-crud";
-import { DataTableAnggota } from "@/components/data-table-anggota";
-import { getAnggotaColumns } from "@/components/data-table-anggota-columns";
-import { DeleteAnggotaDialog } from "@/components/delete-anggota-dialog";
+import { DeleteAnggotaDialog } from "@/components/delete-dialog/delete-anggota-dialog";
 import { EditAnggotaDialog } from "@/components/edit-anggota-dialog";
 import { DetailAnggotaDrawer } from "@/components/detail-anggota-drawer";
 import { KartuAnggotaDialog } from "@/components/kartu-anggota-dialog";
 import { Anggota } from "@/lib/schema";
+import { getAnggotaColumns } from "@/components/data-table-colum/data-table-anggota-columns";
+import { DataTableAnggota } from "@/components/data-table/data-table-anggota";
 
 type DialogState =
 	| { type: "edit"; anggota: Anggota }

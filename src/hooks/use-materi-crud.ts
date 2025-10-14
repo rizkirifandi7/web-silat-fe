@@ -74,7 +74,7 @@ export function useMateriCRUD(id_course: string) {
 		}
 	};
 
-	const handleDelete = async (id: number) => {
+	const handleDelete = async (id: number, options?: { onSuccess?: () => void }) => {
 		setIsDeleting(true);
 		try {
 			await deleteMateri(id);
@@ -82,6 +82,7 @@ export function useMateriCRUD(id_course: string) {
 				if (!currentData) return [];
 				return currentData.filter((item) => item.id !== id);
 			}, false);
+			options?.onSuccess?.();
 		} catch (error) {
 			console.error("Failed to delete materi:", error);
 		} finally {

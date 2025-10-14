@@ -26,7 +26,7 @@ export function EditGaleriDialog({
   const { editGaleri } = useGaleriCrud();
 
   const handleSubmit = async (formData: FormData) => {
-    await editGaleri(galeri.id, formData);
+    await editGaleri({ id: galeri.id, data: formData });
   };
 
   const handleSuccess = () => {

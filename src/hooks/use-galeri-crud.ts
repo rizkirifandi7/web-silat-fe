@@ -1,69 +1,83 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-	getGaleri,
-	createGaleri,
-	updateGaleri,
-	deleteGaleri,
+  createGaleri,
+  deleteGaleri,
+  getGaleri,
+  updateGaleri,
 } from "@/lib/galeri-api";
 import { Galeri } from "@/lib/schema";
 import { toast } from "sonner";
 
 export function useGaleriCrud() {
-	const [galeri, setGaleri] = useState<Galeri[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<Error | null>(null);
+  const queryClient = useQueryClient();
 
-	const refreshGaleri = useCallback(async () => {
-		try {
-			setLoading(true);
-			const data = await getGaleri();
-			setGaleri(data);
-		} catch (err) {
-			setError(err as Error);
-			toast.error("Gagal memuat data galeri.");
-		} finally {
-			setLoading(false);
-		}
-	}, []);
+  const {
+    data: galeri,
+    isLoading: loading,
+    isError,
+	refetch: refreshGaleri,
+  } = useQuery({
+    queryKey: ["galeri"],
+    queryFn: getGaleri,
+  });
 
-	useEffect(() => {
-		refreshGaleri();
-	}, [refreshGaleri]);
+  const { mutate: addGaleri, isPending: isAdding } = useMutation<
+    Galeri,
+    Error,
+    FormData
+  >({
+    mutationFn: createGaleri,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["galeri"] });
+      toast.success("Galeri berhasil ditambahkan.");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal menambahkan galeri.");
+    },
+  });
 
-	const addGaleri = async (formData: FormData) => {
-		try {
-			await createGaleri(formData);
-			toast.success("Galeri berhasil ditambahkan.");
-			await refreshGaleri();
-		} catch (err) {
-			setError(err as Error);
-			toast.error((err as Error).message || "Gagal menambahkan galeri.");
-		}
-	};
+  const { mutate: editGaleri, isPending: isEditing } = useMutation<
+    Galeri,
+    Error,
+    { id: number; data: FormData }
+  >({
+    mutationFn: ({ id, data }) => updateGaleri(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["galeri"] });
+      toast.success("Galeri berhasil diperbarui.");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal memperbarui galeri.");
+    },
+  });
 
-	const editGaleri = async (id: number, formData: FormData) => {
-		try {
-			await updateGaleri(id, formData);
-			toast.success("Galeri berhasil diperbarui.");
-			await refreshGaleri();
-		} catch (err) {
-			setError(err as Error);
-			toast.error((err as Error).message || "Gagal memperbarui galeri.");
-		}
-	};
+  const { mutate: removeGaleri, isPending: isDeleting } = useMutation<
+    void,
+    Error,
+    number
+  >({
+    mutationFn: deleteGaleri,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["galeri"] });
+      toast.success("Galeri berhasil dihapus.");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal menghapus galeri.");
+    },
+  });
 
-	const removeGaleri = async (id: number) => {
-		try {
-			await deleteGaleri(id);
-			toast.success("Galeri berhasil dihapus.");
-			await refreshGaleri();
-		} catch (err) {
-			setError(err as Error);
-			toast.error((err as Error).message || "Gagal menghapus galeri.");
-		}
-	};
-
-	return { galeri, loading, error, addGaleri, editGaleri, removeGaleri, refreshGaleri };
+  return {
+    galeri,
+    loading,
+    isError,
+    addGaleri,
+    isAdding,
+    editGaleri,
+    isEditing,
+    removeGaleri,
+    isDeleting,
+    refreshGaleri,
+  };
 }

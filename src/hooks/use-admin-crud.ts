@@ -53,12 +53,16 @@ export function useAdminCrud() {
 	const { mutate: removeAdmin, isPending: isDeleting } = useMutation<
 		void,
 		Error,
-		number
+		number,
+		{ onSuccess?: () => void }
 	>({
 		mutationFn: deleteAdmin,
-		onSuccess: () => {
+		onSuccess: (_, __, context) => {
 			queryClient.invalidateQueries({ queryKey: ["admins"] });
 			toast.success("Admin berhasil dihapus");
+			if (context.onSuccess) {
+				context.onSuccess();
+			}
 		},
 		onError: (error) => {
 			toast.error("Gagal menghapus admin: " + error.message);

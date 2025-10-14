@@ -1,8 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
-import { DataTableMateri } from "@/components/data-table-materi";
-import { columns } from "@/components/data-table-materi-columns";
+import { DataTableMateri } from "@/components/data-table/data-table-materi";
+import { columns } from "@/components/data-table-colum/data-table-materi-columns";
 
 export default function DetailMateriPage() {
 	const { id } = useParams();
