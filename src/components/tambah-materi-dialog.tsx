@@ -122,7 +122,7 @@ export function TambahMateriDialog() {
 							<FormField
 								control={form.control}
 								name="konten"
-								render={({ field: { onChange, ...field } }) => (
+								render={({ field: { onChange, onBlur, name, ref } }) => (
 									<FormItem>
 										<FormLabel>Konten</FormLabel>
 										<FormControl>
@@ -132,7 +132,9 @@ export function TambahMateriDialog() {
 												onChange={(e) => {
 													onChange(e.target.files);
 												}}
-												{...field}
+												onBlur={onBlur}
+												name={name}
+												ref={ref}
 											/>
 										</FormControl>
 										<FormMessage />
