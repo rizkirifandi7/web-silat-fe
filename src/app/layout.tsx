@@ -4,6 +4,7 @@ import { ActiveThemeProvider } from "@/components/active-theme";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/config";
 import { Inter } from "next/font/google";
+import { UserProvider } from "@/context/user-context";
 
 const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
@@ -55,7 +56,9 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<ActiveThemeProvider>{children}</ActiveThemeProvider>
+					<UserProvider>
+						<ActiveThemeProvider>{children}</ActiveThemeProvider>
+					</UserProvider>
 				</ThemeProvider>
 			</body>
 		</html>

@@ -2,82 +2,62 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Cookies from "js-cookie";
-import Image from "next/image";
-import { ArrowLeft, Terminal } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { loginSchema, type LoginData } from "@/lib/schema";
+import { useUserContext } from "@/context/user-context";
+import { toast } from "sonner";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { toast } from "sonner";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export function LoginForm({
-	className,
-	...props
-}: React.ComponentProps<"div">) {
-	const router = useRouter();
-	const [serverError, setServerError] = useState<string | null>(null);
-	const [isRedirecting, setIsRedirecting] = useState(false);
+export function LoginForm() {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { login } = useUserContext();
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors, isSubmitting },
-	} = useForm<LoginData>({
-		resolver: zodResolver(loginSchema),
-	});
-
-	const onSubmit = async (data: LoginData) => {
-		setServerError(null);
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		toast.loading("Mencoba masuk...");
 
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			});
-
-			const result = await res.json();
-
-			console.log("Login response:", result);
-
-			if (!res.ok) {
-				throw new Error(result.message || "Login gagal");
-			}
-
-			if (result && result.token && result.role) {
-				Cookies.set("token", result.token, { expires: 7, path: "/" });
-				Cookies.set("role", result.role, { expires: 7, path: "/" }); // Simpan role di cookie
-
-				setIsRedirecting(true);
-				toast.success("Login berhasil!");
-
-				// Arahkan berdasarkan role
-				if (result.role === "anggota") {
-					router.push("/dashboard-anggota/anggota");
-				} else {
-					router.push("/dashboard/beranda");
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ email, password }),
 				}
-			} else {
-				throw new Error("Token atau role tidak diterima dari server");
+			);
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				throw new Error(result.message || "Email atau password salah.");
 			}
-		} catch (err: any) {
-			setServerError(err.message);
+
+			// Destructuring data sesuai dengan struktur backend baru
+			const { token, user } = result.data;
+
+			// Panggil fungsi login dari context
+			login(token, user);
+
+			toast.dismiss();
+			toast.success(`Selamat datang kembali, ${user.nama}!`);
+		} catch (error: any) {
+			toast.dismiss();
+			toast.error(error.message || "Terjadi kesalahan saat login.");
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
 	return (
-		<div className={cn("flex flex-col gap-6", className)} {...props}>
-			<form onSubmit={handleSubmit(onSubmit)}>
+		<div className={cn("flex flex-col gap-6")}>
+			<form onSubmit={handleSubmit} className="space-y-6">
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col items-center gap-2">
 						<a
@@ -98,13 +78,7 @@ export function LoginForm({
 							Masuk ke akun Anda untuk melanjutkan
 						</div>
 					</div>
-					{serverError && (
-						<Alert variant="destructive">
-							<Terminal className="h-4 w-4" />
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{serverError}</AlertDescription>
-						</Alert>
-					)}
+
 					<div className="flex flex-col gap-6">
 						<div className="grid gap-3">
 							<Label htmlFor="email">Email</Label>
@@ -112,12 +86,9 @@ export function LoginForm({
 								id="email"
 								type="email"
 								placeholder="m@example.com"
-								{...register("email")}
-								disabled={isSubmitting || isRedirecting}
+								onChange={(e) => setEmail(e.target.value)}
+								disabled={isSubmitting}
 							/>
-							{errors.email && (
-								<p className="text-sm text-red-500">{errors.email.message}</p>
-							)}
 						</div>
 						<div className="grid gap-3">
 							<Label htmlFor="password">Password</Label>
@@ -125,25 +96,15 @@ export function LoginForm({
 								id="password"
 								type="password"
 								placeholder="••••••••"
-								{...register("password")}
-								disabled={isSubmitting || isRedirecting}
+								onChange={(e) => setPassword(e.target.value)}
+								disabled={isSubmitting}
 							/>
-							{errors.password && (
-								<p className="text-sm text-red-500">
-									{errors.password.message}
-								</p>
-							)}
 						</div>
-						<Button
-							type="submit"
-							className="w-full"
-							disabled={isSubmitting || isRedirecting}
-						>
-							{isSubmitting
-								? "Memproses..."
-								: isRedirecting
-								? "Mengalihkan..."
-								: "Login"}
+						<Button type="submit" className="w-full" disabled={isSubmitting}>
+							{isSubmitting ? "Memproses..." : "Masuk"}
+							{isSubmitting && (
+								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+							)}
 						</Button>
 					</div>
 				</div>

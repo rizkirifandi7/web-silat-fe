@@ -1,40 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useUser } from "@/hooks/use-user"; // Import hook kustom
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React from "react";
+import { useAuthGuard } from "@/hooks/use-auth-guard";
 
 const queryClient = new QueryClient();
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-	const router = useRouter();
-	const { user, isLoading } = useUser(); // Gunakan hook kustom
+	// Gunakan hook untuk proteksi rute
+	const { isAccessing } = useAuthGuard(["admin", "superadmin"]);
 
-	useEffect(() => {
-		// Jika proses loading data user belum selesai, jangan lakukan apa-apa.
-		if (isLoading) {
-			return;
-		}
-
-		// Setelah loading selesai, periksa apakah user tidak ada atau rolenya tidak sesuai.
-		// Jika ya, alihkan ke halaman login.
-		if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
-			router.replace("/login");
-		}
-	}, [user, isLoading, router]); // Efek ini bergantung pada status user, loading, dan router.
-
-	// Selama data masih loading atau user belum divalidasi (sebelum dialihkan),
-	// tampilkan layar loading untuk mencegah render layout dashboard sesaat.
-	if (
-		isLoading ||
-		!user ||
-		(user.role !== "admin" && user.role !== "superadmin")
-	) {
+	// Tampilkan loading jika akses sedang divalidasi
+	if (isAccessing) {
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center gap-4">
 				<Loader2 className="h-8 w-8 animate-spin" />

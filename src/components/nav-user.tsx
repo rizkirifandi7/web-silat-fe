@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useUser } from "@/hooks/use-user"; // Import hook kustom
+import { useUserContext } from "@/context/user-context"; // Import hook kustom
 
 import {
 	IconDotsVertical,
@@ -33,7 +33,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 export function NavUser() {
 	const router = useRouter();
 	const { isMobile } = useSidebar();
-	const { user, isLoading } = useUser(); // Gunakan hook kustom
+	const { user, isLoading } = useUserContext(); // Gunakan context
 
 	const handleLogout = () => {
 		Cookies.remove("token");
@@ -87,8 +87,6 @@ export function NavUser() {
 	};
 
 	const photoUrl = getPhotoUrl(user?.foto || "");
-	console.log("User data:", user);
-	console.log("Photo URL:", photoUrl);
 
 	return (
 		<SidebarMenu>
