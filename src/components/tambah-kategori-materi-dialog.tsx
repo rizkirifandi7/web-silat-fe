@@ -9,7 +9,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { PlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import KategoriMateriForm from "./kategori-materi-bulk-form";
 
@@ -20,7 +20,7 @@ export default function TambahKategoriMateriDialog() {
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>
-					<PlusIcon className="h-4 w-4 mr-2" />
+					<Plus className="h-4 w-4 mr-2" />
 					Tambah Kategori
 				</Button>
 			</DialogTrigger>

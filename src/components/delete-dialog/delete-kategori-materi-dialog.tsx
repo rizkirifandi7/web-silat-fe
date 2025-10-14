@@ -32,8 +32,8 @@ export function DeleteKategoriMateriDialog({
 	return (
 		<>
 			<Button
-				variant="ghost"
-				className="w-full text-left text-sm py-1 px-2 text-red-600 h-fit"
+				variant="outline"
+				className="w-full text-center text-sm py-1 px-2 text-red-600 h-fit"
 				onClick={() => setOpen(true)}
 			>
 				Hapus

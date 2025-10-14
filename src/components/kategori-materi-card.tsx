@@ -37,12 +37,14 @@ export function KategoriMateriCard({ kategori }: KategoriMateriCardProps) {
 						<DropdownMenuContent align="end">
 							<DropdownMenuLabel>Aksi</DropdownMenuLabel>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-								<EditKategoriMateriDialog kategori={kategori} />
-							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-								<DeleteKategoriMateriDialog id={kategori.id} />
-							</DropdownMenuItem>
+							<div className="space-y-1">
+								<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+									<EditKategoriMateriDialog kategori={kategori} />
+								</DropdownMenuItem>
+								<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+									<DeleteKategoriMateriDialog id={kategori.id} />
+								</DropdownMenuItem>
+							</div>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>

@@ -23,7 +23,7 @@ export function EditKategoriMateriDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger className="w-full text-left text-sm py-1 px-2 hover:bg-accent rounded">
+			<DialogTrigger className="w-full text-center text-sm py-1 px-2 hover:bg-accent rounded-md border">
 				Ubah
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
