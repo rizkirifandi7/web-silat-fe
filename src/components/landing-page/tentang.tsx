@@ -57,7 +57,7 @@ const Tentang = () => {
 								src="/silat.png"
 								alt="Sejarah Pusamada"
 								fill
-								className="rounded-lg shadow-2xl object-cover"
+								className="rounded-lg shadow-none object-cover"
 							/>
 						</div>
 					</div>
