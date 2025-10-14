@@ -23,11 +23,11 @@ export function useGaleriCrud() {
     queryFn: getGaleri,
   });
 
-  const { mutate: addGaleri, isPending: isAdding } = useMutation<
-    Galeri,
-    Error,
-    FormData
-  >({
+  const {
+    mutate: addGaleri,
+    mutateAsync: addGaleriAsync,
+    isPending: isAdding,
+  } = useMutation<Galeri, Error, FormData>({
     mutationFn: createGaleri,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["galeri"] });
@@ -73,6 +73,7 @@ export function useGaleriCrud() {
     loading,
     isError,
     addGaleri,
+    addGaleriAsync,
     isAdding,
     editGaleri,
     isEditing,

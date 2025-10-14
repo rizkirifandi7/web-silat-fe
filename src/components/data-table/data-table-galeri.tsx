@@ -56,7 +56,7 @@ export function DataTableGaleri() {
 				data={(galeri as Galeri[]) ?? []}
 				filterColumn="judul"
 				filterPlaceholder="Filter judul..."
-				toolbar={<TambahGaleriDialog onSuccess={refreshGaleri} />}
+				toolbar={<TambahGaleriDialog />}
 			/>
 		</div>
 	);
