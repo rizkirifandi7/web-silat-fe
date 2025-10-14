@@ -433,7 +433,6 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-3">
                   <Label htmlFor="no_telepon">No. Telepon</Label>
                   <Input 
@@ -442,70 +441,7 @@ export function EditProfilDialog({ onEditSuccess }: EditProfilDialogProps) {
                     defaultValue={user.no_telepon || ""} 
                   />
                 </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="angkatan_unit">Angkatan/Unit</Label>
-                  <Input 
-                    id="angkatan_unit" 
-                    name="angkatan_unit" 
-                    defaultValue={user.angkatan_unit || ""} 
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="status_keanggotaan">Status Keanggotaan</Label>
-                  <Select name="status_keanggotaan" defaultValue={user.status_keanggotaan || ""}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih status keanggotaan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Aktif">Aktif</SelectItem>
-                      <SelectItem value="Tidak Aktif">Tidak Aktif</SelectItem>
-                      <SelectItem value="Cuti">Cuti</SelectItem>
-                      <SelectItem value="Alumni">Alumni</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="tingkatan_sabuk">Tingkatan Sabuk</Label>
-                  <Select name="tingkatan_sabuk" defaultValue={user.tingkatan_sabuk || ""}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih tingkatan sabuk" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
-                      <SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
-                      <SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
-                      <SelectItem value="Sabuk Biru">Sabuk Biru</SelectItem>
-                      <SelectItem value="Sabuk Coklat">Sabuk Coklat</SelectItem>
-                      <SelectItem value="Sabuk Hitam 1 Dan">Sabuk Hitam 1 Dan</SelectItem>
-                      <SelectItem value="Sabuk Hitam 2 Dan">Sabuk Hitam 2 Dan</SelectItem>
-                      <SelectItem value="Sabuk Hitam 3 Dan">Sabuk Hitam 3 Dan</SelectItem>
-                      <SelectItem value="Sabuk Hitam 4 Dan">Sabuk Hitam 4 Dan</SelectItem>
-                      <SelectItem value="Sabuk Hitam 5 Dan">Sabuk Hitam 5 Dan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid gap-3">
-                <Label htmlFor="status_perguruan">Status Perguruan</Label>
-                <Select name="status_perguruan" defaultValue={user.status_perguruan || ""}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih status perguruan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Anggota">Anggota</SelectItem>
-                    <SelectItem value="Pengurus">Pengurus</SelectItem>
-                    <SelectItem value="Pelatih">Pelatih</SelectItem>
-                    <SelectItem value="Ketua">Ketua</SelectItem>
-                    <SelectItem value="Wakil Ketua">Wakil Ketua</SelectItem>
-                    <SelectItem value="Sekretaris">Sekretaris</SelectItem>
-                    <SelectItem value="Bendahara">Bendahara</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
             
             <DialogFooter>

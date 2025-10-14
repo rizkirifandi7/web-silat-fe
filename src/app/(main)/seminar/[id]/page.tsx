@@ -45,7 +45,7 @@ const mockSeminar = {
   harga: 150000,
   kuota: 50,
   status: "Akan Datang",
-  gambar_banner: "/kujang-bg.png"
+  gambar_banner: "/silat.png"
 }
 
 const SeminarDetailPage = () => {
@@ -55,27 +55,6 @@ const SeminarDetailPage = () => {
   const handleRegister = () => {
     setIsRegistered(true)
     setRemainingQuota(prev => prev - 1)
-  }
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: mockSeminar.judul,
-          text: `Bergabunglah dengan workshop: ${mockSeminar.judul}`,
-          url: window.location.href,
-        })
-      } catch (err) {
-        console.log('Error sharing:', err)
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert('Link berhasil disalin!')
-    }
-  }
-
-  const goBack = () => {
-    window.history.back()
   }
 
   const getStatusBadgeVariant = (status: string) => {
@@ -100,23 +79,6 @@ const SeminarDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Navigation Header */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={goBack}>
-              <ArrowLeftIcon className="h-4 w-4 mr-2" />
-              Kembali
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleShare}>
-              <ShareIcon className="h-4 w-4 mr-2" />
-              Bagikan
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero Section with Banner */}
       <div className="relative h-[400px] w-full overflow-hidden">
         <Image
           src={mockSeminar.gambar_banner}
@@ -125,88 +87,44 @@ const SeminarDetailPage = () => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 flex items-end">
-          <div className="container mx-auto px-4 pb-8">
-            <Badge 
-              variant={getStatusBadgeVariant(mockSeminar.status)}
-              className="mb-4"
-            >
-              {mockSeminar.status}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {mockSeminar.judul}
-            </h1>
-            <p className="text-white/90 text-lg max-w-2xl">
-              Bergabunglah dengan kami dalam workshop yang akan membuka wawasan Anda tentang seni bela diri tradisional Indonesia
-            </p>
-          </div>
-        </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Event Details Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarIcon className="h-5 w-5" />
-                  Detail Acara
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">Tanggal</p>
-                        <p className="text-sm text-muted-foreground">
-                          {mockSeminar.tanggal}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">Waktu</p>
-                        <p className="text-sm text-muted-foreground">
-                          {mockSeminar.waktu_mulai} - {mockSeminar.waktu_selesai} WIB
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <MapPinIcon className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">Lokasi</p>
-                        <p className="text-sm text-muted-foreground">
-                          {mockSeminar.lokasi}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <UsersIcon className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">Kuota</p>
-                        <p className="text-sm text-muted-foreground">
-                          {remainingQuota} dari {mockSeminar.kuota} peserta tersisa
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+      <div className="container mx-auto max-w-6xl space-y-24 px-4 py-12 sm:px-6">
 
-            {/* Description Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Tentang Workshop</CardTitle>
-              </CardHeader>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex items-start gap-6 mb-8">
+            <div className="relative w-32 h-32 flex-shrink-0">
+              <Image
+                src={mockSeminar.gambar}
+                alt={mockSeminar.judul}
+                fill
+                className="object-cover rounded-2xl shadow-none"
+              />
+            </div>
+            <div className="flex-1 space-y-3">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">
+                {mockSeminar.judul}
+              </h1>
+              <Badge variant={getStatusBadgeVariant(mockSeminar.status)}>
+                  {mockSeminar.status}
+                </Badge>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span>{mockSeminar.tanggal}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <MapPinIcon className="h-4 w-4" />
+                  <span>{mockSeminar.lokasi}</span>
+                </div>
+                
+              </div>
+            </div>
+        </div>
+
+        <Card className='shadow-none'>
               <CardContent>
                 <div 
                   className="prose prose-sm max-w-none dark:prose-invert"
@@ -215,22 +133,16 @@ const SeminarDetailPage = () => {
               </CardContent>
             </Card>
 
-           
-
-            
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Registration Card */}
-            <Card className="sticky top-24">
+            <Card className="sticky top-24 shadow-none">
               <CardHeader>
                 <CardTitle className="text-center">Registrasi</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <DollarSignIcon className="h-4 w-4" />
                     <span className="text-2xl font-bold">
                       {mockSeminar.harga === 0 ? 'GRATIS' : formatCurrency(mockSeminar.harga)}
                     </span>
@@ -298,31 +210,56 @@ const SeminarDetailPage = () => {
             </Card>
 
         
-
-            {/* Contact Info */}
-            <Card>
+            <Card className='shadow-none'>
               <CardHeader>
-                <CardTitle>Kontak</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5" />
+                  Detail Acara
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="font-medium">PUSAMADA Indonesia</p>
-                  <p className="text-sm text-muted-foreground">
-                    Jl. Pencak Silat No. 123<br />
-                    Jakarta Selatan, DKI Jakarta
-                  </p>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="font-sm text-muted-foreground">Tanggal</p>
+                        <p className="font-medium">
+                          {mockSeminar.tanggal}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <ClockIcon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="font-sm text-muted-foreground">Waktu</p>
+                        <p className="font-medium">
+                          {mockSeminar.waktu_mulai} - {mockSeminar.waktu_selesai} WIB
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <MapPinIcon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="font-sm text-muted-foreground">Lokasi</p>
+                        <p className="font-medium">
+                          {mockSeminar.lokasi}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <UsersIcon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="font-sm text-muted-foreground">Kuota</p>
+                        <p className="font-medium">
+                          {remainingQuota} dari {mockSeminar.kuota} peserta tersisa
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">Hubungi Kami</p>
-                  <p className="text-sm text-muted-foreground">
-                    Email: info@pusamada.com<br />
-                    WhatsApp: +62 812-3456-7890
-                  </p>
-                </div>
-                <Button variant="outline" className="w-full">
-                  <LinkIcon className="h-4 w-4 mr-2" />
-                  Hubungi Penyelenggara
-                </Button>
               </CardContent>
             </Card>
           </div>
