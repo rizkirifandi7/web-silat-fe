@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, LinkIcon, DollarSignIcon, ShareIcon, ArrowLeftIcon } from 'lucide-react'
+import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, LinkIcon } from 'lucide-react'
 
 // Data mock untuk demo
 const mockSeminar = {
