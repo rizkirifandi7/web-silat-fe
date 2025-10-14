@@ -90,7 +90,7 @@ const Page = () => {
 	return (
 		<div className="space-y-4 p-4 md:p-6">
 			<h1 className="text-2xl font-bold">Profil</h1>
-			<Card className="p-8">
+			<Card className="p-8 shadow-none">
 					<div className="flex flex-col md:flex-row items-center md:items-start gap-4">
 						<div className="flex flex-col md:flex-row items-center md:items-start gap-6 flex-1">
 							<Avatar className="h-32 w-32 flex-shrink-0">
@@ -116,7 +116,7 @@ const Page = () => {
 			</Card>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<Card className="space-y-2 px-4 gap-4 p-8">
+				<Card className="space-y-2 px-4 gap-4 p-8 shadow-none">
 					<h2 className="text-lg font-bold">Informasi Pribadi</h2>
 							<div>
 								<h2 className="text-sm font-medium text-muted-foreground">Jenis Kelamin</h2>
@@ -140,8 +140,8 @@ const Page = () => {
 							</div>
 				</Card>
 
-				<Card className="space-y-2 px-4 gap-4 p-8">
-					<h2 className="text-lg font-bold">Informasi Akademik</h2>
+				<Card className="space-y-2 px-4 gap-4 p-8 shadow-none">
+					<h2 className="text-lg font-bold">Informasi Keanggotaan</h2>
 							<div>
 								<h2 className="text-sm font-medium text-muted-foreground">Angkatan/Unit</h2>
 								<p className="text-sm font-semibold">{user?.angkatan_unit || "Unknown"}</p>

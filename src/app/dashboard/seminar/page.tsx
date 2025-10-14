@@ -33,7 +33,7 @@ function SeminarPageContent() {
 				</div>
 			</div>
 
-			<Card className="shadow-lg rounded-lg">
+			<Card className="shadow-none rounded-lg">
 				<CardHeader>
 					<CardTitle>Daftar Seminar</CardTitle>
 					<CardDescription>
