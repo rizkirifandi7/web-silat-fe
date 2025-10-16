@@ -290,8 +290,8 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 					control={control}
 					name="gambar"
 					render={({ field }) => {
-						// Destrukturisasi 'value' secara manual untuk dipisahkan
-						const { ...restField } = field;
+						// Jangan pernah set value pada input file
+						const { value, ...restField } = field;
 
 						return (
 							<FormItem>
@@ -299,10 +299,8 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 								<FormControl>
 									<Input
 										type="file"
-										// '...restField' sekarang tidak lagi mengandung 'value'
 										{...restField}
 										onChange={(e) => {
-											// Kirim file ke react-hook-form
 											field.onChange(e.target.files ? e.target.files[0] : null);
 										}}
 									/>
@@ -317,8 +315,8 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 					control={control}
 					name="gambar_banner"
 					render={({ field }) => {
-						// Lakukan hal yang sama untuk gambar_banner
-						const { ...restField } = field;
+						// Jangan pernah set value pada input file
+						const { value, ...restField } = field;
 
 						return (
 							<FormItem>
