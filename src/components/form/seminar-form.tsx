@@ -94,7 +94,7 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
 				<FormField
 					control={control}
 					name="judul"
@@ -108,7 +108,7 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 						</FormItem>
 					)}
 				/>
-				<FormField
+				<FormField 
 					control={control}
 					name="deskripsi"
 					render={({ field }) => (
