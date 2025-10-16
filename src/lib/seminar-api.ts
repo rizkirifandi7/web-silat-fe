@@ -8,20 +8,26 @@ export const getSeminars = async (): Promise<Seminar[]> => {
 
 
 export const createSeminar = async (formData: FormData): Promise<Seminar> => {
-  const response = await api.post("/seminar", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return response.data;
+  try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seminar`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create seminar');
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error creating seminar:', error);
+      throw error;
+  }
 } 
 
 export const updateSeminar = async (id: number, formData: FormData): Promise<Seminar> => {
-  const response = await api.put(`/seminar/${id}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  // Let the browser/axios set the Content-Type (with boundary) for FormData.
+  const response = await api.put(`/seminar/${id}`, formData);
 
   return response.data;
 };
