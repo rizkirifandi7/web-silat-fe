@@ -35,9 +35,19 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 		resolver: zodResolver(seminarFormSchema),
 		defaultValues: seminar
 			? {
-					...seminar,
-					harga: seminar.harga,
-					kuota: seminar.kuota,
+					judul: seminar.judul || "",
+					deskripsi: seminar.deskripsi || "",
+					tanggal_mulai: seminar.tanggal_mulai || "",
+					tanggal_selesai: seminar.tanggal_selesai || "",
+					waktu_mulai: seminar.waktu_mulai || "",
+					waktu_selesai: seminar.waktu_selesai || "",
+					lokasi: seminar.lokasi || "",
+					link_acara: seminar.link_acara || "",
+					harga: seminar.harga || 0,
+					kuota: seminar.kuota || 0,
+					status: seminar.status || "Akan Datang",
+					gambar: undefined, // Untuk input file, undefined/null di awal tidak apa-apa
+					gambar_banner: undefined,
 			  }
 			: {
 					judul: "",
@@ -79,16 +89,16 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 		try {
 			if (seminar) {
 				await updateSeminar(seminar.id, formData);
-				toast("Berhasil memperbarui seminar.");
+				toast.success("Berhasil memperbarui seminar.");
 			} else {
 				await createSeminar(formData);
-				toast("Berhasil membuat seminar baru.");
+				toast.success("Berhasil membuat seminar baru.");
 			}
 			router.push("/dashboard/seminar");
 			router.refresh();
 		} catch (error) {
 			console.error("Failed to save seminar:", error);
-			toast("Gagal menyimpan seminar.");
+			toast.error("Gagal menyimpan seminar.");
 		}
 	};
 
@@ -108,7 +118,7 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 						</FormItem>
 					)}
 				/>
-				<FormField 
+				<FormField
 					control={control}
 					name="deskripsi"
 					render={({ field }) => (
@@ -279,40 +289,53 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 				<FormField
 					control={control}
 					name="gambar"
-					render={({ field: { onChange, ...rest } }) => (
-						<FormItem>
-							<FormLabel>Gambar</FormLabel>
-							<FormControl>
-								<Input
-									type="file"
-									onChange={(e) =>
-										onChange(e.target.files ? e.target.files[0] : null)
-									}
-									{...rest}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
+					render={({ field }) => {
+						// Destrukturisasi 'value' secara manual untuk dipisahkan
+						const { ...restField } = field;
+
+						return (
+							<FormItem>
+								<FormLabel>Gambar</FormLabel>
+								<FormControl>
+									<Input
+										type="file"
+										// '...restField' sekarang tidak lagi mengandung 'value'
+										{...restField}
+										onChange={(e) => {
+											// Kirim file ke react-hook-form
+											field.onChange(e.target.files ? e.target.files[0] : null);
+										}}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
+
 				<FormField
 					control={control}
 					name="gambar_banner"
-					render={({ field: { onChange, ...rest } }) => (
-						<FormItem>
-							<FormLabel>Gambar Banner</FormLabel>
-							<FormControl>
-								<Input
-									type="file"
-									onChange={(e) =>
-										onChange(e.target.files ? e.target.files[0] : null)
-									}
-									{...rest}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
+					render={({ field }) => {
+						// Lakukan hal yang sama untuk gambar_banner
+						const { ...restField } = field;
+
+						return (
+							<FormItem>
+								<FormLabel>Gambar Banner</FormLabel>
+								<FormControl>
+									<Input
+										type="file"
+										{...restField}
+										onChange={(e) => {
+											field.onChange(e.target.files ? e.target.files[0] : null);
+										}}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
 				<Button type="submit" disabled={isSubmitting}>
 					{isSubmitting ? "Menyimpan..." : "Simpan"}
