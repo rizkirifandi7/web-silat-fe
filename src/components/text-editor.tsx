@@ -50,7 +50,7 @@ export default function TextEditor({ value, onChange }: TextEditorProps) {
 	const editorState = getEditorState();
 
 	return (
-		<div>
+		<div className="contents">
 			<Editor
 				editorSerializedState={editorState}
 				onSerializedChange={onChange}
