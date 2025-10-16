@@ -8,6 +8,7 @@ interface Materi {
   judul: string;
   tipeKonten: string;
   konten: string;
+  tingkatan: string;
 }
 
 interface Course {
@@ -18,7 +19,7 @@ interface Course {
 }
 
 const fetchCourses = async (): Promise<Course[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/course/anggota`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/course`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -28,7 +29,10 @@ const fetchCourses = async (): Promise<Course[]> => {
   if (!response.ok) {
     throw new Error('Gagal mengambil data kursus dari server.');
   }
-  return response.json();
+
+  const data = await response.json();
+  console.log('Fetch Courses Response:', data);
+  return data;
 };
 
 export const useCourses = () => {

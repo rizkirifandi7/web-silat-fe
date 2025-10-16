@@ -3,6 +3,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
 
 interface MateriViewerProps {
 	selectedMateri: {
@@ -10,9 +12,17 @@ interface MateriViewerProps {
 		tipeKonten: string;
 		konten: string;
 	} | null;
+	onNext?: () => void;
+	hasNext?: boolean;
+	isNextLocked?: boolean;
 }
 
-const MateriViewer: React.FC<MateriViewerProps> = ({ selectedMateri }) => {
+const MateriViewer: React.FC<MateriViewerProps> = ({
+	selectedMateri,
+	onNext,
+	hasNext,
+	isNextLocked,
+}) => {
 	const getYoutubeVideoId = (url: string) => {
 		const regExp =
 			/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -28,9 +38,6 @@ const MateriViewer: React.FC<MateriViewerProps> = ({ selectedMateri }) => {
 						<h2 className="text-2xl font-bold">
 							Selamat Datang di Ruang Materi
 						</h2>
-						<p className="text-muted-foreground">
-							Pilih materi dari daftar di samping untuk memulai pembelajaran.
-						</p>
 					</div>
 				</div>
 			);
@@ -72,8 +79,18 @@ const MateriViewer: React.FC<MateriViewerProps> = ({ selectedMateri }) => {
 
 	return (
 		<Card className="h-full flex flex-col border-none">
-			<CardHeader>
+			<CardHeader className="flex flex-row items-center justify-between">
 				<CardTitle>{selectedMateri?.judul || "Pilih Materi"}</CardTitle>
+				{selectedMateri && hasNext && (
+					<Button
+						className="ml-4 px-4 py-2 rounded bg-primary text-white text-sm hover:bg-primary/80 disabled:bg-gray-400 disabled:cursor-not-allowed"
+						onClick={onNext}
+						disabled={isNextLocked}
+						title={isNextLocked ? "Materi berikutnya terkunci" : undefined}
+					>
+						Lanjut <ArrowRight className="ml-2 h-4 w-4" />
+					</Button>
+				)}
 			</CardHeader>
 			<CardContent className="flex-grow">{renderContent()}</CardContent>
 		</Card>

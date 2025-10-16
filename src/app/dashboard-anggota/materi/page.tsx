@@ -1,5 +1,25 @@
 "use client";
 
+import { useUserContext } from "@/context/user-context";
+// Urutan tingkatan sabuk dari terendah ke tertinggi
+const urutanSabuk = [
+	"Sabuk Putih",
+	"Sabuk Kuning",
+	"Sabuk Hijau",
+	"Sabuk Biru",
+	"Sabuk Coklat",
+	"Sabuk Hitam Wiraga 1",
+	"Sabuk Hitam Wiraga 2",
+	"Sabuk Hitam Wiraga 3",
+];
+
+function bisaAksesMateri(tingkatanAnggota: string, tingkatanMateri: string) {
+	const idxAnggota = urutanSabuk.indexOf(tingkatanAnggota);
+	const idxMateri = urutanSabuk.indexOf(tingkatanMateri);
+	if (idxAnggota === -1 || idxMateri === -1) return false;
+	return idxAnggota >= idxMateri;
+}
+
 import React, { useState } from "react";
 import CourseSidebar from "@/components/course-sidebar";
 import MateriViewer from "@/components/materi-viewer";
@@ -16,11 +36,46 @@ interface Materi {
 	judul: string;
 	tipeKonten: string;
 	konten: string;
+	tingkatan: string;
 }
 
 const PageMateri = () => {
-	const [selectedMateri, setSelectedMateri] = useState<Materi | null>(null);
 	const { courses, isLoading, isError } = useCourses();
+	const { user } = useUserContext();
+	// Gabungkan semua materi dari seluruh course (urutan sesuai courses)
+	interface Course {
+		id: number;
+		Materi?: Materi[];
+		Materis?: Materi[];
+		// tambahkan properti lain jika diperlukan
+	}
+
+	const materiList: Materi[] = courses.flatMap(
+		(course: Course) => course.Materi ?? course.Materis ?? []
+	);
+	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+	const selectedMateri = selectedIndex >= 0 ? materiList[selectedIndex] : null;
+
+	const handleMateriSelect = (materi: Materi) => {
+		const idx = materiList.findIndex((m) => m.id === materi.id);
+		setSelectedIndex(idx);
+	};
+
+	// Cek apakah materi berikutnya terkunci
+	const nextMateri =
+		selectedIndex < materiList.length - 1
+			? materiList[selectedIndex + 1]
+			: null;
+	const tingkatanAnggota = user?.tingkatan_sabuk || "";
+	const isNextLocked = nextMateri
+		? !bisaAksesMateri(tingkatanAnggota, nextMateri.tingkatan)
+		: false;
+
+	const handleNext = () => {
+		if (selectedIndex < materiList.length - 1 && !isNextLocked) {
+			setSelectedIndex(selectedIndex + 1);
+		}
+	};
 
 	if (isLoading) {
 		return (
@@ -82,13 +137,18 @@ const PageMateri = () => {
 				<ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
 					<CourseSidebar
 						courses={courses}
-						onMateriSelect={setSelectedMateri}
+						onMateriSelect={handleMateriSelect}
 						selectedMateriId={selectedMateri?.id || null}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={75}>
-					<MateriViewer selectedMateri={selectedMateri} />
+					<MateriViewer
+						selectedMateri={selectedMateri}
+						onNext={handleNext}
+						hasNext={selectedIndex < materiList.length - 1}
+						isNextLocked={isNextLocked}
+					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
