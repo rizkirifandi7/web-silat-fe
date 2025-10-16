@@ -47,6 +47,9 @@ export function TambahMateriDialog() {
 		},
 	});
 
+	const { register } = form;
+	const tipeKonten = form.watch("tipeKonten");
+
 	const onSubmit = async (values: z.infer<typeof materiFormSchema>) => {
 		await handleCreate(values);
 		form.reset();
@@ -87,7 +90,10 @@ export function TambahMateriDialog() {
 								<FormItem>
 									<FormLabel>Tipe Konten</FormLabel>
 									<Select
-										onValueChange={field.onChange}
+										onValueChange={(value) => {
+											field.onChange(value);
+											form.setValue("konten", ""); // Reset konten value on change
+										}}
 										defaultValue={field.value}
 									>
 										<FormControl>
@@ -104,7 +110,7 @@ export function TambahMateriDialog() {
 								</FormItem>
 							)}
 						/>
-						{form.watch("tipeKonten") === "video" ? (
+						{tipeKonten === "video" ? (
 							<FormField
 								control={form.control}
 								name="konten"
@@ -119,26 +125,19 @@ export function TambahMateriDialog() {
 								)}
 							/>
 						) : (
-							<FormField
-								control={form.control}
-								name="konten"
-								render={({ field: { onChange, ...rest } }) => (
-									<FormItem>
-										<FormLabel>Konten</FormLabel>
-										<FormControl>
-											<Input
-												type="file"
-												accept="application/pdf"
-												onChange={(e) => {
-													onChange(e.target.files ? e.target.files[0] : null);
-												}}
-												{...rest}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							<FormItem>
+								<FormLabel>Konten</FormLabel>
+								<FormControl>
+									<Input
+										type="file"
+										accept="application/pdf"
+										{...register("konten", {
+											setValueAs: (v) => (v.length > 0 ? v[0] : ""),
+										})}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
 						)}
 						<Button type="submit" disabled={isCreating}>
 							{isCreating ? "Menyimpan..." : "Simpan"}

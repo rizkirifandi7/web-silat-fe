@@ -5,7 +5,6 @@ import {
 	IconBooks,
 	IconCalendarEvent,
 	IconDashboard,
-	IconPlayCard1,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -37,11 +36,6 @@ const data = {
 			title: "Materi",
 			url: "/dashboard-anggota/materi",
 			icon: IconBooks,
-		},
-		{
-			title: "Kartu Anggota",
-			url: "/dashboard-anggota/kartu-anggota",
-			icon: IconPlayCard1,
 		},
 	],
 };
