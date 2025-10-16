@@ -41,13 +41,14 @@ export function TambahMateriDialog() {
 		resolver: zodResolver(materiFormSchema),
 		defaultValues: {
 			judul: "",
+			deskripsi: "",
 			tipeKonten: "video",
 			konten: "",
+			tingkatan: "Belum punya",
 			id_course: parseInt(id_course as string),
 		},
 	});
 
-	const { register } = form;
 	const tipeKonten = form.watch("tipeKonten");
 
 	const onSubmit = async (values: z.infer<typeof materiFormSchema>) => {
@@ -79,6 +80,58 @@ export function TambahMateriDialog() {
 									<FormControl>
 										<Input placeholder="Judul materi" {...field} />
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="deskripsi"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Deskripsi</FormLabel>
+									<FormControl>
+										<Input placeholder="Deskripsi materi" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="tingkatan"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tingkatan</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Pilih tingkatan" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="Belum punya">Belum punya</SelectItem>
+											<SelectItem value="LULUS Binfistal">
+												LULUS Binfistal
+											</SelectItem>
+											<SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
+											<SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
+											<SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
+											<SelectItem value="Sabuk Merah">Sabuk Merah</SelectItem>
+											<SelectItem value="Sabuk Hitam Wiraga 1">
+												Sabuk Hitam Wiraga 1
+											</SelectItem>
+											<SelectItem value="Sabuk Hitam Wiraga 2">
+												Sabuk Hitam Wiraga 2
+											</SelectItem>
+											<SelectItem value="Sabuk Hitam Wiraga 3">
+												Sabuk Hitam Wiraga 3
+											</SelectItem>
+										</SelectContent>
+									</Select>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -125,19 +178,27 @@ export function TambahMateriDialog() {
 								)}
 							/>
 						) : (
-							<FormItem>
-								<FormLabel>Konten</FormLabel>
-								<FormControl>
-									<Input
-										type="file"
-										accept="application/pdf"
-										{...register("konten", {
-											setValueAs: (v) => (v.length > 0 ? v[0] : ""),
-										})}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
+							<FormField
+								control={form.control}
+								name="konten"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Konten</FormLabel>
+										<FormControl>
+											<Input
+												type="file"
+												accept="application/pdf"
+												onChange={(e) =>
+													field.onChange(
+														e.target.files ? e.target.files[0] : null
+													)
+												}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 						)}
 						<Button type="submit" disabled={isCreating}>
 							{isCreating ? "Menyimpan..." : "Simpan"}

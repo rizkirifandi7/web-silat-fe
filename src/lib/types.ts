@@ -34,8 +34,19 @@ export interface Materi {
 	id: number;
 	id_course: number;
 	judul: string;
+	deskripsi: string;
 	tipeKonten: "pdf" | "video";
 	konten: string | null;
+	tingkatan:
+		| "Belum punya"
+		| "LULUS Binfistal"
+		| "Sabuk Putih"
+		| "Sabuk Kuning"
+		| "Sabuk Hijau"
+		| "Sabuk Merah"
+		| "Sabuk Hitam Wiraga 1"
+		| "Sabuk Hitam Wiraga 2"
+		| "Sabuk Hitam Wiraga 3";
 	createdAt: string;
 	updatedAt: string;
 }

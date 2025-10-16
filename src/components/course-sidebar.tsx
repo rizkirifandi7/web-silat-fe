@@ -14,7 +14,7 @@ interface Course {
 	id: number;
 	judul: string;
 	deskripsi: string;
-	Materis: Materi[];
+	Materi: Materi[];
 }
 
 interface Materi {
@@ -45,13 +45,13 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 							<div className="text-left">
 								<p className="font-semibold">{course.judul}</p>
 								<p className="text-sm text-muted-foreground">
-									{course.Materis.length} materi
+									{course.Materi.length} materi
 								</p>
 							</div>
 						</AccordionTrigger>
 						<AccordionContent>
 							<div className="flex flex-col gap-1 p-2">
-								{course.Materis.map((materi) => (
+								{course.Materi.map((materi) => (
 									<Button
 										key={materi.id}
 										variant={

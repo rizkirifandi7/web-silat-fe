@@ -51,11 +51,15 @@ export function useMateriCRUD(id_course: string) {
 		try {
 			const formData = new FormData();
 			formData.append("judul", data.judul);
+			if (data.deskripsi) {
+				formData.append("deskripsi", data.deskripsi);
+			}
+			formData.append("tingkatan", data.tingkatan);
 			formData.append("tipeKonten", data.tipeKonten);
 			formData.append("id_course", id_course);
 
-			if (data.tipeKonten === "pdf" && data.konten && data.konten[0] instanceof File) {
-				formData.append("konten", data.konten[0]);
+			if (data.tipeKonten === "pdf" && data.konten instanceof File) {
+				formData.append("konten", data.konten);
 			} else if (data.tipeKonten === "video") {
 				formData.append("konten", data.konten as string);
 			}
@@ -73,14 +77,12 @@ export function useMateriCRUD(id_course: string) {
 		try {
 			const formData = new FormData();
 			if (data.judul) formData.append("judul", data.judul);
+			if (data.deskripsi) formData.append("deskripsi", data.deskripsi);
+			if (data.tingkatan) formData.append("tingkatan", data.tingkatan);
 			if (data.tipeKonten) formData.append("tipeKonten", data.tipeKonten);
 
-			if (
-				data.tipeKonten === "pdf" &&
-				data.konten &&
-				data.konten[0] instanceof File
-			) {
-				formData.append("konten", data.konten[0]);
+			if (data.tipeKonten === "pdf" && data.konten instanceof File) {
+				formData.append("konten", data.konten);
 			} else if (data.konten) {
 				formData.append("konten", data.konten as string);
 			}

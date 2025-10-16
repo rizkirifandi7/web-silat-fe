@@ -1,14 +1,13 @@
 import { api } from "./utils";
 import { Materi } from "@/lib/types";
-import { Course } from "@/lib/types";
 import { toast } from "sonner";
 
 export const getMateriByCourse = async (
 	id_course: string
 ): Promise<Materi[]> => {
 	try {
-		const response = await api.get<Course>(`/course/${id_course}`);
-		return response.data.Materis;
+		const response = await api.get<Materi[]>(`/course/materi/${id_course}`);
+		return response.data;
 	} catch (error) {
 		console.error("Error fetching materi by course:", error);
 		throw error;
