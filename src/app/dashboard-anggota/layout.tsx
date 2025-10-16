@@ -3,10 +3,8 @@
 import { AppSidebarAnggota } from "@/components/app-sidebar-anggota";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Loader2 } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { useAuthGuard } from "@/hooks/use-auth-guard";
 
 const queryClient = new QueryClient();
 
@@ -15,19 +13,6 @@ const DashboardAnggotaLayout = ({
 }: {
 	children: React.ReactNode;
 }) => {
-	// Gunakan hook untuk proteksi rute, kali ini untuk 'anggota'
-	const { isAccessing } = useAuthGuard(["anggota"]);
-
-	// Tampilkan loading jika akses sedang divalidasi
-	if (isAccessing) {
-		return (
-			<div className="flex min-h-screen flex-col items-center justify-center gap-4">
-				<Loader2 className="h-8 w-8 animate-spin" />
-				<p className="text-muted-foreground">Memvalidasi sesi...</p>
-			</div>
-		);
-	}
-
 	// Jika pengguna valid, tampilkan layout dashboard
 	return (
 		<QueryClientProvider client={queryClient}>
