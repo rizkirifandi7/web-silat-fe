@@ -1,15 +1,10 @@
+import { api } from "./utils";
 import { Galeri } from "@/lib/schema";
 
 export const getGaleri = async (): Promise<Galeri[]> => {
 	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galeri`, {
-			cache: "no-store",
-		});
-		if (!response.ok) {
-			throw new Error("Gagal mengambil data galeri");
-		}
-		const data = await response.json();
-		return data;
+		const response = await api.get("/galeri");
+		return response.data;
 	} catch (error) {
 		console.error("Error fetching galeri:", error);
 		throw error;
@@ -18,40 +13,30 @@ export const getGaleri = async (): Promise<Galeri[]> => {
 
 export const createGaleri = async (formData: FormData): Promise<Galeri> => {
 	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galeri`, {
-			method: "POST",
-			body: formData,
+		const response = await api.post("/galeri", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
 		});
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal menambahkan galeri.");
-		}
-		const result = await response.json();
-		return result.data;
+		return response.data;
 	} catch (error) {
-		console.error("Error creating galeri:", error);
+		console.error("Error fetching galeri:", error);
 		throw error;
 	}
 };
+
 
 export const updateGaleri = async (
 	id: number,
 	formData: FormData
 ): Promise<Galeri> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/galeri/${id}`,
-			{
-				method: "PUT",
-				body: formData,
-			}
-		);
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal memperbarui galeri.");
-		}
-		const result = await response.json();
-		return result;
+		const response = await api.put(`/galeri/${id}`, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
 	} catch (error) {
 		console.error(`Error updating galeri with id ${id}:`, error);
 		throw error;
@@ -60,16 +45,7 @@ export const updateGaleri = async (
 
 export const deleteGaleri = async (id: number): Promise<void> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/galeri/${id}`,
-			{
-				method: "DELETE",
-			}
-		);
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal menghapus galeri.");
-		}
+		await api.delete(`/galeri/${id}`);
 	} catch (error) {
 		console.error(`Error deleting galeri with id ${id}:`, error);
 		throw error;

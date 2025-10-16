@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
-import { Materi } from "@/lib/schema";
+import { Materi } from "@/lib/types";
 import { useParams } from "next/navigation";
 import { DeleteDialog } from "@/components/delete-dialog/delete-dialog";
 

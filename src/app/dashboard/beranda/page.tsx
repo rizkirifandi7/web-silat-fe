@@ -1,7 +1,9 @@
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { RecentAnggota } from "@/components/recent-anggota";
 import { SectionCards } from "@/components/section-cards";
+import { RecentAnggota } from "@/components/recent-anggota";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { getAnggotas } from "@/lib/anggota-api";
+
+export const dynamic = "force-dynamic";
 
 export default async function PageBeranda() {
 	const data = await getAnggotas();

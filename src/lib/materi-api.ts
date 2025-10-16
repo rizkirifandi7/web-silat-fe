@@ -1,42 +1,29 @@
-import { Materi } from "@/lib/schema";
+import { api } from "./utils";
+import { Materi } from "@/lib/types";
+import { Course } from "@/lib/types";
 import { toast } from "sonner";
 
-export const getMateriByCourse = async (id_course: string): Promise<Materi[]> => {
+export const getMateriByCourse = async (
+	id_course: string
+): Promise<Materi[]> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/course/${id_course}`,
-			{
-				cache: "no-store",
-			}
-		);
-		if (!response.ok) {
-			throw new Error("Gagal mengambil data materi");
-		}
-		const data = await response.json();
-		// Assuming the API returns a course object with a 'Materis' array
-		return data.Materis || [];
+		const response = await api.get<Course>(`/course/${id_course}`);
+		return response.data.Materis;
 	} catch (error) {
-		console.error("Error fetching materi:", error);
+		console.error("Error fetching materi by course:", error);
 		throw error;
 	}
 };
 
 export const createMateri = async (data: FormData): Promise<Materi> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/materi`,
-			{
-				method: "POST",
-				body: data,
-			}
-		);
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal menambahkan materi.");
-		}
-		const result = await response.json();
-		toast.success("Materi berhasil ditambahkan.");
-		return result.data;
+		const response = await api.post("/materi", data, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		toast.success("Materi berhasil dibuat.");
+		return response.data;
 	} catch (error) {
 		console.error("Error creating materi:", error);
 		throw error;
@@ -48,20 +35,13 @@ export const updateMateri = async (
 	data: FormData
 ): Promise<Materi> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/materi/${id}`,
-			{
-				method: "PUT",
-				body: data,
-			}
-		);
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal memperbarui materi.");
-		}
-		const result = await response.json();
+		const response = await api.put(`/materi/${id}`, data, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
 		toast.success("Materi berhasil diperbarui.");
-		return result.data;
+		return response.data;
 	} catch (error) {
 		console.error(`Error updating materi with id ${id}:`, error);
 		throw error;
@@ -70,17 +50,9 @@ export const updateMateri = async (
 
 export const deleteMateri = async (id: number): Promise<void> => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/materi/${id}`,
-			{
-				method: "DELETE",
-			}
-		);
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Gagal menghapus materi.");
-		}
+		const response = await api.delete(`/materi/${id}`);
 		toast.success("Materi berhasil dihapus.");
+		return response.data;
 	} catch (error) {
 		console.error(`Error deleting materi with id ${id}:`, error);
 		throw error;

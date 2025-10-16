@@ -24,7 +24,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
-import { Materi, materiFormSchema } from "@/lib/schema";
+import { materiFormSchema } from "@/lib/schema";
+import { Materi } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -117,7 +118,7 @@ export function EditMateriDialog({ materi }: EditMateriDialogProps) {
 												onBlur={onBlur}
 												name={name}
 												ref={ref}
-												defaultValue={materi.konten}
+												defaultValue={materi.konten ?? ""}
 											/>
 										) : (
 											<Input

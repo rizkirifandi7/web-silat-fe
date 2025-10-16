@@ -134,3 +134,43 @@ export const editAnggotaSchema = anggotaFormSchema;
 // Tipe data yang diinfer dari skema
 export type CreateAnggotaData = z.infer<typeof createAnggotaSchema>;
 export type EditAnggotaData = z.infer<typeof editAnggotaSchema>;
+
+
+export const seminarSchema = z.object({
+	id: z.number(),
+	gambar: z.string(),
+	judul: z.string(),
+	deskripsi: z.string(),
+	tanggal_mulai: z.string(),
+	tanggal_selesai: z.string(),
+	waktu_mulai: z.string(),
+	waktu_selesai: z.string(),
+	lokasi: z.string(),
+	link_acara: z.string().optional(),
+	harga: z.number(),
+	kuota: z.number(),
+	status: z.enum(["Akan Datang", "Berlangsung", "Selesai"]),
+	gambar_banner: z.string(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+});
+
+export const seminarFormSchema = z.object({
+	judul: z.string().min(1, "Judul tidak boleh kosong."),
+	deskripsi: z.string().min(1, "Deskripsi tidak boleh kosong."),
+	tanggal_mulai: z.string().min(1, "Tanggal mulai tidak boleh kosong."),
+	tanggal_selesai: z.string().min(1, "Tanggal selesai tidak boleh kosong."),
+	waktu_mulai: z.string().min(1, "Waktu mulai tidak boleh kosong."),
+	waktu_selesai: z.string().min(1, "Waktu selesai tidak boleh kosong."),
+	lokasi: z.string().min(1, "Lokasi tidak boleh kosong."),
+	link_acara: z.string().url({ message: "Link acara tidak valid." }).optional().or(z.literal("")),
+	harga: z.number().min(0, "Harga tidak boleh kurang dari 0"),
+	kuota: z.number().min(0, "Kuota tidak boleh kurang dari 0"),
+	status: z.enum(["Akan Datang", "Berlangsung", "Selesai"]),
+	gambar: z.any().optional(),
+	gambar_banner: z.any().optional(),
+});
+
+export type SeminarFormData = z.infer<typeof seminarFormSchema>;
+
+export type Seminar = z.infer<typeof seminarSchema>;

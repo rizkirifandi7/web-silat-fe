@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Materi } from "@/lib/schema";
+import { Materi } from "@/lib/types";
 import { EditMateriDialog } from "@/components/edit-materi-dialog";
 import { DeleteMateriDialog } from "@/components/delete-dialog/delete-materi-dialog";
 

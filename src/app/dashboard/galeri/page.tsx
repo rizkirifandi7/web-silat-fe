@@ -18,7 +18,10 @@ export default function GaleriPage() {
 
 	return (
 		<div className="container mx-auto py-10">
-			<h1 className="text-2xl font-bold mb-4">Manajemen Galeri</h1>
+			<h1 className="text-2xl font-bold">Manajemen Galeri</h1>
+			<p className="text-muted-foreground mb-4">
+				Halaman ini digunakan untuk mengelola data galeri.
+			</p>
 			<DataTableGaleri />
 		</div>
 	);

@@ -1,6 +1,5 @@
 "use client";
-import { useState } from "react";
-import useSWR from "swr";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
 	getMateriByCourse,
 	createMateri,
@@ -13,87 +12,102 @@ import { z } from "zod";
 type MateriFormValues = z.infer<typeof materiFormSchema>;
 
 export function useMateriCRUD(id_course: string) {
+	const queryClient = useQueryClient();
+
 	const {
 		data: materi,
 		error,
-		mutate,
-	} = useSWR(
-		id_course ? ["courses", id_course] : null,
-		() => getMateriByCourse(id_course),
-		{
-			revalidateOnFocus: false,
-		}
-	);
+		isLoading,
+		isError,
+	} = useQuery({
+		queryKey: ["materi", id_course],
+		queryFn: () => getMateriByCourse(id_course),
+		enabled: !!id_course,
+	});
 
-	const [isCreating, setIsCreating] = useState(false);
-	const [isUpdating, setIsUpdating] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
+	const { mutateAsync: createMutation, isPending: isCreating } = useMutation({
+		mutationFn: createMateri,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["materi", id_course] });
+		},
+	});
+
+	const { mutateAsync: updateMutation, isPending: isUpdating } = useMutation({
+		mutationFn: ({ id, data }: { id: number; data: FormData }) =>
+			updateMateri(id, data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["materi", id_course] });
+		},
+	});
+
+	const { mutateAsync: deleteMutation, isPending: isDeleting } = useMutation({
+		mutationFn: deleteMateri,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["materi", id_course] });
+		},
+	});
 
 	const handleCreate = async (data: MateriFormValues) => {
-		setIsCreating(true);
 		try {
 			const formData = new FormData();
 			formData.append("judul", data.judul);
 			formData.append("tipeKonten", data.tipeKonten);
 			formData.append("id_course", id_course);
 
-			if (data.tipeKonten === "pdf" && data.konten[0] instanceof File) {
+			if (data.tipeKonten === "pdf" && data.konten && data.konten[0] instanceof File) {
 				formData.append("konten", data.konten[0]);
-			} else {
-				formData.append("konten", data.konten);
+			} else if (data.tipeKonten === "video") {
+				formData.append("konten", data.konten as string);
 			}
 
-			await createMateri(formData);
-			mutate();
+			await createMutation(formData);
 		} catch (error) {
 			console.error("Failed to create materi:", error);
-		} finally {
-			setIsCreating(false);
 		}
 	};
 
-	const handleUpdate = async (id: number, data: Partial<MateriFormValues>) => {
-		setIsUpdating(true);
+	const handleUpdate = async (
+		id: number,
+		data: Partial<MateriFormValues>
+	) => {
 		try {
 			const formData = new FormData();
 			if (data.judul) formData.append("judul", data.judul);
 			if (data.tipeKonten) formData.append("tipeKonten", data.tipeKonten);
 
-			if (data.tipeKonten === "pdf" && data.konten && data.konten[0] instanceof File) {
+			if (
+				data.tipeKonten === "pdf" &&
+				data.konten &&
+				data.konten[0] instanceof File
+			) {
 				formData.append("konten", data.konten[0]);
 			} else if (data.konten) {
 				formData.append("konten", data.konten as string);
 			}
 
-			await updateMateri(id, formData);
-			mutate();
+			await updateMutation({ id, data: formData });
 		} catch (error) {
 			console.error("Failed to update materi:", error);
-		} finally {
-			setIsUpdating(false);
 		}
 	};
 
-	const handleDelete = async (id: number, options?: { onSuccess?: () => void }) => {
-		setIsDeleting(true);
+	const handleDelete = async (
+		id: number,
+		options?: { onSuccess?: () => void }
+	) => {
 		try {
-			await deleteMateri(id);
-			mutate((currentData) => {
-				if (!currentData) return [];
-				return currentData.filter((item) => item.id !== id);
-			}, false);
+			await deleteMutation(id);
 			options?.onSuccess?.();
 		} catch (error) {
 			console.error("Failed to delete materi:", error);
-		} finally {
-			setIsDeleting(false);
 		}
 	};
 
 	return {
 		materi,
-		isLoading: !error && !materi,
-		isError: error,
+		isLoading,
+		isError,
+		error,
 		isCreating,
 		isUpdating,
 		isDeleting,
