@@ -3,12 +3,21 @@ import { useParams } from "next/navigation";
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
 import { DataTableMateri } from "@/components/data-table/data-table-materi";
 import { columns } from "@/components/data-table-colum/data-table-materi-columns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DetailMateriPage() {
 	const { id } = useParams();
 	const { materi, isLoading, isError } = useMateriCRUD(id as string);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) {
+		return (
+			<div className="container mx-auto py-10">
+				<Skeleton className="h-8 w-1/4 mb-4" />
+				<Skeleton className="h-96 w-full" />
+			</div>
+		);
+	}
+
 	if (isError) return <div>Error fetching data</div>;
 
 	return (
