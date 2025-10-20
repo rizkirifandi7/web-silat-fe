@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const PageKontak = () => {
 	const form = useRef<HTMLFormElement>(null);
@@ -70,7 +71,7 @@ const PageKontak = () => {
 									</div>
 									<div className="flex items-center">
 										<Phone className="w-5 h-5 text-primary mr-4 flex-shrink-0" />
-										<span className="text-foreground">(+62) 823-4393-6639</span>
+										<Link target="_blank" href="https://wa.link/hmfqt8" className="text-foreground">(+62) 823-4393-6639</Link>
 									</div>
 								</div>
 							</div>
