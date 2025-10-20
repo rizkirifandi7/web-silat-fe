@@ -13,15 +13,22 @@ import { Skeleton } from '@/components/ui/skeleton'
 import LexicalRenderer from '@/components/lexical-render'
 
 interface SeminarDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
-  const seminarId = parseInt(params.id)
-  const { seminar, loading, isError } = useSeminarDetail(seminarId)
+  const [seminarId, setSeminarId] = useState<number | null>(null)
   const [isRegistered, setIsRegistered] = useState(false)
+
+  React.useEffect(() => {
+    params.then((resolvedParams) => {
+      setSeminarId(Number(resolvedParams.id))
+    })
+  }, [params])
+
+  const { seminar, loading, isError } = useSeminarDetail(seminarId || 0)
 
   const handleRegister = () => {
     setIsRegistered(true)
@@ -47,7 +54,7 @@ const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
     }).format(amount)
   }
 
-  if (loading) {
+  if (loading || seminarId === null) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
         <Skeleton className="h-[400px] w-full" />
