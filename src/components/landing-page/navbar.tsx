@@ -28,9 +28,9 @@ const navLinks = [
 	{ href: "/", label: "Beranda" },
 	{ href: "/tentang", label: "Tentang" },
 	{ href: "/galeri", label: "Galeri" },
-	{ href: "/kontak", label: "Kontak" },
 	{ href: "/seminar", label: "Seminar" },
 	{ href: "/katalog", label: "Katalog" },
+	{ href: "/kontak", label: "Kontak" },
 ];
 
 const Logo = () => (
