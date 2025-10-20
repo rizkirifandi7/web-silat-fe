@@ -2,59 +2,29 @@
 
 import React, { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, LinkIcon } from 'lucide-react'
+import { useSeminarDetail } from '@/hooks/use-seminar-crud'
+import { Skeleton } from '@/components/ui/skeleton'
+import LexicalRenderer from '@/components/lexical-render'
 
-// Data mock untuk demo
-const mockSeminar = {
-  id: "1",
-  gambar: "/silat.jpg",
-  judul: "Workshop Pencak Silat: Teknik Dasar untuk Pemula",
-  deskripsi: `
-    <div class="space-y-4">
-      <h3 class="text-lg font-semibold">Deskripsi</h3>
-      <p>Workshop ini dirancang khusus untuk para pemula yang ingin mempelajari seni bela diri Pencak Silat. Dalam workshop ini, peserta akan diperkenalkan dengan teknik-teknik dasar Pencak Silat, sejarah, dan filosofi yang mendasari seni bela diri tradisional Indonesia ini.</p>
-      
-      <h3 class="text-lg font-semibold">Materi yang akan dipelajari:</h3>
-      <ul class="list-disc pl-6 space-y-1">
-        <li>Sejarah dan filosofi Pencak Silat</li>
-        <li>Teknik kuda-kuda (stance) dasar</li>
-        <li>Gerakan langkah dan perpindahan</li>
-        <li>Teknik pukulan dan tendangan dasar</li>
-        <li>Teknik tangkisan dan hindaran</li>
-        <li>Praktik berpasangan sederhana</li>
-      </ul>
-      
-      <h3 class="text-lg font-semibold">Yang akan Anda dapatkan:</h3>
-      <ul class="list-disc pl-6 space-y-1">
-        <li>Sertifikat kehadiran digital</li>
-        <li>Modul pembelajaran Pencak Silat</li>
-        <li>Akses ke komunitas PUSAMADA</li>
-        <li>Konsultasi gratis dengan instruktur</li>
-      </ul>
-    </div>
-  `,
-  tanggal: "15 November 2025",
-  waktu_mulai: "09:00",
-  waktu_selesai: "17:00",
-  lokasi: "Gedung Serbaguna PUSAMADA, Jakarta",
-  link_acara: "https://meet.google.com/xyz-abc-def",
-  harga: 150000,
-  kuota: 50,
-  status: "Akan Datang",
-  gambar_banner: "/silat.png"
+interface SeminarDetailPageProps {
+  params: {
+    id: string
+  }
 }
 
-const SeminarDetailPage = () => {
+const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
+  const seminarId = parseInt(params.id)
+  const { seminar, loading, isError } = useSeminarDetail(seminarId)
   const [isRegistered, setIsRegistered] = useState(false)
-  const [remainingQuota, setRemainingQuota] = useState(45)
 
   const handleRegister = () => {
     setIsRegistered(true)
-    setRemainingQuota(prev => prev - 1)
   }
 
   const getStatusBadgeVariant = (status: string) => {
@@ -77,12 +47,69 @@ const SeminarDetailPage = () => {
     }).format(amount)
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+        <Skeleton className="h-[400px] w-full" />
+        <div className="container mx-auto max-w-6xl space-y-24 px-4 py-12 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="flex items-start gap-6 mb-8">
+                <Skeleton className="w-32 h-32 rounded-2xl" />
+                <div className="flex-1 space-y-3">
+                  <Skeleton className="h-8 w-3/4" />
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+              <Card className='shadow-none'>
+                <CardContent>
+                  <Skeleton className="h-64 w-full" />
+                </CardContent>
+              </Card>
+            </div>
+            <div className="space-y-6">
+              <Card className="shadow-none">
+                <CardHeader>
+                  <Skeleton className="h-6 w-32" />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Skeleton className="h-16 w-full" />
+                  <Skeleton className="h-32 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isError || !seminar) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold text-foreground">
+            Seminar Tidak Ditemukan
+          </h1>
+          <p className="text-muted-foreground">
+            Seminar yang Anda cari tidak dapat ditemukan atau terjadi kesalahan.
+          </p>
+          <Button asChild>
+            <Link href="/seminar">Kembali ke Daftar Seminar</Link>
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="relative h-[400px] w-full overflow-hidden">
         <Image
-          src={mockSeminar.gambar_banner}
-          alt={mockSeminar.judul}
+          src={seminar.gambar_banner || seminar.gambar || "/silat.jpg"}
+          alt={seminar.judul}
           fill
           className="object-cover"
           priority
@@ -97,27 +124,27 @@ const SeminarDetailPage = () => {
             <div className="flex items-start gap-6 mb-8">
             <div className="relative w-32 h-32 flex-shrink-0">
               <Image
-                src={mockSeminar.gambar}
-                alt={mockSeminar.judul}
+                src={seminar.gambar || "/silat.jpg"}
+                alt={seminar.judul}
                 fill
                 className="object-cover rounded-2xl shadow-none"
               />
             </div>
             <div className="flex-1 space-y-3">
               <h1 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">
-                {mockSeminar.judul}
+                {seminar.judul}
               </h1>
-              <Badge variant={getStatusBadgeVariant(mockSeminar.status)}>
-                  {mockSeminar.status}
+              <Badge variant={getStatusBadgeVariant(seminar.status)}>
+                  {seminar.status}
                 </Badge>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <CalendarIcon className="h-4 w-4" />
-                  <span>{mockSeminar.tanggal}</span>
+                  <span>{new Date(seminar.tanggal_mulai).toLocaleDateString('id-ID')}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MapPinIcon className="h-4 w-4" />
-                  <span>{mockSeminar.lokasi}</span>
+                  <span>{seminar.lokasi}</span>
                 </div>
                 
               </div>
@@ -126,10 +153,12 @@ const SeminarDetailPage = () => {
 
         <Card className='shadow-none'>
               <CardContent>
-                <div 
-                  className="prose prose-sm max-w-none dark:prose-invert"
-                  dangerouslySetInnerHTML={{ __html: mockSeminar.deskripsi }}
-                />
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <h3 className="text-lg font-semibold mb-4">Deskripsi</h3>
+                  <div className=''>
+                    <LexicalRenderer editorStateString={seminar.deskripsi} />
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -144,11 +173,11 @@ const SeminarDetailPage = () => {
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <span className="text-2xl font-bold">
-                      {mockSeminar.harga === 0 ? 'GRATIS' : formatCurrency(mockSeminar.harga)}
+                      {seminar.harga === 0 ? 'GRATIS' : formatCurrency(seminar.harga)}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Sisa {remainingQuota} kursi
+                    Kuota tersedia: {seminar.kuota} orang
                   </p>
                 </div>
                 
@@ -157,13 +186,13 @@ const SeminarDetailPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Status:</span>
-                    <Badge variant={getStatusBadgeVariant(mockSeminar.status)}>
-                      {mockSeminar.status}
+                    <Badge variant={getStatusBadgeVariant(seminar.status)}>
+                      {seminar.status}
                     </Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Kategori:</span>
-                    <span className="font-medium">Workshop</span>
+                    <span className="font-medium">Seminar</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Diselenggarakan oleh:</span>
@@ -178,13 +207,11 @@ const SeminarDetailPage = () => {
                     onClick={handleRegister}
                     className="w-full"
                     size="lg"
-                    disabled={mockSeminar.status === "Selesai" || remainingQuota <= 0}
+                    disabled={seminar.status === "Selesai"}
                   >
-                    {mockSeminar.status === "Selesai" 
+                    {seminar.status === "Selesai" 
                       ? "Acara Telah Selesai" 
-                      : remainingQuota <= 0 
-                        ? "Kuota Penuh"
-                        : "Daftar Sekarang"
+                      : "Daftar Sekarang"
                     }
                   </Button>
                 ) : (
@@ -198,9 +225,9 @@ const SeminarDetailPage = () => {
                   </div>
                 )}
 
-                {mockSeminar.link_acara && (
+                {seminar.link_acara && (
                   <Button variant="outline" className="w-full" asChild>
-                    <a href={mockSeminar.link_acara} target="_blank" rel="noopener noreferrer">
+                    <a href={seminar.link_acara} target="_blank" rel="noopener noreferrer">
                       <LinkIcon className="h-4 w-4 mr-2" />
                       Link Acara
                     </a>
@@ -225,7 +252,7 @@ const SeminarDetailPage = () => {
                       <div>
                         <p className="font-sm text-muted-foreground">Tanggal</p>
                         <p className="font-medium">
-                          {mockSeminar.tanggal}
+                          {new Date(seminar.tanggal_mulai).toLocaleDateString('id-ID')} - {new Date(seminar.tanggal_selesai).toLocaleDateString('id-ID')}
                         </p>
                       </div>
                     </div>
@@ -234,7 +261,7 @@ const SeminarDetailPage = () => {
                       <div>
                         <p className="font-sm text-muted-foreground">Waktu</p>
                         <p className="font-medium">
-                          {mockSeminar.waktu_mulai} - {mockSeminar.waktu_selesai} WIB
+                          {seminar.waktu_mulai} - {seminar.waktu_selesai} WIB
                         </p>
                       </div>
                     </div>
@@ -245,7 +272,7 @@ const SeminarDetailPage = () => {
                       <div>
                         <p className="font-sm text-muted-foreground">Lokasi</p>
                         <p className="font-medium">
-                          {mockSeminar.lokasi}
+                          {seminar.lokasi}
                         </p>
                       </div>
                     </div>
@@ -254,7 +281,7 @@ const SeminarDetailPage = () => {
                       <div>
                         <p className="font-sm text-muted-foreground">Kuota</p>
                         <p className="font-medium">
-                          {remainingQuota} dari {mockSeminar.kuota} peserta tersisa
+                          {seminar.kuota} peserta
                         </p>
                       </div>
                     </div>

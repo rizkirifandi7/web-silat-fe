@@ -1,7 +1,7 @@
 "use client";
 
 import { Seminar } from "@/lib/schema";
-import { createSeminar, deleteSeminar, getSeminars, updateSeminar } from "@/lib/seminar-api";
+import { createSeminar, deleteSeminar, getSeminars, getSeminarById, updateSeminar } from "@/lib/seminar-api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -12,7 +12,7 @@ export function useSeminarCrud() {
     data: seminar,
     isLoading: loading,
     isError,
-  refetch: refreshSeminar,
+    refetch: refreshSeminar,
   } = useQuery({
     queryKey: ["seminar"],
     queryFn: getSeminars,
@@ -74,6 +74,27 @@ export function useSeminarCrud() {
     isEditing,
     removeSeminar,
     isDeleting,
+    refreshSeminar,
+  };
+}
+
+// Hook for getting individual seminar details
+export function useSeminarDetail(id: number) {
+  const {
+    data: seminar,
+    isLoading: loading,
+    isError,
+    refetch: refreshSeminar,
+  } = useQuery({
+    queryKey: ["seminar", id],
+    queryFn: () => getSeminarById(id),
+    enabled: !!id,
+  });
+
+  return {
+    seminar,
+    loading,
+    isError,
     refreshSeminar,
   };
 }
