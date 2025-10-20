@@ -82,7 +82,7 @@ const PageSeminar = () => {
 					</div>
 				</div>
 
-				<div className="mt-12 justify-center gap-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 justify-self-center">
+				<div className="mt-12 justify-center gap-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-self-center">
 					{seminar && seminar.length > 0 ? (
 						seminar.map((item) => (
 							<Card
