@@ -6,6 +6,10 @@ export const getSeminars = async (): Promise<Seminar[]> => {
   return response.data;
 };
 
+export const getSeminarById = async (id: number): Promise<Seminar> => {
+  const response = await api.get(`/seminar/${id}`);
+  return response.data;
+};
 
 // Ambil seminar berdasarkan ID
 export const getSeminarById = async (id: number): Promise<Seminar> => {
@@ -20,6 +24,8 @@ export const createSeminar = async (formData: FormData): Promise<Seminar> => {
         method: 'POST',
         body: formData,
       });
+
+      console.log('Response status:', response);
 
       if (!response.ok) {
         throw new Error('Failed to create seminar');

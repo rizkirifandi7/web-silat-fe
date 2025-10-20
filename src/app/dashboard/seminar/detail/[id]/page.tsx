@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,8 +19,7 @@ interface SeminarDetailPageProps {
 }
 
 const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
-  const [seminarId, setSeminarId] = useState<number | null>(null)
-  const [isRegistered, setIsRegistered] = useState(false)
+  const [seminarId, setSeminarId] = React.useState<number | null>(null)
 
   React.useEffect(() => {
     params.then((resolvedParams) => {
@@ -30,9 +29,6 @@ const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
 
   const { seminar, loading, isError } = useSeminarDetail(seminarId || 0)
 
-  const handleRegister = () => {
-    setIsRegistered(true)
-  }
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -173,9 +169,6 @@ const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
 
           <div className="space-y-6">
             <Card className="sticky top-24 shadow-none">
-              <CardHeader>
-                <CardTitle className="text-center">Registrasi</CardTitle>
-              </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
@@ -206,31 +199,6 @@ const SeminarDetailPage = ({ params }: SeminarDetailPageProps) => {
                     <span className="font-medium">PUSAMADA</span>
                   </div>
                 </div>
-
-                <Separator />
-
-                {!isRegistered ? (
-                  <Button 
-                    onClick={handleRegister}
-                    className="w-full"
-                    size="lg"
-                    disabled={seminar.status === "Selesai"}
-                  >
-                    {seminar.status === "Selesai" 
-                      ? "Acara Telah Selesai" 
-                      : "Daftar Sekarang"
-                    }
-                  </Button>
-                ) : (
-                  <div className="text-center space-y-2">
-                    <Badge variant="secondary" className="w-full py-2">
-                      ✓ Anda sudah terdaftar
-                    </Badge>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Lihat Tiket
-                    </Button>
-                  </div>
-                )}
 
                 {seminar.link_acara && (
                   <Button variant="outline" className="w-full" asChild>

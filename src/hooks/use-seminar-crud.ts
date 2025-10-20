@@ -12,7 +12,7 @@ export function useSeminarCrud() {
     data: seminar,
     isLoading: loading,
     isError,
-  refetch: refreshSeminar,
+    refetch: refreshSeminar,
   } = useQuery({
     queryKey: ["seminar"],
     queryFn: getSeminars,
