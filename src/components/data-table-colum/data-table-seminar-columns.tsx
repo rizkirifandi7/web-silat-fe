@@ -90,6 +90,9 @@ export const columns: ColumnDef<Seminar>[] = [
 						<Link href={`/dashboard/seminar/edit/${id}`}>
 							<DropdownMenuItem>Edit</DropdownMenuItem>
 						</Link>
+						<Link href={`/dashboard/seminar/detail/${id}`}>
+							<DropdownMenuItem>Detail</DropdownMenuItem>
+						</Link>
 						<DropdownMenuSeparator />
 						<DeleteSeminarDialog seminar={row.original}>
 							<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
