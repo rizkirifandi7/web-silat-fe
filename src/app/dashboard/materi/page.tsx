@@ -5,7 +5,6 @@ import { KategoriMateriCard } from "@/components/kategori-materi-card";
 
 const PageKategoriMateri = async () => {
 	const kategoriMateri = await getKategoriMateri();
-	console.log("Kategori Materi:", kategoriMateri);
 
 	return (
 		<div className="p-4 sm:p-6 lg:p-8">

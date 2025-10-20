@@ -18,8 +18,6 @@ export const createSeminar = async (formData: FormData): Promise<Seminar> => {
         body: formData,
       });
 
-      console.log('Response status:', response);
-
       if (!response.ok) {
         throw new Error('Failed to create seminar');
       }
@@ -32,9 +30,7 @@ export const createSeminar = async (formData: FormData): Promise<Seminar> => {
 } 
 
 export const updateSeminar = async (id: number, formData: FormData): Promise<Seminar> => {
-  // Let the browser/axios set the Content-Type (with boundary) for FormData.
   const response = await api.put(`/seminar/${id}`, formData);
-
   return response.data;
 };
 
