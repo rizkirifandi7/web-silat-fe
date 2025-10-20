@@ -7,6 +7,13 @@ export const getSeminars = async (): Promise<Seminar[]> => {
 };
 
 
+// Ambil seminar berdasarkan ID
+export const getSeminarById = async (id: number): Promise<Seminar> => {
+  const response = await api.get(`/seminar/${id}`);
+  return response.data;
+};
+
+
 export const createSeminar = async (formData: FormData): Promise<Seminar> => {
   try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seminar`, {

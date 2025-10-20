@@ -1,7 +1,7 @@
 "use client";
 
 import { Seminar } from "@/lib/schema";
-import { createSeminar, deleteSeminar, getSeminars, updateSeminar } from "@/lib/seminar-api";
+import { createSeminar, deleteSeminar, getSeminars, updateSeminar, getSeminarById } from "@/lib/seminar-api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -75,5 +75,16 @@ export function useSeminarCrud() {
     removeSeminar,
     isDeleting,
     refreshSeminar,
+    useSeminarById,
   };
+}
+
+// Hook untuk mengambil seminar berdasarkan ID
+import { useQuery as useQueryBase } from "@tanstack/react-query";
+export function useSeminarById(id: number) {
+  return useQueryBase<Seminar, Error>({
+    queryKey: ["seminar", id],
+    queryFn: () => getSeminarById(id),
+    enabled: !!id,
+  });
 }

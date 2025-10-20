@@ -80,7 +80,12 @@ export function SeminarForm({ seminar }: SeminarFormProps) {
 			if (dataKey === "gambar" || dataKey === "gambar_banner") {
 				const file = data[dataKey];
 				if (file instanceof File) {
-					formData.append(dataKey, file);
+					// Rename file agar unik (pakai timestamp)
+					const ext = file.name.split(".").pop();
+					const base = file.name.replace(/\.[^/.]+$/, "");
+					const uniqueName = `${base}-${Date.now()}.${ext}`;
+					const renamedFile = new File([file], uniqueName, { type: file.type });
+					formData.append(dataKey, renamedFile);
 				}
 			} else {
 				formData.append(dataKey, String(data[dataKey]));

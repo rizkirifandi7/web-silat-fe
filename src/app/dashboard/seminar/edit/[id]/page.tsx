@@ -1,36 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
-import { Seminar } from "@/lib/schema";
-import { api } from "@/lib/utils";
 import { SeminarForm } from "@/components/form/seminar-form";
 import { Card } from "@/components/ui/card";
+import { useSeminarById } from "@/hooks/use-seminar-crud";
 
 const PageEditSeminar = () => {
 	const { id } = useParams();
-	const [seminar, setSeminar] = useState<Seminar | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	let seminarId: number | undefined = undefined;
+	if (typeof id === "string" && !isNaN(Number(id))) {
+		seminarId = Number(id);
+	}
+	const {
+		data: seminar,
+		isLoading,
+		isError,
+		error,
+	} = useSeminarById(seminarId as number);
 
-	useEffect(() => {
-		if (!id) return;
-		setLoading(true);
-		api
-			.get(`/seminar/${id}`)
-			.then((res) => {
-				setSeminar(res.data);
-				setError(null);
-			})
-			.catch(() => {
-				setError("Gagal mengambil data seminar");
-				setSeminar(null);
-			})
-			.finally(() => setLoading(false));
-	}, [id]);
-
-	if (loading) return <div>Loading...</div>;
-	if (error) return <div>{error}</div>;
+	if (isLoading) return <div>Loading...</div>;
+	if (isError)
+		return <div>{error?.message || "Gagal memuat data seminar."}</div>;
 	if (!seminar) return <div>Seminar tidak ditemukan</div>;
 
 	return (

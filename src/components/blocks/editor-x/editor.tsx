@@ -7,7 +7,6 @@ import {
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
 import { EditorState, SerializedEditorState } from "lexical"
 
-
 import { nodes } from "./nodes"
 import { Plugins } from "./plugins"
 import { TooltipProvider } from "@/components/ui/tooltip"

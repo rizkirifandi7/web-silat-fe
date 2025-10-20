@@ -27,21 +27,31 @@ export async function RecentAnggota() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className="space-y-8">
+				<div className="space-y-6">
 					{recentAnggota.map((anggota) => (
-						<div className="flex items-center" key={anggota.id}>
-							<Avatar className="h-9 w-9">
-								<AvatarImage src={anggota.foto} alt="Avatar" />
-								<AvatarFallback>{anggota.nama.charAt(0)}</AvatarFallback>
-							</Avatar>
-							<div className="ml-4 space-y-1">
-								<p className="text-sm font-medium leading-none">
-									{anggota.nama}
-								</p>
-								<p className="text-sm text-muted-foreground">{anggota.email}</p>
+						<div
+							className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
+							key={anggota.id}
+						>
+							<div className="flex items-center">
+								<Avatar className="h-10 w-10 sm:h-9 sm:w-9">
+									<AvatarImage src={anggota.foto} alt={`Avatar ${anggota.nama}`} />
+									<AvatarFallback className="text-sm font-medium">
+										{anggota.nama.charAt(0)}
+									</AvatarFallback>
+								</Avatar>
+								<div className="ml-3 sm:ml-4 min-w-0">
+									<p className="text-sm font-medium leading-none truncate">
+										{anggota.nama}
+									</p>
+									<p className="text-sm text-muted-foreground truncate">
+										{anggota.email}
+									</p>
+								</div>
 							</div>
-							<div className="ml-auto text-sm text-muted-foreground">
-								{new Date(anggota.createdAt).toLocaleDateString()}
+
+							<div className="mt-1 sm:mt-0 sm:ml-auto text-sm text-muted-foreground">
+								{new Date(anggota.createdAt).toLocaleDateString("id-ID")}
 							</div>
 						</div>
 					))}
