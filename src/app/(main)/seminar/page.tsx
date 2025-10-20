@@ -82,7 +82,7 @@ const PageSeminar = () => {
 					</div>
 				</div>
 
-				<div className="mt-12 justify-center gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 justify-self-center">
+				<div className="mt-12 justify-center gap-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 justify-self-center">
 					{seminar && seminar.length > 0 ? (
 						seminar.map((item) => (
 							<Card
@@ -109,7 +109,7 @@ const PageSeminar = () => {
 										</h1>
 									</Link>
 
-									<div className="mb-2 flex items-center justify-between">
+									<div className="mb-2 flex items-center gap-2">
 										<Badge
 											variant={
 												item.status === "Berlangsung"
@@ -121,11 +121,30 @@ const PageSeminar = () => {
 										>
 											{item.status}
 										</Badge>
+
+										<Badge variant="outline">
+											Kuota {item.kuota}
+										</Badge>
+									</div>
+
+									<div className="">
+										<p className="text-sm text-gray-600 dark:text-gray-400">
+											Acara ini akan diselenggarakan pada{" "}
+											{new Date(item.tanggal_mulai).toLocaleDateString(
+												"id-ID",
+												{
+													day: "numeric",
+													month: "long",
+													year: "numeric",
+												}
+											)}{""}
+										, pada pukul {item.waktu_mulai.slice(0, 5)} - {item.waktu_selesai.slice(0, 5)} WIB. {item.lokasi == "Online" ? "Acara ini akan diselenggarakan secara online." : `Lokasi: ${item.lokasi}`} | {item.harga === 0 ? "Gratis untuk diikuti." : `Biaya: Rp${item.harga.toLocaleString("id-ID")}.`}
+										</p>
 									</div>
 
 									<Link
 										href={`/seminar/${item.id}`}
-										className="inline-flex items-end justify-end mt-4 text-sm font-medium text-end rounded-md"
+										className="inline-flex mt-4 text-sm font-medium text-end rounded-md w-full"
 									>
 										<Button
 											variant="outline"
