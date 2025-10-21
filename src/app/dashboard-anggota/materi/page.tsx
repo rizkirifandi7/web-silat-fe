@@ -3,14 +3,13 @@
 import { useUserContext } from "@/context/user-context";
 // Urutan tingkatan sabuk dari terendah ke tertinggi
 const urutanSabuk = [
-	"Sabuk Putih",
-	"Sabuk Kuning",
-	"Sabuk Hijau",
-	"Sabuk Biru",
-	"Sabuk Coklat",
 	"Sabuk Hitam Wiraga 1",
 	"Sabuk Hitam Wiraga 2",
 	"Sabuk Hitam Wiraga 3",
+	"Sabuk Hijau",
+	"Sabuk Merah",
+	"Sabuk Putih",
+	"Sabuk Kuning",
 ];
 
 function bisaAksesMateri(tingkatanAnggota: string, tingkatanMateri: string) {
