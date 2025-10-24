@@ -4,6 +4,7 @@ import * as React from "react";
 import {
 	IconBooks,
 	IconCalendarEvent,
+	IconCashBanknote,
 	IconDashboard,
 	IconLibraryPhoto,
 	IconPlayCard1,
@@ -22,7 +23,6 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
-import { Banknote } from "lucide-react";
 
 const data = {
 	navMain: [
@@ -54,7 +54,7 @@ const data = {
 		{
 			title: "Rekening",
 			url: "/dashboard/rekening",
-			icon: Banknote,
+			icon: IconCashBanknote,
 		},
 		{
 			title: "Pengguna",
