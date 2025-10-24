@@ -22,6 +22,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
+import { Banknote } from "lucide-react";
 
 const data = {
 	navMain: [
@@ -49,6 +50,11 @@ const data = {
 			title: "Kartu Anggota",
 			url: "/dashboard/kartu-anggota",
 			icon: IconPlayCard1,
+		},
+		{
+			title: "Rekening",
+			url: "/dashboard/rekening",
+			icon: Banknote,
 		},
 		{
 			title: "Pengguna",
