@@ -186,3 +186,14 @@ export const seminarFormSchema = z.object({
 export type SeminarFormData = z.infer<typeof seminarFormSchema>;
 
 export type Seminar = z.infer<typeof seminarSchema>;
+
+export const rekeningSchema = z.object({
+	id: z.number(),
+	logo: z.string(),
+	namaBank: z.string(),
+	noRekening: z.string(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+});
+
+export type Rekening = z.infer<typeof rekeningSchema>;
