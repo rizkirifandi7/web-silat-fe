@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Galeri } from "@/lib/schema";
+import { Rekening } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
@@ -14,22 +14,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
 
-export type GaleriTableHandlers = {
-  onEdit: (galeri: Galeri) => void;
-  onDelete: (galeri: Galeri) => void;
+export type RekeningTableHandlers = {
+  onEdit: (rekening: Rekening) => void;
+  onDelete: (rekening: Rekening) => void;
 };
 
-export const getGaleriColumns = ({
+export const getRekeningColumns = ({
   onEdit,
   onDelete,
-}: GaleriTableHandlers): ColumnDef<Galeri>[] => [
+}: RekeningTableHandlers): ColumnDef<Rekening>[] => [
   {
-    accessorKey: "gambar",
-    header: "Gambar",
+    accessorKey: "logo",
+    header: "Logo",
     cell: ({ row }) => (
       <Image
-        src={row.original.gambar || "/no-image.jpg"}
-        alt={row.original.judul}
+        src={row.original.logo || "/no-image.jpg"}
+        alt={row.original.namaBank}
         width={80}
         height={80}
         priority
@@ -38,27 +38,27 @@ export const getGaleriColumns = ({
     ),
   },
   {
-    accessorKey: "judul",
+    accessorKey: "namaBank",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Judul
+          Nama Bank
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("judul")}</div>
+      <div className="capitalize">{row.getValue("namaBank")}</div>
     ),
   },
   {
-    accessorKey: "deskripsi",
-    header: "Deskripsi",
+    accessorKey: "noRekening",
+    header: "Nomor Rekening",
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("deskripsi")}</div>
+      <div className="lowercase">{row.getValue("noRekening")}</div>
     ),
   },
   {
@@ -76,10 +76,7 @@ export const getGaleriColumns = ({
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="text-red-600"
-            onClick={() => onDelete(row.original)}
-          >
+          <DropdownMenuItem className="text-red-600" onClick={() => onDelete(row.original)}>
             Hapus
           </DropdownMenuItem>
         </DropdownMenuContent>
