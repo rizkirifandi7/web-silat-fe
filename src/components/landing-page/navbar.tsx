@@ -30,6 +30,7 @@ const navLinks = [
 	{ href: "/galeri", label: "Galeri" },
 	{ href: "/seminar", label: "Seminar" },
 	{ href: "/katalog", label: "Katalog" },
+	{ href: "/donasi", label: "Donasi" },
 	{ href: "/kontak", label: "Kontak" },
 ];
 
