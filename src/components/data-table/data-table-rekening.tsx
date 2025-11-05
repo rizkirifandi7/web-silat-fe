@@ -10,54 +10,55 @@ import { useRekeningCrud } from "@/hooks/use-rekening-crud";
 import { Rekening } from "@/lib/schema";
 
 export function DataTableRekening() {
-    const { rekening, refreshRekening } = useRekeningCrud();
-    const [editingRekening, setEditingRekening] = React.useState<Rekening | null>(null);
-    const [deletingRekening, setDeletingRekening] = React.useState<Rekening | null>(
-        null
-    );
+	const { rekening, refreshRekening } = useRekeningCrud();
+	const [editingRekening, setEditingRekening] = React.useState<Rekening | null>(
+		null
+	);
+	const [deletingRekening, setDeletingRekening] =
+		React.useState<Rekening | null>(null);
 
-    const handleEdit = (rekening: Rekening) => {
-        setEditingRekening(rekening);
-    };
+	const handleEdit = (rekening: Rekening) => {
+		setEditingRekening(rekening);
+	};
 
-    const handleDelete = (rekening: Rekening) => {
-        setDeletingRekening(rekening);
-    };
+	const handleDelete = (rekening: Rekening) => {
+		setDeletingRekening(rekening);
+	};
 
-    const columns = React.useMemo(
-        () => getRekeningColumns({ onEdit: handleEdit, onDelete: handleDelete }),
-        []
-    );
+	const columns = React.useMemo(
+		() => getRekeningColumns({ onEdit: handleEdit, onDelete: handleDelete }),
+		[]
+	);
 
-    return (
-        <div className="w-full">
-            {editingRekening && (
-                <EditRekeningDialog
-                    rekening={editingRekening}
-                    onSuccess={() => {
-                        refreshRekening();
-                        setEditingRekening(null);
-                    }}
-                    onCancel={() => setEditingRekening(null)}
-                />
-            )}
-            {deletingRekening && (
-                <DeleteRekeningDialog
-                    rekeningId={deletingRekening.id}
-                    onSuccess={() => {
-                        refreshRekening();
-                        setDeletingRekening(null);
-                    }}
-                    onCancel={() => setDeletingRekening(null)}
-                />
-            )}
-            <DataTable
-                columns={columns}
-                data={(rekening as Rekening[]) ?? []}
-                filterColumn="namaBank"
-                filterPlaceholder="Filter nama bank..."
-                toolbar={<TambahRekeningDialog />}
-            />
-        </div>
-    );
+	return (
+		<div className="w-full">
+			{editingRekening && (
+				<EditRekeningDialog
+					rekening={editingRekening}
+					onSuccess={() => {
+						refreshRekening();
+						setEditingRekening(null);
+					}}
+					onCancel={() => setEditingRekening(null)}
+				/>
+			)}
+			{deletingRekening && (
+				<DeleteRekeningDialog
+					rekeningId={deletingRekening.id}
+					onSuccess={() => {
+						refreshRekening();
+						setDeletingRekening(null);
+					}}
+					onCancel={() => setDeletingRekening(null)}
+				/>
+			)}
+			<DataTable
+				columns={columns}
+				data={(rekening as Rekening[]) ?? []}
+				filterColumn="namaBank"
+				filterPlaceholder="Filter nama bank..."
+				toolbar={<TambahRekeningDialog />}
+			/>
+		</div>
+	);
 }

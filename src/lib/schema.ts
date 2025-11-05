@@ -190,6 +190,7 @@ export type Seminar = z.infer<typeof seminarSchema>;
 export const rekeningSchema = z.object({
 	id: z.number(),
 	logo: z.string(),
+	namaPemilik: z.string(),
 	namaBank: z.string(),
 	noRekening: z.string(),
 	createdAt: z.string(),
