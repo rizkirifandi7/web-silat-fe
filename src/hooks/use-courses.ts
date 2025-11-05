@@ -5,17 +5,23 @@ import Cookie from 'js-cookie';
 
 interface Materi {
   id: number;
+  id_course: number;
   judul: string;
+  deskripsi: string;
   tipeKonten: string;
   konten: string;
   tingkatan: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Course {
   id: number;
   judul: string;
   deskripsi: string;
-  Materi: Materi[];
+  Materis: Materi[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 const fetchCourses = async (): Promise<Course[]> => {

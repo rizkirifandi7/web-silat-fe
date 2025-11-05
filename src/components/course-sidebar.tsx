@@ -2,24 +2,7 @@
 
 import React from "react";
 import { useUserContext } from "@/context/user-context";
-// Urutan tingkatan sabuk dari terendah ke tertinggi
-const urutanSabuk = [
-	"Sabuk Putih",
-	"Sabuk Kuning",
-	"Sabuk Hijau",
-	"Sabuk Biru",
-	"Sabuk Coklat",
-	"Sabuk Hitam Wiraga 1",
-	"Sabuk Hitam Wiraga 2",
-	"Sabuk Hitam Wiraga 3",
-];
-
-function bisaAksesMateri(tingkatanAnggota: string, tingkatanMateri: string) {
-	const idxAnggota = urutanSabuk.indexOf(tingkatanAnggota);
-	const idxMateri = urutanSabuk.indexOf(tingkatanMateri);
-	if (idxAnggota === -1 || idxMateri === -1) return false;
-	return idxAnggota >= idxMateri;
-}
+import { bisaAksesMateri } from "@/lib/sabuk-utils";
 import {
 	Accordion,
 	AccordionContent,
@@ -33,8 +16,7 @@ interface Course {
 	id: number;
 	judul: string;
 	deskripsi: string;
-	Materi?: Materi[];
-	Materis?: Materi[];
+	Materis: Materi[];
 }
 
 interface Materi {
@@ -65,7 +47,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 			<h2 className="p-4 text-xl font-bold border-b">Daftar Materi</h2>
 			<Accordion type="single" collapsible className="w-full">
 				{courses.map((course) => {
-					const materiList = course.Materi ?? course.Materis ?? [];
+					const materiList = course.Materis ?? [];
 					return (
 						<AccordionItem value={`course-${course.id}`} key={course.id}>
 							<AccordionTrigger className="px-4 hover:bg-muted/50">
@@ -78,7 +60,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 							</AccordionTrigger>
 							<AccordionContent>
 								<div className="flex flex-col gap-1 p-2">
-									{materiList.map((materi) => {
+									{materiList.map((materi: Materi) => {
 										const terkunci = !bisaAksesMateri(
 											tingkatanAnggota,
 											materi.tingkatan

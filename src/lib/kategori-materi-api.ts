@@ -7,7 +7,8 @@ export const getKategoriMateri = async (): Promise<KategoriMateri[]> => {
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching kategori materi:", error);
-		throw error;
+		// Return empty array during build time or when API is unavailable
+		return [];
 	}
 };
 

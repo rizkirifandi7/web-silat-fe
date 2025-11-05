@@ -7,7 +7,8 @@ export const getRekening = async (): Promise<Rekening[]> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching rekening:", error);
-    throw error;
+    // Return empty array during build time or when API is unavailable
+    return [];
   }
 };
 

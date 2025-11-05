@@ -6,7 +6,9 @@ export const getAnggotas = async (): Promise<Anggota[]> => {
 		const response = await api.get("/anggota");
 		return response.data;
 	} catch (error) {
-		handleApiError(error, "Gagal mengambil data anggota");
+		console.error("Error fetching anggota:", error);
+		// Return empty array during build time or when API is unavailable
+		return [];
 	}
 };
 

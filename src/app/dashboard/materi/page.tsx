@@ -1,10 +1,28 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { getKategoriMateri } from "@/lib/kategori-materi-api";
 import TambahKategoriMateriDialog from "@/components/tambah-kategori-materi-dialog";
 import { KategoriMateriCard } from "@/components/kategori-materi-card";
+import { KategoriMateri } from "@/lib/schema";
 
-const PageKategoriMateri = async () => {
-	const kategoriMateri = await getKategoriMateri();
+const PageKategoriMateri = () => {
+	const [kategoriMateri, setKategoriMateri] = useState<KategoriMateri[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await getKategoriMateri();
+				setKategoriMateri(data);
+			} catch (error) {
+				console.error("Failed to fetch kategori materi:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchData();
+	}, []);
 
 	return (
 		<div className="p-4 sm:p-6 lg:p-8">
@@ -22,7 +40,11 @@ const PageKategoriMateri = async () => {
 						<TambahKategoriMateriDialog />
 					</div>
 				</div>
-				{kategoriMateri.length > 0 ? (
+				{isLoading ? (
+					<div className="mt-8 flex flex-col items-center justify-center rounded-lg bg-muted py-12 text-center">
+						<p className="text-lg font-medium">Memuat data...</p>
+					</div>
+				) : kategoriMateri.length > 0 ? (
 					<div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 						{kategoriMateri.map((kategori) => (
 							<KategoriMateriCard key={kategori.id} kategori={kategori} />
