@@ -48,3 +48,50 @@ export const deleteAnggota = async (id: number): Promise<void> => {
 		handleApiError(error, `Gagal menghapus anggota dengan ID ${id}`);
 	}
 };
+
+/**
+ * Get anggota data by verification token
+ * This function can be used both on client and server side
+ * @param token - The verification token from QR code
+ * @param options - Optional fetch configuration
+ * @returns Anggota data or null if not found
+ */
+export const getAnggotaByToken = async (
+	token: string,
+	options?: {
+		cache?: RequestCache;
+		revalidate?: number | false;
+	}
+): Promise<Anggota | null> => {
+	try {
+		const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+		if (!apiUrl) {
+			throw new Error("API URL is not configured");
+		}
+
+		const response = await fetch(`${apiUrl}/anggota/token/${token}`, {
+			cache: options?.cache || "no-store",
+			next: options?.revalidate !== undefined ? { revalidate: options.revalidate } : undefined,
+		});
+
+		if (!response.ok) {
+			if (response.status === 404) {
+				console.log(`Anggota with token ${token} not found`);
+				return null;
+			}
+			const errorData = await response.json().catch(() => ({}));
+			throw new Error(
+				errorData.message || `Failed to fetch anggota: ${response.statusText}`
+			);
+		}
+
+		const data: Anggota = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error fetching anggota by token:", error);
+		if (error instanceof Error) {
+			throw error;
+		}
+		throw new Error("Failed to fetch anggota data");
+	}
+};
