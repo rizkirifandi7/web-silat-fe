@@ -52,9 +52,13 @@ const data = {
 			icon: IconPlayCard1,
 		},
 		{
-			title: "Rekening",
-			url: "/dashboard/rekening",
+			title: "Donasi",
+			url: "#",
 			icon: IconCashBanknote,
+			items: [
+				{ title: "Kelola Campaign", url: "/dashboard/donasi" },
+				{ title: "Metode Pembayaran", url: "/dashboard/payment-methods" },
+			],
 		},
 		{
 			title: "Pengguna",

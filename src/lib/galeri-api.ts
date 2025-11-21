@@ -7,7 +7,6 @@ export const getGaleri = async (): Promise<Galeri[]> => {
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching galeri:", error);
-		// Return empty array during build time or when API is unavailable
 		return [];
 	}
 };

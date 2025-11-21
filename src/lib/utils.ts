@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -14,6 +15,21 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Add token to every request
+api.interceptors.request.use(
+  (config) => {
+    const token = Cookies.get("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 
 /**
  * Menangani error dari panggilan API dan menampilkan pesan toast.

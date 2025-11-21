@@ -7,10 +7,12 @@ import {
 	useEffect,
 	ReactNode,
 	useCallback,
+	useRef,
 } from "react";
 import Cookies from "js-cookie";
 import { User } from "@/types/user";
 import { usePathname, useRouter } from "next/navigation";
+import { getUserProfile } from "@/lib/auth-api";
 
 interface UserContextType {
 	user: User | null;
@@ -18,6 +20,7 @@ interface UserContextType {
 	error: string | null;
 	login: (token: string, user: User) => void;
 	logout: () => void;
+	refetchUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -29,6 +32,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const pathname = usePathname();
 
+	// Use refs to avoid dependency changes
+	const routerRef = useRef(router);
+	const pathnameRef = useRef(pathname);
+
+	// Update refs when they change
+	useEffect(() => {
+		routerRef.current = router;
+		pathnameRef.current = pathname;
+	}, [router, pathname]);
+
 	const fetchUser = useCallback(async () => {
 		const token = Cookies.get("token");
 		if (!token) {
@@ -39,38 +52,32 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 		setIsLoading(true);
 		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/anggota/profile`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Sesi tidak valid atau telah berakhir.");
-			}
-
-			const data = await response.json();
+			const data = await getUserProfile(token);
 			setUser(data);
 			setError(null);
 		} catch (err: unknown) {
 			console.error("Gagal mengambil data pengguna:", err);
 			setUser(null);
 			Cookies.remove("token");
+
 			if (err instanceof Error) {
 				setError(err.message);
 			} else {
 				setError("Terjadi kesalahan yang tidak diketahui.");
 			}
-			if (!["/login", "/verify"].includes(pathname)) {
-				router.replace("/login");
+
+			// Use ref to avoid dependency
+			const currentPathname = pathnameRef.current;
+			if (
+				!["/login", "/verify", "/"].includes(currentPathname) &&
+				!currentPathname.startsWith("/verify/")
+			) {
+				routerRef.current.replace("/login");
 			}
 		} finally {
 			setIsLoading(false);
 		}
-	}, [pathname, router]);
+	}, []); // Empty dependencies - stable function
 
 	useEffect(() => {
 		fetchUser();
@@ -94,11 +101,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 		Cookies.remove("token");
 		setUser(null);
 		setError(null);
-		router.replace("/login");
+		routerRef.current.replace("/login");
 	};
 
+	// Expose refetch function for manual refresh
+	const refetchUser = useCallback(async () => {
+		await fetchUser();
+	}, [fetchUser]);
+
 	return (
-		<UserContext.Provider value={{ user, isLoading, error, login, logout }}>
+		<UserContext.Provider
+			value={{ user, isLoading, error, login, logout, refetchUser }}
+		>
 			{children}
 		</UserContext.Provider>
 	);

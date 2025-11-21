@@ -44,6 +44,18 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<head>
+				{/* Midtrans Snap.js Script */}
+				<script
+					src={`https://app.${
+						process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true"
+							? ""
+							: "sandbox."
+					}midtrans.com/snap/snap.js`}
+					data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+					async
+				></script>
+			</head>
 			<body
 				className={cn(`${inter.className}
 					text-foreground group/body overscroll-none  antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)] 

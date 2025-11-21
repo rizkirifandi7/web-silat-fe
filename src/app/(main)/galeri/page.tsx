@@ -1,8 +1,6 @@
 import { GaleriGrid } from "@/components/galeri-grid";
 import { getGaleri } from "@/lib/galeri-api";
 
-export const dynamic = "force-dynamic";
-
 export default async function GaleriPage() {
 	const galleryData = await getGaleri();
 
