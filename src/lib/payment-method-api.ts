@@ -47,7 +47,6 @@ export const getAllPaymentMethods = async (params?: {
 		const response = await api.get(url);
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching payment methods:", error);
 		throw error;
 	}
 };
@@ -60,7 +59,6 @@ export const getPaymentMethodById = async (id: number) => {
 		const response = await api.get(`/donasi/payment-methods/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching payment method:", error);
 		throw error;
 	}
 };
@@ -73,7 +71,6 @@ export const createPaymentMethod = async (payload: CreatePaymentMethodPayload) =
 		const response = await api.post("/donasi/payment-methods", payload);
 		return response.data;
 	} catch (error) {
-		console.error("Error creating payment method:", error);
 		throw error;
 	}
 };
@@ -89,7 +86,6 @@ export const updatePaymentMethod = async (
 		const response = await api.put(`/donasi/payment-methods/${id}`, payload);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating payment method:", error);
 		throw error;
 	}
 };
@@ -102,7 +98,6 @@ export const deletePaymentMethod = async (id: number) => {
 		const response = await api.delete(`/donasi/payment-methods/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting payment method:", error);
 		throw error;
 	}
 };
@@ -122,7 +117,6 @@ export const uploadPaymentMethodIcon = async (file: File) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error uploading icon:", error);
 		throw error;
 	}
 };

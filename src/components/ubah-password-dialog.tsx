@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -36,7 +37,11 @@ const PasswordSchema = z
 		path: ["confirmPassword"],
 	});
 
-export function UbahPasswordDialog({ children }: { children: React.ReactNode }) {
+export function UbahPasswordDialog({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,26 +57,21 @@ export function UbahPasswordDialog({ children }: { children: React.ReactNode }) 
 	async function onSubmit(values: z.infer<typeof PasswordSchema>) {
 		setIsSubmitting(true);
 		try {
-			// Anda perlu mendapatkan token dari suatu tempat (misal: local storage, context)
-			const token = localStorage.getItem("token");
-			if (!token) {
-				toast.error("Otentikasi dibutuhkan. Silakan login kembali.");
-				// Mungkin arahkan ke halaman login
-				return;
-			}
-
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/change-password`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify({
-					// userId akan diambil dari token di backend, tidak perlu dikirim
-					oldPassword: values.oldPassword,
-					newPassword: values.newPassword,
-				}),
-			});
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/change-password`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${Cookies.get("accessToken")}`,
+					},
+					credentials: "include", // Include cookies
+					body: JSON.stringify({
+						oldPassword: values.oldPassword,
+						newPassword: values.newPassword,
+					}),
+				}
+			);
 
 			const result = await response.json();
 
@@ -83,7 +83,6 @@ export function UbahPasswordDialog({ children }: { children: React.ReactNode }) 
 			form.reset();
 			setIsOpen(false);
 		} catch (error) {
-			console.error("Error changing password:", error);
 			if (error instanceof Error) {
 				toast.error(error.message);
 			} else {
@@ -156,3 +155,4 @@ export function UbahPasswordDialog({ children }: { children: React.ReactNode }) 
 		</Dialog>
 	);
 }
+

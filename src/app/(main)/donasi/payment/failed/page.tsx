@@ -1,6 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { use, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,9 +25,12 @@ const formatRupiah = (amount: number) => {
 	}).format(amount);
 };
 
-export default function PaymentFailedPage() {
+function PaymentFailedContent({
+	searchParams,
+}: {
+	searchParams: ReadonlyURLSearchParams;
+}) {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 
 	const amount = searchParams.get("amount");
 	const method = searchParams.get("method");
@@ -199,3 +204,32 @@ export default function PaymentFailedPage() {
 		</div>
 	);
 }
+
+export default function PaymentFailedPage({
+	searchParams,
+}: {
+	searchParams: Promise<{
+		amount?: string;
+		method?: string;
+		campaign?: string;
+		reason?: string;
+	}>;
+}) {
+	const params = use(searchParams);
+	const urlSearchParams = new URLSearchParams(params as Record<string, string>);
+
+	return (
+		<Suspense
+			fallback={
+				<div className="flex items-center justify-center min-h-screen">
+					<XCircle className="w-8 h-8 animate-spin" />
+				</div>
+			}
+		>
+			<PaymentFailedContent
+				searchParams={urlSearchParams as ReadonlyURLSearchParams}
+			/>
+		</Suspense>
+	);
+}
+

@@ -36,7 +36,6 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					link.click();
 				})
 				.catch((err) => {
-					console.error("Gagal mengunduh kartu!", err);
 				});
 		}
 	}, [anggota.nama]);

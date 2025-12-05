@@ -127,9 +127,8 @@ export function AnggotaForm({
 				setFotoPreview(previewUrl);
 				form.setValue("foto", resizedFile);
 				setShowCrop(false);
-			} catch (error) {
+			} catch {
 				toast.error("Gagal memotong gambar.");
-				console.error(error);
 			}
 		}
 	};

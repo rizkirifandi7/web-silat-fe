@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { use, useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useUserContext } from "@/context/user-context";
 import CourseSidebar from "@/components/course-sidebar";
 import MateriViewer from "@/components/materi-viewer";
@@ -39,10 +39,10 @@ interface Materi {
 	tingkatan: string;
 }
 
-const MateriDetailPage = () => {
-	const params = useParams();
+const MateriDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
+	const { id } = use(params);
 	const router = useRouter();
-	const courseId = params.id ? Number(params.id) : null;
+	const courseId = id ? Number(id) : null;
 
 	const { courses, isLoading, isError } = useCourses();
 	const { user } = useUserContext();
@@ -292,3 +292,4 @@ const MateriDetailPage = () => {
 };
 
 export default MateriDetailPage;
+

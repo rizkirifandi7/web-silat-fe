@@ -18,9 +18,13 @@ import Link from "next/link";
 
 interface KategoriMateriCardProps {
 	kategori: KategoriMateri;
+	onRefresh?: () => void;
 }
 
-export function KategoriMateriCard({ kategori }: KategoriMateriCardProps) {
+export function KategoriMateriCard({
+	kategori,
+	onRefresh,
+}: KategoriMateriCardProps) {
 	return (
 		<Card className="w-full overflow-hidden shadow-none">
 			<div className="relative">
@@ -39,10 +43,16 @@ export function KategoriMateriCard({ kategori }: KategoriMateriCardProps) {
 							<DropdownMenuSeparator />
 							<div className="space-y-1">
 								<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-									<EditKategoriMateriDialog kategori={kategori} />
+									<EditKategoriMateriDialog
+										kategori={kategori}
+										onSuccess={onRefresh}
+									/>
 								</DropdownMenuItem>
 								<DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-									<DeleteKategoriMateriDialog id={kategori.id} />
+									<DeleteKategoriMateriDialog
+										id={kategori.id}
+										onSuccess={onRefresh}
+									/>
 								</DropdownMenuItem>
 							</div>
 						</DropdownMenuContent>
@@ -63,3 +73,4 @@ export function KategoriMateriCard({ kategori }: KategoriMateriCardProps) {
 		</Card>
 	);
 }
+

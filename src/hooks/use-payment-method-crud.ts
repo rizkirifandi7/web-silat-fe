@@ -1,70 +1,61 @@
+/**
+ * Payment Method CRUD Hook (REFACTORED)
+ * Uses React Query hooks for state management
+ * Replaces manual useState/useEffect with caching
+ */
+
 "use client";
 
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import {
-	getAllPaymentMethods,
-	createPaymentMethod,
-	updatePaymentMethod,
-	deletePaymentMethod,
+	usePaymentMethods,
+	useCreatePaymentMethod,
+	useUpdatePaymentMethod,
+	useDeletePaymentMethod,
+	useUploadPaymentMethodIcon,
 	type PaymentMethod,
 	type CreatePaymentMethodPayload,
 	type UpdatePaymentMethodPayload,
-} from "@/lib/payment-method-api";
-import { api } from "@/lib/utils";
+} from "@/hooks/queries/use-payment-methods";
 
 export function usePaymentMethodCrud() {
-	const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-	const [loading, setLoading] = useState(true);
+	// Dialog states (UI state only)
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+	
+	// Filter states
+	const [channel, setChannel] = useState<string | undefined>(undefined);
+	const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 
-	// Fetch payment methods
+	// React Query hooks (replaces manual useState + useEffect)
+	const { data: paymentMethods = [], isLoading: loading, refetch } = usePaymentMethods({
+		channel,
+		is_active: isActive,
+	});
+
+	const createMutation = useCreatePaymentMethod();
+	const updateMutation = useUpdatePaymentMethod();
+	const deleteMutation = useDeletePaymentMethod();
+	const uploadIconMutation = useUploadPaymentMethodIcon();
+
+	// Fetch payment methods (now just triggers refetch with new filters)
 	const fetchPaymentMethods = async (params?: {
 		channel?: string;
 		is_active?: boolean;
 	}) => {
-		try {
-			setLoading(true);
-			const response = await getAllPaymentMethods(params);
-
-			if (response.status === "success") {
-				console.log("Fetched payment methods:", response.data);
-				setPaymentMethods(response.data);
-			}
-		} catch (error) {
-			console.error("Error fetching payment methods:", error);
-			toast.error("Gagal memuat data metode pembayaran");
-		} finally {
-			setLoading(false);
-		}
+		if (params?.channel !== undefined) setChannel(params.channel);
+		if (params?.is_active !== undefined) setIsActive(params.is_active);
+		await refetch();
 	};
 
-	useEffect(() => {
-		fetchPaymentMethods();
-	}, []);
-
 	// Create payment method
-	const handleCreate = async (data: CreatePaymentMethodPayload) => {
+	const handleCreate = async (data: CreatePaymentMethodPayload): Promise<boolean> => {
 		try {
-			console.log("Creating payment method with data:", data);
-			const response = await createPaymentMethod(data);
-			console.log("Create payment method response:", response);
-			if (response.status === "success") {
-				toast.success("Metode pembayaran berhasil dibuat");
-				fetchPaymentMethods();
-				setIsDialogOpen(false);
-				return true;
-			}
-			return false;
+			await createMutation.mutateAsync(data);
+			setIsDialogOpen(false);
+			return true;
 		} catch (error) {
-			console.error("Error creating payment method:", error);
-			const errorMessage =
-				error instanceof Error
-					? error.message
-					: "Gagal membuat metode pembayaran";
-			toast.error(errorMessage);
 			return false;
 		}
 	};
@@ -73,22 +64,13 @@ export function usePaymentMethodCrud() {
 	const handleUpdate = async (
 		id: number,
 		data: UpdatePaymentMethodPayload
-	) => {
+	): Promise<boolean> => {
 		try {
-			const response = await updatePaymentMethod(id, data);
-			if (response.status === "success") {
-				toast.success("Metode pembayaran berhasil diupdate");
-				fetchPaymentMethods();
-				setIsDialogOpen(false);
-				setSelectedPaymentMethod(null);
-				return true;
-			}
-			return false;
+			await updateMutation.mutateAsync({ id, data });
+			setIsDialogOpen(false);
+			setSelectedPaymentMethod(null);
+			return true;
 		} catch (error) {
-			console.error("Error updating payment method:", error);
-			const errorMessage =
-				error instanceof Error ? error.message : "Gagal mengupdate metode pembayaran";
-			toast.error(errorMessage);
 			return false;
 		}
 	};
@@ -98,20 +80,11 @@ export function usePaymentMethodCrud() {
 		if (!selectedPaymentMethod) return false;
 
 		try {
-			const response = await deletePaymentMethod(selectedPaymentMethod.id);
-			if (response.status === "success") {
-				toast.success("Metode pembayaran berhasil dihapus");
-				fetchPaymentMethods();
-				setIsDeleteDialogOpen(false);
-				setSelectedPaymentMethod(null);
-				return true;
-			}
-			return false;
+			await deleteMutation.mutateAsync(selectedPaymentMethod.id);
+			setIsDeleteDialogOpen(false);
+			setSelectedPaymentMethod(null);
+			return true;
 		} catch (error) {
-			console.error("Error deleting payment method:", error);
-			const errorMessage =
-				error instanceof Error ? error.message : "Gagal menghapus metode pembayaran";
-			toast.error(errorMessage);
 			return false;
 		}
 	};
@@ -119,42 +92,52 @@ export function usePaymentMethodCrud() {
 	// Upload icon
 	const handleUploadIcon = async (file: File): Promise<string | null> => {
 		try {
-			const formData = new FormData();
-			formData.append("icon", file);
-
-			const response = await api.post("/donasi/payment-methods/upload", formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
-			
-			if (response.data.status === "success") {
-				toast.success("Icon berhasil diupload");
-				return response.data.data.icon_url;
-			}
-			return null;
+			const iconUrl = await uploadIconMutation.mutateAsync(file);
+			return iconUrl;
 		} catch (error) {
-			console.error("Error uploading icon:", error);
-			const errorMessage =
-				error instanceof Error ? error.message : "Gagal mengupload icon";
-			toast.error(errorMessage);
 			return null;
 		}
 	};
 
+	// Open create dialog
+	const openCreateDialog = () => {
+		setSelectedPaymentMethod(null);
+		setIsDialogOpen(true);
+	};
+
+	// Open edit dialog
+	const openEditDialog = (paymentMethod: PaymentMethod) => {
+		setSelectedPaymentMethod(paymentMethod);
+		setIsDialogOpen(true);
+	};
+
+	// Open delete dialog
+	const openDeleteDialog = (paymentMethod: PaymentMethod) => {
+		setSelectedPaymentMethod(paymentMethod);
+		setIsDeleteDialogOpen(true);
+	};
+
 	return {
+		// Data (from React Query)
 		paymentMethods,
 		loading,
+		
+		// UI state
 		selectedPaymentMethod,
 		setSelectedPaymentMethod,
 		isDialogOpen,
-		setIsDialogOpen,
 		isDeleteDialogOpen,
+		setIsDialogOpen,
 		setIsDeleteDialogOpen,
+		
+		// Actions
 		fetchPaymentMethods,
 		handleCreate,
 		handleUpdate,
 		handleDelete,
 		handleUploadIcon,
+		openCreateDialog,
+		openEditDialog,
+		openDeleteDialog,
 	};
 }

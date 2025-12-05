@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { use, useEffect, useState, Suspense } from "react";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,8 +32,11 @@ const formatRupiah = (amount: string | number) => {
 	}).format(numAmount);
 };
 
-export default function PaymentSuccessPage() {
-	const searchParams = useSearchParams();
+function PaymentSuccessContent({
+	searchParams,
+}: {
+	searchParams: ReadonlyURLSearchParams;
+}) {
 	const [donation, setDonation] = useState<DonationStatus | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -49,20 +52,10 @@ export default function PaymentSuccessPage() {
 			}
 
 			try {
-				console.log(
-					`🔄 Fetching donation status (attempt ${pollingCount + 1}/15)...`
-				);
 				const response = await checkDonationStatus(transactionId);
-				console.log("📦 Check Status Response:", response);
 
 				if (response.status === "success" && response.data?.donation) {
 					const donationData = response.data.donation;
-					console.log("💳 Donation Data:", donationData);
-					console.log("💰 Payment Status:", donationData.payment_status);
-					console.log("🏦 VA Numbers:", donationData.va_numbers);
-					console.log("🔢 Payment Code:", donationData.payment_code);
-					console.log("🔗 QR Code URL:", donationData.qr_code_url);
-					console.log("📱 Deeplink:", donationData.deeplink_redirect);
 
 					setDonation(donationData);
 
@@ -81,30 +74,17 @@ export default function PaymentSuccessPage() {
 
 					// Continue polling if payment is pending and no payment details yet
 					if (isPendingPayment && !hasPaymentDetails && pollingCount < 15) {
-						console.log(
-							"⏳ Payment details not available yet, retrying in 2 seconds..."
-						);
 						setTimeout(() => {
 							setPollingCount((prev) => prev + 1);
 						}, 2000);
 					} else {
-						if (hasPaymentDetails) {
-							console.log("✅ Payment details loaded successfully!");
-						} else if (pollingCount >= 15) {
-							console.warn(
-								"⚠️ Max polling attempts reached. Payment details may be sent via email."
-							);
-						}
 						setLoading(false);
 					}
 				} else {
-					console.error("❌ Invalid response structure:", response);
 					setLoading(false);
 				}
-			} catch (error) {
-				console.error("❌ Error fetching donation status:", error);
+			} catch {
 				if (pollingCount < 15) {
-					console.log("🔄 Retrying after error...");
 					setTimeout(() => {
 						setPollingCount((prev) => prev + 1);
 					}, 2000);
@@ -626,3 +606,27 @@ export default function PaymentSuccessPage() {
 		</div>
 	);
 }
+
+export default function PaymentSuccessPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ transaction_id?: string }>;
+}) {
+	const params = use(searchParams);
+	const urlSearchParams = new URLSearchParams(params as Record<string, string>);
+
+	return (
+		<Suspense
+			fallback={
+				<div className="flex items-center justify-center min-h-screen">
+					<Loader2 className="w-8 h-8 animate-spin" />
+				</div>
+			}
+		>
+			<PaymentSuccessContent
+				searchParams={urlSearchParams as ReadonlyURLSearchParams}
+			/>
+		</Suspense>
+	);
+}
+

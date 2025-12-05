@@ -10,17 +10,19 @@ const PageKategoriMateri = () => {
 	const [kategoriMateri, setKategoriMateri] = useState<KategoriMateri[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	const fetchData = async () => {
+		setIsLoading(true);
+		try {
+			const data = await getKategoriMateri();
+			setKategoriMateri(data);
+		} catch (error) {
+			console.error("Failed to fetch kategori materi:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = await getKategoriMateri();
-				setKategoriMateri(data);
-			} catch (error) {
-				console.error("Failed to fetch kategori materi:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
 		fetchData();
 	}, []);
 
@@ -37,7 +39,7 @@ const PageKategoriMateri = () => {
 						</p>
 					</div>
 					<div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-						<TambahKategoriMateriDialog />
+						<TambahKategoriMateriDialog onSuccess={fetchData} />
 					</div>
 				</div>
 				{isLoading ? (
@@ -47,7 +49,11 @@ const PageKategoriMateri = () => {
 				) : kategoriMateri.length > 0 ? (
 					<div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 						{kategoriMateri.map((kategori) => (
-							<KategoriMateriCard key={kategori.id} kategori={kategori} />
+							<KategoriMateriCard
+								key={kategori.id}
+								kategori={kategori}
+								onRefresh={fetchData}
+							/>
 						))}
 					</div>
 				) : (
@@ -73,7 +79,7 @@ const PageKategoriMateri = () => {
 							Mulai dengan menambahkan kategori materi baru.
 						</p>
 						<div className="mt-6">
-							<TambahKategoriMateriDialog />
+							<TambahKategoriMateriDialog onSuccess={fetchData} />
 						</div>
 					</div>
 				)}
@@ -83,3 +89,4 @@ const PageKategoriMateri = () => {
 };
 
 export default PageKategoriMateri;
+

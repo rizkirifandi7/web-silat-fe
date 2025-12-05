@@ -1,0 +1,59 @@
+
+> nextjs-dashboard-template@0.1.0 build
+> next build
+
+   ▲ Next.js 15.4.5
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 20.0s
+   Linting and checking validity of types ...
+
+./src/app/(main)/donasi/[id]/payment/page.tsx
+178:17  Warning: 'result' is defined but never used.  @typescript-eslint/no-unused-vars
+184:17  Warning: 'result' is defined but never used.  @typescript-eslint/no-unused-vars
+190:15  Warning: 'result' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/(main)/kontak/page.tsx
+30:6  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blocks/editor-x/editor.tsx
+19:13  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/editor/shared/warn-only-once.ts
+9:30  Warning: 'message' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/kartu-anggota.tsx
+38:13  Warning: 'err' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/landing-page/kontak.tsx
+30:7  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/nav-user.tsx
+104:20  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/qr-scanner.tsx
+100:21  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/queries/use-campaigns.ts
+74:13  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+94:13  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/queries/use-user-profile.ts
+45:13  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+63:13  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+Failed to compile.
+
+./src/components/editor/nodes/embeds/tweet-node.tsx:82:24
+Type error: Cannot find name 'error'. Did you mean 'onError'?
+
+[0m [90m 80 |[39m     } [36mcatch[39m {
+ [90m 81 |[39m       [36mif[39m (onError) {
+[31m[1m>[22m[39m[90m 82 |[39m         onError([33mString[39m(error))
+ [90m    |[39m                        [31m[1m^[22m[39m
+ [90m 83 |[39m       }
+ [90m 84 |[39m     }
+ [90m 85 |[39m   }[33m,[39m [onError[33m,[39m onLoad[33m,[39m tweetID])[0m
+Next.js build worker exited with code: 1 and signal: null

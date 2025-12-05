@@ -61,7 +61,6 @@ export default function VerifyPage() {
 					audio.volume = 0.3;
 					audio.play().catch(() => {
 						// Ignore audio play errors
-						console.log("Audio play blocked by browser");
 					});
 				} catch {
 					// Audio not supported or file not found
@@ -236,3 +235,4 @@ export default function VerifyPage() {
 		</>
 	);
 }
+

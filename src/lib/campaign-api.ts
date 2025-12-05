@@ -63,9 +63,13 @@ export const getAllCampaigns = async (params?: {
 }) => {
 	try {
 		const response = await api.get("/donasi/campaigns", { params });
-		return response.data;
+		// Backend returns: { status, message, data: [...], pagination: {...} }
+		// Return full object with campaigns and pagination for dashboard
+		return {
+			campaigns: response.data.data || [],
+			pagination: response.data.pagination || { total: 0, page: 1, limit: 10, total_pages: 0 }
+		};
 	} catch (error) {
-		console.error("Error getting campaigns:", error);
 		throw error;
 	}
 };
@@ -78,7 +82,6 @@ export const getCampaignById = async (id: number) => {
 		const response = await api.get(`/donasi/campaigns/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error getting campaign:", error);
 		throw error;
 	}
 };
@@ -91,7 +94,6 @@ export const getCampaignBySlug = async (slug: string) => {
 		const response = await api.get(`/donasi/campaigns/slug/${slug}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error getting campaign:", error);
 		throw error;
 	}
 };
@@ -104,7 +106,6 @@ export const createCampaign = async (payload: CreateCampaignPayload) => {
 		const response = await api.post("/donasi/campaigns", payload);
 		return response.data;
 	} catch (error) {
-		console.error("Error creating campaign:", error);
 		throw error;
 	}
 };
@@ -120,7 +121,6 @@ export const updateCampaign = async (
 		const response = await api.put(`/donasi/campaigns/${id}`, payload);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating campaign:", error);
 		throw error;
 	}
 };
@@ -133,7 +133,6 @@ export const deleteCampaign = async (id: number) => {
 		const response = await api.delete(`/donasi/campaigns/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting campaign:", error);
 		throw error;
 	}
 };
@@ -153,7 +152,6 @@ export const uploadCampaignImage = async (file: File) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error uploading image:", error);
 		throw error;
 	}
 };

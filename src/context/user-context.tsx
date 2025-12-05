@@ -18,7 +18,7 @@ interface UserContextType {
 	user: User | null;
 	isLoading: boolean;
 	error: string | null;
-	login: (token: string, user: User) => void;
+	login: (token: string, user: User, redirectPath?: string) => void;
 	logout: () => void;
 	refetchUser: () => Promise<void>;
 }
@@ -43,7 +43,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 	}, [router, pathname]);
 
 	const fetchUser = useCallback(async () => {
-		const token = Cookies.get("token");
+		const token = Cookies.get("accessToken");
 		if (!token) {
 			setIsLoading(false);
 			setUser(null);
@@ -52,13 +52,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 		setIsLoading(true);
 		try {
-			const data = await getUserProfile(token);
+			const data = await getUserProfile();
 			setUser(data);
 			setError(null);
 		} catch (err: unknown) {
 			console.error("Gagal mengambil data pengguna:", err);
 			setUser(null);
-			Cookies.remove("token");
+			Cookies.remove("accessToken");
 
 			if (err instanceof Error) {
 				setError(err.message);
@@ -83,22 +83,33 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 		fetchUser();
 	}, [fetchUser]);
 
-	const login = (token: string, userData: User) => {
-		Cookies.set("token", token, { expires: 7, path: "/" });
+	const login = (token: string, userData: User, redirectPath?: string) => {
+		Cookies.set("accessToken", token, {
+			expires: 1 / 96, // 15 minutes
+			path: "/",
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "lax",
+		});
 		setUser(userData);
 		setError(null);
 
-		if (userData.role === "admin" || userData.role === "superadmin") {
-			router.replace("/dashboard/beranda");
-		} else if (userData.role === "anggota") {
-			router.replace("/dashboard-anggota/beranda");
+		// Custom redirect path has priority
+		if (redirectPath) {
+			router.replace(redirectPath);
 		} else {
-			router.replace("/");
+			// Auto-redirect based on user role
+			if (userData.role === "admin" || userData.role === "superadmin") {
+				router.replace("/dashboard/beranda");
+			} else if (userData.role === "anggota") {
+				// Anggota stays on landing page (no redirect)
+				// Navbar will show user menu automatically
+				router.replace("/");
+			}
 		}
 	};
 
 	const logout = () => {
-		Cookies.remove("token");
+		Cookies.remove("accessToken");
 		setUser(null);
 		setError(null);
 		routerRef.current.replace("/login");
@@ -125,3 +136,4 @@ export const useUserContext = () => {
 	}
 	return context;
 };
+

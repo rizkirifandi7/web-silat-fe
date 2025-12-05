@@ -62,7 +62,6 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({
 				}
 			} catch {
 				// Bukan URL, gunakan raw data
-				console.log("Scanned data is not a URL, using raw data.");
 			}
 
 			// Implementasi debouncing: cek apakah token yang sama baru saja di-scan
@@ -71,7 +70,6 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({
 				lastScannedRef.current?.token === token &&
 				now - lastScannedRef.current.time < SCAN_COOLDOWN
 			) {
-				console.log("Duplicate scan ignored (cooldown active)");
 				return;
 			}
 
@@ -103,7 +101,6 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({
 					// Silent error untuk decode failures (normal saat scanning)
 					// Hanya log untuk debugging
 					if (process.env.NODE_ENV === "development") {
-						console.log("QR Decode Error:", error);
 					}
 				},
 				highlightScanRegion: true,
@@ -116,7 +113,6 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({
 			scannerRef.current
 				.start()
 				.then(() => {
-					console.log("QR Scanner started successfully");
 					onCameraReadyRef.current?.();
 				})
 				.catch((err) => {
@@ -148,7 +144,6 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({
 								break;
 						}
 					}
-					console.error("Failed to start QR Scanner:", err);
 					onScanFailureRef.current(`Gagal memulai kamera: ${detailedMessage}`);
 				});
 		} else if (!active && scannerRef.current) {

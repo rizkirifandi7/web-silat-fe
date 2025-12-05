@@ -55,8 +55,15 @@ export function CampaignFormDialog({
 	const isPublished = watch("is_published");
 	const isUrgent = watch("is_urgent");
 
+	// Reset form when dialog opens/closes or campaign changes
 	useEffect(() => {
+		if (!open) {
+			// Reset everything when dialog closes
+			return;
+		}
+
 		if (campaign) {
+			// Edit mode - populate with campaign data
 			reset({
 				title: campaign.title,
 				category: campaign.category,
@@ -73,18 +80,28 @@ export function CampaignFormDialog({
 			setImagePreview(campaign.image_url || "");
 			if (campaign.benefits && campaign.benefits.length > 0) {
 				setBenefits(campaign.benefits.map((b) => b.benefit_text));
+			} else {
+				setBenefits([""]);
 			}
 		} else {
+			// Create mode - reset to default values
 			reset({
+				title: "",
+				category: "sosial",
+				description: "",
+				story: "",
+				image_url: "",
+				target_amount: 0,
 				is_published: false,
 				is_urgent: false,
 				urgency_level: "medium",
-				category: "sosial",
+				start_date: "",
+				end_date: "",
 			});
 			setImagePreview("");
 			setBenefits([""]);
 		}
-	}, [campaign, reset]);
+	}, [open, campaign, reset]);
 
 	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -143,9 +160,24 @@ export function CampaignFormDialog({
 
 		const success = await onSubmit(payload);
 		if (success) {
-			reset();
+			// Reset form to default values
+			reset({
+				title: "",
+				category: "sosial",
+				description: "",
+				story: "",
+				image_url: "",
+				target_amount: 0,
+				is_published: false,
+				is_urgent: false,
+				urgency_level: "medium",
+				start_date: "",
+				end_date: "",
+			});
 			setBenefits([""]);
 			setImagePreview("");
+			// Close dialog
+			onOpenChange(false);
 		}
 	};
 
@@ -466,3 +498,4 @@ export function CampaignFormDialog({
 		</Dialog>
 	);
 }
+

@@ -68,7 +68,7 @@ const getSabukColor = (sabuk: string) => {
 export default function DashboardAnggotaPage() {
 	const [user, setUser] = React.useState<User | null>(null);
 	const { courses, isLoading: coursesLoading } = useCourses();
-	const token = Cookies.get("token");
+	const token = Cookies.get("accessToken");
 
 	const fetchUserData = async (token: string) => {
 		try {
@@ -88,8 +88,7 @@ export default function DashboardAnggotaPage() {
 
 			const data = await response.json();
 			return data;
-		} catch (error) {
-			console.error("Error fetching user data:", error);
+		} catch {
 			return null;
 		}
 	};
@@ -431,3 +430,4 @@ export default function DashboardAnggotaPage() {
 		</div>
 	);
 }
+

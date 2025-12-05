@@ -194,7 +194,6 @@ export function AutocompletePlugin(): JSX.Element | null {
 					})
 					.catch((e) => {
 						if (e !== "Dismissed") {
-							console.error(e);
 						}
 					});
 				lastMatch = match;

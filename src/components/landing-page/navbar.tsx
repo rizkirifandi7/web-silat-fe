@@ -6,8 +6,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Menu } from "lucide-react";
+import { Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUserContext } from "@/context/user-context";
 import {
 	Sheet,
 	SheetContent,
@@ -23,12 +24,20 @@ import {
 	NavigationMenuList,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navLinks = [
 	{ href: "/", label: "Beranda" },
 	{ href: "/tentang", label: "Tentang" },
 	{ href: "/galeri", label: "Galeri" },
-	{ href: "/seminar", label: "Seminar" },
 	{ href: "/katalog", label: "Katalog" },
 	{ href: "/donasi", label: "Donasi" },
 	{ href: "/kontak", label: "Kontak" },
@@ -75,6 +84,18 @@ const DesktopNav = () => {
 
 const MobileNav = () => {
 	const pathname = usePathname();
+	const { user, logout } = useUserContext();
+
+	const getDashboardLink = () => {
+		if (!user) return "/";
+		if (user.role === "admin" || user.role === "superadmin") {
+			return "/dashboard/beranda";
+		} else if (user.role === "anggota") {
+			return "/dashboard-anggota/beranda";
+		}
+		return "/";
+	};
+
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
@@ -114,9 +135,43 @@ const MobileNav = () => {
 					})}
 				</nav>
 				<div className="mt-auto flex flex-col gap-2 pt-4">
-					<Button variant="outline" asChild>
-						<Link href="/login">Login</Link>
-					</Button>
+					{user ? (
+						<>
+							<div className="flex items-center gap-2 px-3 py-2 border rounded-md">
+								<Avatar className="h-8 w-8">
+									<AvatarImage src={user.foto || ""} alt={user.nama} />
+									<AvatarFallback>
+										{user.nama
+											.split(" ")
+											.map((n) => n[0])
+											.join("")
+											.toUpperCase()
+											.slice(0, 2)}
+									</AvatarFallback>
+								</Avatar>
+								<div className="flex flex-col">
+									<span className="text-sm font-medium">{user.nama}</span>
+									<span className="text-xs text-muted-foreground">
+										{user.email}
+									</span>
+								</div>
+							</div>
+							<Button variant="outline" asChild>
+								<Link href={getDashboardLink()}>
+									<LayoutDashboard className="mr-2 h-4 w-4" />
+									Dashboard
+								</Link>
+							</Button>
+							<Button variant="destructive" onClick={logout}>
+								<LogOut className="mr-2 h-4 w-4" />
+								Logout
+							</Button>
+						</>
+					) : (
+						<Button variant="outline" asChild>
+							<Link href="/login">Login</Link>
+						</Button>
+					)}
 					<ModeToggle />
 				</div>
 			</SheetContent>
@@ -124,7 +179,68 @@ const MobileNav = () => {
 	);
 };
 
+const UserMenu = () => {
+	const { user, logout } = useUserContext();
+
+	if (!user) return null;
+
+	const getDashboardLink = () => {
+		if (user.role === "admin" || user.role === "superadmin") {
+			return "/dashboard/beranda";
+		} else if (user.role === "anggota") {
+			return "/dashboard-anggota/beranda";
+		}
+		return "/";
+	};
+
+	const getInitials = (name: string) => {
+		return name
+			.split(" ")
+			.map((n) => n[0])
+			.join("")
+			.toUpperCase()
+			.slice(0, 2);
+	};
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" className="relative h-9 w-9 rounded-full">
+					<Avatar className="h-9 w-9">
+						<AvatarImage src={user.foto || ""} alt={user.nama} />
+						<AvatarFallback>{getInitials(user.nama)}</AvatarFallback>
+					</Avatar>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className="w-56" align="end" forceMount>
+				<DropdownMenuLabel className="font-normal">
+					<div className="flex flex-col space-y-1">
+						<p className="text-sm font-medium leading-none">{user.nama}</p>
+						<p className="text-xs leading-none text-muted-foreground">
+							{user.email}
+						</p>
+					</div>
+				</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem asChild>
+					<Link href={getDashboardLink()} className="cursor-pointer">
+						<LayoutDashboard className="mr-2 h-4 w-4" />
+						<span>Dashboard</span>
+					</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem onClick={logout} className="cursor-pointer">
+					<LogOut className="mr-2 h-4 w-4" />
+					<span>Logout</span>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
+
 const Navbar = () => {
+	const { user } = useUserContext();
+
 	return (
 		<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
 			<div className="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between">
@@ -132,9 +248,13 @@ const Navbar = () => {
 				<DesktopNav />
 				<div className="flex items-center gap-2">
 					<div className="hidden md:flex md:items-center md:gap-2">
-						<Button variant="outline" size="sm" asChild>
-							<Link href="/login">Login</Link>
-						</Button>
+						{user ? (
+							<UserMenu />
+						) : (
+							<Button variant="outline" size="sm" asChild>
+								<Link href="/login">Login</Link>
+							</Button>
+						)}
 						<ModeToggle />
 					</div>
 					<MobileNav />
@@ -145,3 +265,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

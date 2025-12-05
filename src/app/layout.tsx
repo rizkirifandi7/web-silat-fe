@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ActiveThemeProvider } from "@/components/active-theme";
+import { ReactQueryProvider } from "@/components/react-query-provider";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/config";
 import { Inter } from "next/font/google";
@@ -62,17 +63,20 @@ export default function RootLayout({
 				`)}
 			>
 				<Toaster />
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<UserProvider>
-						<ActiveThemeProvider>{children}</ActiveThemeProvider>
-					</UserProvider>
-				</ThemeProvider>
+				<ReactQueryProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<UserProvider>
+							<ActiveThemeProvider>{children}</ActiveThemeProvider>
+						</UserProvider>
+					</ThemeProvider>
+				</ReactQueryProvider>
 			</body>
 		</html>
 	);
 }
+

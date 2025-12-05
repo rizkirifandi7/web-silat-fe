@@ -30,7 +30,6 @@ export function DetailAnggotaDrawer({
 		return null;
 	}
 
-	console.log(anggota);
 
 	return (
 		<Drawer open={isOpen} onOpenChange={onOpenChange}>

@@ -36,7 +36,7 @@ export function NavUser() {
 	const { user, isLoading } = useUserContext(); // Gunakan context
 
 	const handleLogout = () => {
-		Cookies.remove("token");
+		Cookies.remove("accessToken");
 		router.replace("/login");
 	};
 
@@ -101,10 +101,7 @@ export function NavUser() {
 								<AvatarImage
 									src={photoUrl}
 									alt={user?.nama}
-									onError={(e) => {
-										console.log("Avatar image failed to load:", photoUrl);
-										console.log("Error:", e);
-									}}
+									onError={(e) => {}}
 								/>
 								<AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
 									{getInitials(user?.nama)}
@@ -128,17 +125,7 @@ export function NavUser() {
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage
-										src={photoUrl}
-										alt={user?.nama}
-										onError={(e) => {
-											console.log(
-												"Dropdown avatar image failed to load:",
-												photoUrl
-											);
-											console.log("Error:", e);
-										}}
-									/>
+									<AvatarImage src={photoUrl} alt={user?.nama} />
 									<AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
 										{getInitials(user?.nama)}
 									</AvatarFallback>
@@ -167,3 +154,4 @@ export function NavUser() {
 		</SidebarMenu>
 	);
 }
+

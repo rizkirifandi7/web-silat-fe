@@ -1,13 +1,17 @@
 "use client";
-import { useParams } from "next/navigation";
+import { use } from "react";
 import { useMateriCRUD } from "@/hooks/use-materi-crud";
 import { DataTableMateri } from "@/components/data-table/data-table-materi";
 import { columns } from "@/components/data-table-colum/data-table-materi-columns";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function DetailMateriPage() {
-	const { id } = useParams();
-	const { materi, isLoading, isError } = useMateriCRUD(id as string);
+export default function DetailMateriPage({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const { id } = use(params);
+	const { materi, isLoading, isError } = useMateriCRUD(id);
 
 	if (isLoading) {
 		return (
@@ -27,3 +31,4 @@ export default function DetailMateriPage() {
 		</div>
 	);
 }
+

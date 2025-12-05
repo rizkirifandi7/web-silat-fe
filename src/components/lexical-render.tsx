@@ -14,7 +14,6 @@ function LexicalRenderer({ editorStateString }: { editorStateString: string }) {
 		theme: editorTheme, // Gunakan tema editor Anda di sini
 		nodes: nodes, // array [HeadingNode, ListNode, ...etc]
 		onError: () => {
-			console.error("Error di Lexical Renderer:");
 		},
 	};
 

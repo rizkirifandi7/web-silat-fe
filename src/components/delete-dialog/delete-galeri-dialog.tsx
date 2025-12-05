@@ -20,9 +20,8 @@ export function DeleteGaleriDialog({
 		try {
 			await removeGaleri(galeriId);
 			onSuccess();
-		} catch (error) {
+		} catch {
 			// Error handling is done in the hook
-			console.error(error);
 		}
 	};
 

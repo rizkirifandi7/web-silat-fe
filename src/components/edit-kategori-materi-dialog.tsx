@@ -14,12 +14,21 @@ import KategoriMateriForm from "./kategori-materi-bulk-form";
 
 interface EditKategoriMateriDialogProps {
 	kategori: KategoriMateri;
+	onSuccess?: () => void;
 }
 
 export function EditKategoriMateriDialog({
 	kategori,
+	onSuccess,
 }: EditKategoriMateriDialogProps) {
 	const [open, setOpen] = useState(false);
+
+	const handleSuccess = () => {
+		setOpen(false);
+		if (onSuccess) {
+			onSuccess();
+		}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -41,3 +50,4 @@ export function EditKategoriMateriDialog({
 		</Dialog>
 	);
 }
+

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { use, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,10 +61,13 @@ const channelIcons: Record<string, typeof Building2> = {
 	virtual_account: CreditCard,
 };
 
-export default function PaymentPage() {
-	const params = useParams();
+export default function PaymentPage({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const { id: slug } = use(params);
 	const router = useRouter();
-	const slug = params.id as string;
 
 	// Fetch campaign and payment methods
 	const { campaign, loading: campaignLoading } = useCampaignDetail(slug);
@@ -102,9 +105,7 @@ export default function PaymentPage() {
 	useEffect(() => {
 		const checkSnapLoaded = () => {
 			if (window.snap) {
-				console.log("✅ Midtrans Snap loaded successfully");
 			} else {
-				console.warn("⚠️ Midtrans Snap not loaded yet");
 			}
 		};
 
@@ -129,8 +130,6 @@ export default function PaymentPage() {
 	};
 
 	const handlePaymentSubmit = async () => {
-		console.log("🚀 Starting payment submission...");
-
 		// Validation
 		if (!amount || amount < 10000) {
 			toast.error("Minimal donasi Rp 10.000");
@@ -151,7 +150,6 @@ export default function PaymentPage() {
 
 		try {
 			setIsSubmitting(true);
-			console.log("✅ Validation passed, creating donation...");
 
 			// Create donation via API
 			const response = await createDonation({
@@ -165,12 +163,7 @@ export default function PaymentPage() {
 				is_anonymous: formData.isAnonymous,
 			});
 
-			console.log("📦 Donation created, response:", response);
-			console.log("🔑 Snap token:", response.snap_token);
-			console.log("🪟 Window.snap available:", !!window.snap);
-
 			if (!response.snap_token) {
-				console.error("❌ No snap token in response");
 				toast.error("Token pembayaran tidak ditemukan");
 				setIsSubmitting(false);
 				return;
@@ -178,44 +171,35 @@ export default function PaymentPage() {
 
 			// Check if Midtrans Snap is loaded
 			if (!window.snap) {
-				console.error("❌ Midtrans Snap not loaded");
 				toast.error("Midtrans Snap belum dimuat. Mohon refresh halaman.");
 				setIsSubmitting(false);
 				return;
 			}
 
-			console.log("🎯 Opening Midtrans payment popup...");
-
 			// Open Midtrans payment
 			window.snap.pay(response.snap_token, {
 				onSuccess: (result: unknown) => {
-					console.log("✅ Payment success:", result);
 					toast.success("Pembayaran berhasil!");
 					router.push(
 						`/donasi/payment/success?transaction_id=${response.transaction_id}`
 					);
 				},
 				onPending: (result: unknown) => {
-					console.log("⏳ Payment pending:", result);
 					toast.info("Pembayaran menunggu konfirmasi");
 					router.push(
 						`/donasi/payment/success?transaction_id=${response.transaction_id}`
 					);
 				},
 				onError: (result: unknown) => {
-					console.error("❌ Payment error:", result);
 					toast.error("Pembayaran gagal! Silakan coba lagi.");
 					setIsSubmitting(false);
 				},
 				onClose: () => {
-					console.log("🚪 Payment popup closed by user");
 					toast.info("Popup pembayaran ditutup");
 					setIsSubmitting(false);
 				},
 			});
 		} catch (error) {
-			console.error("❌ Payment submission error:", error);
-
 			// Check if error is about missing snap_token
 			const errorMessage =
 				error instanceof Error ? error.message : String(error);
@@ -614,3 +598,4 @@ export default function PaymentPage() {
 		</div>
 	);
 }
+

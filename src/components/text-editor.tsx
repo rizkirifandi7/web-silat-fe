@@ -1,7 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { SerializedEditorState } from "lexical";
-import { Editor } from "./blocks/editor-x/editor";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Lazy load editor component (reduces initial bundle by ~800KB)
+const Editor = dynamic(
+	() =>
+		import("./blocks/editor-x/editor").then((mod) => ({ default: mod.Editor })),
+	{
+		loading: () => <Skeleton className="h-[400px] w-full" />,
+		ssr: false,
+	}
+);
 
 interface TextEditorProps {
 	value?: SerializedEditorState | string;
@@ -34,8 +45,7 @@ export default function TextEditor({ value, onChange }: TextEditorProps) {
 			if (value) {
 				try {
 					return JSON.parse(value) as SerializedEditorState;
-				} catch (error) {
-					console.error("Error parsing editor value:", error);
+				} catch {
 					// Return initial value if parsing fails
 					return initialValue;
 				}

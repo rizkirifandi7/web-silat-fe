@@ -75,8 +75,7 @@ export function RekeningForm({
 			setIsSubmitting(true);
 			await onSubmit(formData);
 			onSuccess();
-		} catch (error) {
-			console.error("Error submitting form:", error);
+		} catch {
 		} finally {
 			setIsSubmitting(false);
 		}

@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
 } from "@/components/ui/dialog";
 import { useGaleriCrud } from "@/hooks/use-galeri-crud";
 import { GaleriForm } from "@/components/galeri-form";
@@ -12,47 +12,51 @@ import { Galeri } from "@/lib/schema";
 import { useState } from "react";
 
 interface EditGaleriDialogProps {
-  galeri: Galeri;
-  onSuccess: () => void;
-  onCancel: () => void;
+	galeri: Galeri;
+	onSuccess: () => void;
+	onCancel: () => void;
 }
 
 export function EditGaleriDialog({
-  galeri,
-  onSuccess,
-  onCancel,
+	galeri,
+	onSuccess,
+	onCancel,
 }: EditGaleriDialogProps) {
-  const [open, setOpen] = useState(true);
-  const { editGaleri } = useGaleriCrud();
+	const [open, setOpen] = useState(true);
+	const { editGaleri } = useGaleriCrud();
 
-  const handleSubmit = async (formData: FormData) => {
-    await editGaleri({ id: galeri.id, data: formData });
-  };
+	const handleSubmit = async (data: {
+		judul: string;
+		deskripsi: string;
+		gambar_url?: string;
+	}) => {
+		await editGaleri({ id: galeri.id, data });
+	};
+	const handleSuccess = () => {
+		onSuccess();
+		setOpen(false);
+	};
 
-  const handleSuccess = () => {
-    onSuccess();
-    setOpen(false);
-  };
+	const handleOpenChange = (isOpen: boolean) => {
+		if (!isOpen) {
+			onCancel();
+		}
+		setOpen(isOpen);
+	};
 
-  const handleOpenChange = (isOpen: boolean) => {
-    if (!isOpen) {
-      onCancel();
-    }
-    setOpen(isOpen);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Galeri</DialogTitle>
-        </DialogHeader>
-        <GaleriForm
-          galeri={galeri}
-          onSubmit={handleSubmit}
-          onSuccess={handleSuccess}
-        />
-      </DialogContent>
-    </Dialog>
-  );
+	return (
+		<Dialog open={open} onOpenChange={handleOpenChange}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Edit Galeri</DialogTitle>
+				</DialogHeader>
+				<GaleriForm
+					galeri={galeri}
+					onSubmit={handleSubmit}
+					onSuccess={handleSuccess}
+				/>
+			</DialogContent>
+		</Dialog>
+	);
 }
+

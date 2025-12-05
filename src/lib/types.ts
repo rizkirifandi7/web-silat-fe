@@ -19,17 +19,6 @@ export interface User {
 	status_perguruan: string;
 }
 
-export interface Seminar {
-  id: string;
-  nama: string;
-  deskripsi: string;
-  tanggal: string;
-  lokasi: string;
-  narasumber: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Materi {
 	id: number;
 	id_course: number;

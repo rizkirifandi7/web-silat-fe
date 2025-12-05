@@ -1,7 +1,7 @@
 import { SectionCards } from "@/components/section-cards";
 import { RecentAnggota } from "@/components/recent-anggota";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { getAnggotas } from "@/lib/anggota-api";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 
 export const dynamic = "force-dynamic";
 

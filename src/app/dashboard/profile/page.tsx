@@ -1,81 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
-import Cookies from "js-cookie";
+import React from "react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EditProfilDialog } from "@/components/edit-profil-dialog";
-
-interface User {
-	id: number;
-	nama: string;
-	email: string;
-	foto: string;
-	role: string;
-	id_token: string;
-	createdAt: string;
-	updatedAt: string;
-	tempat_lahir: string;
-	tanggal_lahir: string;
-	alamat: string;
-	agama: string;
-	jenis_kelamin: string;
-	no_telepon: string;
-	angkatan_unit: string;
-	status_keanggotaan: string;
-	tingkatan_sabuk: string;
-	status_perguruan: string;
-}
+import { useUserProfile } from "@/hooks/queries/use-user-profile";
 
 const Page = () => {
-	const [user, setUser] = React.useState<User | null>(null);
-
-	const token = Cookies.get("token");
-
-	const fetchUserData = async (token: string) => {
-		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/anggota/profile`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch user data");
-			}
-
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			console.error("Error fetching user data:", error);
-			return null;
-		}
-	};
-
-	useEffect(() => {
-		if (token) {
-			fetchUserData(token).then((data) => {
-				if (data) {
-					setUser(data);
-				}
-			});
-		}
-	}, [token]);
+	const { data: user, refetch } = useUserProfile();
 
 	// Fungsi untuk refresh data setelah edit
 	const handleEditSuccess = () => {
-		if (token) {
-			fetchUserData(token).then((data) => {
-				if (data) {
-					setUser(data);
-				}
-			});
-		}
+		refetch();
 	};
 
 	const formattedJoinDate = user?.createdAt

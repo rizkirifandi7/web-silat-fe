@@ -23,10 +23,9 @@ export const useCampaigns = () => {
 				is_published: true,
 				limit: 10,
 			});
-			setCampaigns(data);
-		} catch (err) {
-			console.error("❌ useCampaigns: Error occurred:"  , err);
-			setError(err instanceof Error ? err.message : "Failed to load campaigns");
+		setCampaigns(data);
+	} catch (err) {
+		setError(err instanceof Error ? err.message : "Failed to load campaigns");
 		} finally {
 			setLoading(false);
 		}

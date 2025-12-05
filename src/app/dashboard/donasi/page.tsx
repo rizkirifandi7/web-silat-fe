@@ -1,7 +1,9 @@
 "use client";
 
 import { useCampaignCrud } from "@/hooks/use-campaign-crud";
+import type { Campaign } from "@/hooks/queries/use-campaigns";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { DataTableCampaign } from "@/components/data-table/data-table-campaign";
 import {
 	Card,
@@ -15,12 +17,21 @@ import { Heart, TrendingUp, Users, DollarSign } from "lucide-react";
 export default function DonasiPage() {
 	const { loading, campaigns } = useCampaignCrud();
 
+	console.log("useCampaignCrud campaigns:", campaigns);
+
 	// Calculate statistics
 	const stats = {
 		totalCampaigns: campaigns.length,
-		activeCampaigns: campaigns.filter((c) => c.status === "active").length,
-		totalCollected: campaigns.reduce((sum, c) => sum + c.collected_amount, 0),
-		totalSupporters: campaigns.reduce((sum, c) => sum + c.total_supporters, 0),
+		activeCampaigns: campaigns.filter((c: Campaign) => c.status === "active")
+			.length,
+		totalCollected: campaigns.reduce(
+			(sum: number, c: Campaign) => sum + (Number(c.collected_amount) || 0),
+			0
+		),
+		totalSupporters: campaigns.reduce(
+			(sum: number, c: Campaign) => sum + (Number(c.total_supporters) || 0),
+			0
+		),
 	};
 
 	const formatRupiah = (amount: number) => {
@@ -48,11 +59,21 @@ export default function DonasiPage() {
 	return (
 		<div className="container mx-auto py-10 space-y-8">
 			{/* Header */}
-			<div>
-				<h1 className="text-3xl font-bold">Manajemen Campaign Donasi</h1>
-				<p className="text-muted-foreground mt-2">
-					Kelola campaign donasi, pantau progress, dan lihat statistik donasi
-				</p>
+			<div className="flex items-center justify-between">
+				<div>
+					<h1 className="text-3xl font-bold">Manajemen Campaign Donasi</h1>
+					<p className="text-muted-foreground mt-2">
+						Kelola campaign donasi, pantau progress, dan lihat statistik donasi
+					</p>
+				</div>
+				<Button
+					onClick={() =>
+						(window.location.href = "/dashboard/donasi/statistics")
+					}
+					variant="outline"
+				>
+					📊 Lihat Statistik
+				</Button>
 			</div>
 
 			{/* Statistics Cards */}
@@ -112,7 +133,7 @@ export default function DonasiPage() {
 							{campaigns.length > 0
 								? (
 										campaigns.reduce(
-											(sum, c) =>
+											(sum: number, c: Campaign) =>
 												sum + (c.collected_amount / c.target_amount) * 100,
 											0
 										) / campaigns.length
@@ -142,3 +163,4 @@ export default function DonasiPage() {
 		</div>
 	);
 }
+

@@ -66,7 +66,6 @@ export function useMateriCRUD(id_course: string) {
 
 			await createMutation(formData);
 		} catch (error) {
-			console.error("Failed to create materi:", error);
 		}
 	};
 
@@ -89,7 +88,6 @@ export function useMateriCRUD(id_course: string) {
 
 			await updateMutation({ id, data: formData });
 		} catch (error) {
-			console.error("Failed to update materi:", error);
 		}
 	};
 
@@ -101,7 +99,6 @@ export function useMateriCRUD(id_course: string) {
 			await deleteMutation(id);
 			options?.onSuccess?.();
 		} catch (error) {
-			console.error("Failed to delete materi:", error);
 		}
 	};
 

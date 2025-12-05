@@ -6,10 +6,11 @@ export const getMateriByCourse = async (
 	id_course: string
 ): Promise<Materi[]> => {
 	try {
-		const response = await api.get<Materi[]>(`/course/materi/${id_course}`);
-		return response.data;
+		const response = await api.get(`/course/materi/${id_course}`);
+		// Backend returns paginated response: { data: [...], pagination: {...} }
+		const data = response.data;
+		return Array.isArray(data) ? data : (data?.data || []);
 	} catch (error) {
-		console.error("Error fetching materi by course:", error);
 		throw error;
 	}
 };
@@ -24,7 +25,6 @@ export const createMateri = async (data: FormData): Promise<Materi> => {
 		toast.success("Materi berhasil dibuat.");
 		return response.data;
 	} catch (error) {
-		console.error("Error creating materi:", error);
 		throw error;
 	}
 };
@@ -42,7 +42,6 @@ export const updateMateri = async (
 		toast.success("Materi berhasil diperbarui.");
 		return response.data;
 	} catch (error) {
-		console.error(`Error updating materi with id ${id}:`, error);
 		throw error;
 	}
 };
@@ -53,7 +52,6 @@ export const deleteMateri = async (id: number): Promise<void> => {
 		toast.success("Materi berhasil dihapus.");
 		return response.data;
 	} catch (error) {
-		console.error(`Error deleting materi with id ${id}:`, error);
 		throw error;
 	}
 };

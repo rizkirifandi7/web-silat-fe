@@ -1,10 +1,23 @@
 import { api } from "./utils";
 import { KategoriMateri } from "@/lib/schema";
 
+interface CourseResponse {
+	status: string;
+	message: string;
+	data: KategoriMateri[];
+	pagination: {
+		total: number;
+		page: number;
+		limit: number;
+		total_pages: number;
+	};
+}
+
 export const getKategoriMateri = async (): Promise<KategoriMateri[]> => {
 	try {
-		const response = await api.get("/course");
-		return response.data;
+		const response = await api.get<CourseResponse>("/course");
+		// Extract data array from paginated response
+		return response.data.data;
 	} catch (error) {
 		console.error("Error fetching kategori materi:", error);
 		// Return empty array during build time or when API is unavailable
@@ -19,7 +32,6 @@ export const getKategoriMateriById = async (
 		const response = await api.get(`/course/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error(`Error fetching kategori materi with id ${id}:`, error);
 		throw error;
 	}
 };
@@ -32,7 +44,6 @@ export const createKategoriMateri = async (
 		const response = await api.post("/course", data);
 		return response.data;
 	} catch (error) {
-		console.error("Error creating kategori materi:", error);
 		throw error;
 	}
 };
@@ -45,7 +56,6 @@ export const updateKategoriMateri = async (
 		const response = await api.put(`/course/${id}`, data);
 		return response.data;
 	} catch (error) {
-		console.error(`Error updating kategori materi with id ${id}:`, error);
 		throw error;
 	}
 };
@@ -55,7 +65,6 @@ export const deleteKategoriMateri = async (id: number): Promise<void> => {
 		const response = await api.delete(`/course/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error(`Error deleting kategori materi with id ${id}:`, error);
 		throw error;
 	}
 };

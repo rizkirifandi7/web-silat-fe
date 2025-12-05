@@ -4,9 +4,9 @@ import { Anggota } from "./schema";
 export const getAnggotas = async (): Promise<Anggota[]> => {
 	try {
 		const response = await api.get("/anggota");
-		return response.data;
+		// Backend returns paginated response: { data: [...], pagination: {...} }
+		return Array.isArray(response.data) ? response.data : response.data.data || [];
 	} catch (error) {
-		console.error("Error fetching anggota:", error);
 		// Return empty array during build time or when API is unavailable
 		return [];
 	}
@@ -76,7 +76,6 @@ export const getAnggotaByToken = async (
 
 		if (!response.ok) {
 			if (response.status === 404) {
-				console.log(`Anggota with token ${token} not found`);
 				return null;
 			}
 			const errorData = await response.json().catch(() => ({}));
@@ -88,7 +87,6 @@ export const getAnggotaByToken = async (
 		const data: Anggota = await response.json();
 		return data;
 	} catch (error) {
-		console.error("Error fetching anggota by token:", error);
 		if (error instanceof Error) {
 			throw error;
 		}

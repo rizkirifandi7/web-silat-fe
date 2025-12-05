@@ -27,7 +27,7 @@ export function useGaleriCrud() {
     mutate: addGaleri,
     mutateAsync: addGaleriAsync,
     isPending: isAdding,
-  } = useMutation<Galeri, Error, FormData>({
+  } = useMutation<Galeri, Error, { judul: string; deskripsi: string; gambar_url?: string }>({
     mutationFn: createGaleri,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["galeri"] });
@@ -41,7 +41,7 @@ export function useGaleriCrud() {
   const { mutate: editGaleri, isPending: isEditing } = useMutation<
     Galeri,
     Error,
-    { id: number; data: FormData }
+    { id: number; data: { judul: string; deskripsi: string; gambar_url?: string } }
   >({
     mutationFn: ({ id, data }) => updateGaleri(id, data),
     onSuccess: () => {

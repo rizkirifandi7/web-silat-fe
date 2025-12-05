@@ -24,7 +24,6 @@ export default async function AnggotaDetailPage({
 			cache: "no-store", // Ensure fresh data
 		});
 	} catch (error) {
-		console.error("Error fetching anggota:", error);
 		errorMessage =
 			error instanceof Error
 				? error.message
@@ -88,3 +87,4 @@ export default async function AnggotaDetailPage({
 		</main>
 	);
 }
+

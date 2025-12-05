@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { use } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,10 +54,9 @@ const formatTimeAgo = (dateString: string) => {
 	return `${diffInDays} hari yang lalu`;
 };
 
-const PageDonasiDetail = () => {
-	const params = useParams();
+const PageDonasiDetail = ({ params }: { params: Promise<{ id: string }> }) => {
+	const { id: slug } = use(params);
 	const router = useRouter();
-	const slug = params.id as string;
 
 	// Use custom hook to fetch campaign detail
 	const { campaign, loading, error } = useCampaignDetail(slug);
@@ -374,3 +374,4 @@ const PageDonasiDetail = () => {
 };
 
 export default PageDonasiDetail;
+

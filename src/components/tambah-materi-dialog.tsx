@@ -117,10 +117,6 @@ export function TambahMateriDialog() {
 											<SelectItem value="LULUS Binfistal">
 												LULUS Binfistal
 											</SelectItem>
-											<SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
-											<SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
-											<SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
-											<SelectItem value="Sabuk Merah">Sabuk Merah</SelectItem>
 											<SelectItem value="Sabuk Hitam Wiraga 1">
 												Sabuk Hitam Wiraga 1
 											</SelectItem>
@@ -130,6 +126,10 @@ export function TambahMateriDialog() {
 											<SelectItem value="Sabuk Hitam Wiraga 3">
 												Sabuk Hitam Wiraga 3
 											</SelectItem>
+											<SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
+											<SelectItem value="Sabuk Merah">Sabuk Merah</SelectItem>
+											<SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
+											<SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
 										</SelectContent>
 									</Select>
 									<FormMessage />

@@ -9,10 +9,22 @@ import { AdminData, CreateAdminData } from "./schema";
  * yang tidak efisien. Sebaiknya, API menyediakan endpoint khusus
  * untuk mengambil admin, misalnya `/api/admins` atau `/api/anggota?role=admin`.
  */
+interface AdminResponse {
+	status: string;
+	message: string;
+	data: AdminData[];
+	pagination: {
+		totalItems: number;
+		totalPages: number;
+		currentPage: number;
+		limit: number;
+	};
+}
+
 export const getAdmins = async (): Promise<AdminData[]> => {
 	try {
-		const response = await api.get("/anggota/admins");
-		return response.data;
+		const response = await api.get<AdminResponse>("/anggota/admins");
+		return response.data.data;
 	} catch (error) {
 		handleApiError(error, "Gagal mengambil data admin");
 	}

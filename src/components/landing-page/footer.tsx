@@ -55,11 +55,6 @@ const Footer = () => {
 									</Link>
 								</li>
 								<li className="mb-2">
-									<Link href="/seminar" className="hover:underline">
-										Seminar
-									</Link>
-								</li>
-								<li className="mb-2">
 									<Link href="/katalog" className="hover:underline">
 										Katalog
 									</Link>
@@ -120,3 +115,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

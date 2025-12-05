@@ -9,10 +9,12 @@ import { Button } from "../ui/button";
 
 interface DeleteKategoriMateriDialogProps {
 	id: number;
+	onSuccess?: () => void;
 }
 
 export function DeleteKategoriMateriDialog({
 	id,
+	onSuccess,
 }: DeleteKategoriMateriDialogProps) {
 	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
@@ -23,6 +25,9 @@ export function DeleteKategoriMateriDialog({
 			queryClient.invalidateQueries({ queryKey: ["kategoriMateri"] });
 			toast.success("Kategori materi berhasil dihapus.");
 			setOpen(false);
+			if (onSuccess) {
+				onSuccess();
+			}
 		},
 		onError: (error) => {
 			toast.error(error.message || "Gagal menghapus kategori materi.");
@@ -48,3 +53,4 @@ export function DeleteKategoriMateriDialog({
 		</>
 	);
 }
+

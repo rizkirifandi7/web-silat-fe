@@ -33,7 +33,7 @@ interface ChartAreaInteractiveProps {
 	data: Anggota[];
 }
 
-export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
+const ChartAreaInteractiveComponent = ({ data }: ChartAreaInteractiveProps) => {
 	const isMobile = useIsMobile();
 
 	const processedData = React.useMemo(() => {
@@ -121,4 +121,6 @@ export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
 			</CardContent>
 		</Card>
 	);
-}
+};
+
+export const ChartAreaInteractive = React.memo(ChartAreaInteractiveComponent);

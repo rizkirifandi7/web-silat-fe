@@ -50,7 +50,7 @@ function parseJwt(token: string): JwtPayload | null {
 }
 
 export function middleware(request: NextRequest) {
-	const token = request.cookies.get("token");
+	const token = request.cookies.get("accessToken");
 
 	// Redirect to login if no token
 	if (!token) {
@@ -62,7 +62,7 @@ export function middleware(request: NextRequest) {
 	if (!payload || !payload.role) {
 		// Token invalid or expired - clear cookie and redirect
 		const response = NextResponse.redirect(new URL("/login", request.url));
-		response.cookies.delete("token");
+		response.cookies.delete("accessToken");
 		return response;
 	}
 

@@ -19,9 +19,8 @@ export function DeleteRekeningDialog({
         try {
             await removeRekening(rekeningId);
             onSuccess();
-        } catch (error) {
+        } catch {
             // Error handling is done in the hook
-            console.error(error);
         }
     };
 

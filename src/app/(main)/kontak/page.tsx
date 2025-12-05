@@ -24,12 +24,10 @@ const PageKontak = () => {
 			})
 			.then(
 				() => {
-					console.log("SUCCESS!");
 					toast("Pesan berhasil dikirim!");
 					form.current?.reset();
 				},
 				(error) => {
-					console.log("FAILED...", error.text);
 					toast("Gagal mengirim pesan. Silakan coba lagi.");
 				}
 			);

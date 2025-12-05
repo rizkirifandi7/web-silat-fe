@@ -37,7 +37,6 @@ const fetchCourses = async (): Promise<Course[]> => {
   }
 
   const data = await response.json();
-  console.log('Fetch Courses Response:', data);
   return data;
 };
 

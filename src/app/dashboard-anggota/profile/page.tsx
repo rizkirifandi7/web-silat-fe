@@ -1,83 +1,18 @@
-"use client"
-import React, { useEffect } from "react";
-import Cookies from "js-cookie";
+"use client";
+import React from "react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EditProfilDialog } from "@/components/edit-profil-dialog";
-
-
-interface User {
-	id: number;
-	nama: string;
-	email: string;
-	foto: string;
-	role: string;
-	id_token: string;
-	createdAt: string;
-	updatedAt: string;
-	tempat_lahir: string;
-	tanggal_lahir: string;
-	alamat: string;
-	agama: string;
-	jenis_kelamin: string;
-	no_telepon: string;
-	angkatan_unit: string;
-	status_keanggotaan: string;
-	tingkatan_sabuk: string;
-	status_perguruan: string;
-}
+import { useUserProfile } from "@/hooks/queries/use-user-profile";
 
 const Page = () => {
-
-  const [user, setUser] = React.useState<User | null>(null);
-
-	const token = Cookies.get("token");
-
-	const fetchUserData = async (token: string) => {
-		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/anggota/profile`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch user data");
-			}
-
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			console.error("Error fetching user data:", error);
-			return null;
-		}
-	};
-
-	useEffect(() => {
-		if (token) {
-			fetchUserData(token).then((data) => {
-				if (data) {
-					setUser(data);
-				}
-			});
-		}
-	}, [token]);
+	const { data: user, refetch } = useUserProfile();
 
 	// Fungsi untuk refresh data setelah edit
 	const handleEditSuccess = () => {
-		if (token) {
-			fetchUserData(token).then((data) => {
-				if (data) {
-					setUser(data);
-				}
-			});
-		}
+		refetch();
 	};
 
 	const formattedJoinDate = user?.createdAt
@@ -87,9 +22,9 @@ const Page = () => {
 	const formattedBirthDate = user?.tanggal_lahir
 		? format(new Date(user.tanggal_lahir), "dd MMMM yyyy", { locale: id })
 		: "Unknown";
-  
-  return (
-    <div className="space-y-4 p-4 md:p-6">
+
+	return (
+		<div className="space-y-4 p-4 md:p-6">
 			<h1 className="text-2xl font-bold">Profil</h1>
 			<Card className="p-8 shadow-none">
 				<div className="flex flex-col md:flex-row items-center md:items-start gap-4">
@@ -198,7 +133,7 @@ const Page = () => {
 				</Card>
 			</div>
 		</div>
-  )
-}
+	);
+};
 
-export default Page
+export default Page;

@@ -3,17 +3,24 @@
 import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Anggota } from "@/lib/schema";
+import { api } from "@/lib/utils";
+
+interface AnggotaResponse {
+	status: string;
+	message: string;
+	data: Anggota[];
+	pagination: {
+		total: number;
+		page: number;
+		limit: number;
+		total_pages: number;
+	};
+}
 
 const fetchAnggota = async (): Promise<Anggota[]> => {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/anggota`, {
-		cache: "no-store",
-	});
-	if (!res.ok) {
-		throw new Error("Gagal mengambil data anggota");
-	}
-	const data: Anggota[] = await res.json();
-	// Filter hanya untuk peran "anggota" di sisi klien
-	return data;
+	const response = await api.get<AnggotaResponse>("/anggota");
+	// Extract data array from paginated response
+	return response.data.data;
 };
 
 export function useAnggotaData() {

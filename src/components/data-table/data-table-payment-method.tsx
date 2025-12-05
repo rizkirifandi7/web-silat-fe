@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Pencil, Trash2, Search } from "lucide-react";
 import Image from "next/image";
+import * as React from "react";
 
 interface DataTablePaymentMethodProps {
 	data: PaymentMethod[];
@@ -29,12 +30,12 @@ interface DataTablePaymentMethodProps {
 	onDelete: (paymentMethod: PaymentMethod) => void;
 }
 
-export function DataTablePaymentMethod({
+const DataTablePaymentMethodComponent = ({
 	data,
 	loading,
 	onEdit,
 	onDelete,
-}: DataTablePaymentMethodProps) {
+}: DataTablePaymentMethodProps) => {
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const filteredData = data.filter(
@@ -170,4 +171,8 @@ export function DataTablePaymentMethod({
 			</div>
 		</div>
 	);
-}
+};
+
+export const DataTablePaymentMethod = React.memo(
+	DataTablePaymentMethodComponent
+);

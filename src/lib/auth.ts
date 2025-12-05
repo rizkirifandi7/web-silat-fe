@@ -10,7 +10,7 @@ interface UserPayload {
 }
 
 export function getUserFromToken(): UserPayload | null {
-	const token = Cookies.get("token");
+	const token = Cookies.get("accessToken");
 	if (!token) {
 		return null;
 	}
@@ -19,13 +19,12 @@ export function getUserFromToken(): UserPayload | null {
 		const decoded: UserPayload = jwtDecode(token);
 		// Periksa apakah token sudah kedaluwarsa
 		if (decoded.exp * 1000 < Date.now()) {
-			Cookies.remove("token"); // Hapus token yang sudah tidak valid
+			Cookies.remove("accessToken"); // Hapus token yang sudah tidak valid
 			return null;
 		}
 		return decoded;
 	} catch (error) {
-		console.error("Gagal mendekode token:", error);
-		Cookies.remove("token"); // Hapus token yang rusak
+		Cookies.remove("accessToken"); // Hapus token yang rusak
 		return null;
 	}
 }

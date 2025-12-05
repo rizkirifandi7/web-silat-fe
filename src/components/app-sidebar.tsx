@@ -37,11 +37,6 @@ const data = {
 			icon: IconLibraryPhoto,
 		},
 		{
-			title: "Seminar",
-			url: "/dashboard/seminar",
-			icon: IconCalendarEvent,
-		},
-		{
 			title: "Materi",
 			url: "/dashboard/materi",
 			icon: IconBooks,
@@ -104,3 +99,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		</Sidebar>
 	);
 }
+

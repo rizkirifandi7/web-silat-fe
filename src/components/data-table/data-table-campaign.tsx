@@ -1,7 +1,9 @@
 "use client";
 
+import * as React from "react";
 import { useState } from "react";
 import { useCampaignCrud } from "@/hooks/use-campaign-crud";
+import type { Campaign } from "@/hooks/queries/use-campaigns";
 import {
 	Table,
 	TableBody,
@@ -98,7 +100,7 @@ const getUrgencyBadge = (level: string) => {
 	);
 };
 
-export function DataTableCampaign() {
+const DataTableCampaignComponent = () => {
 	const {
 		campaigns,
 		loading,
@@ -106,7 +108,7 @@ export function DataTableCampaign() {
 		isDialogOpen,
 		isDeleteDialogOpen,
 		pagination,
-		setIsDialogOpen,
+		handleDialogClose,
 		setIsDeleteDialogOpen,
 		fetchCampaigns,
 		handleCreate,
@@ -168,7 +170,6 @@ export function DataTableCampaign() {
 					Tambah Campaign
 				</Button>
 			</div>
-
 			{/* Table */}
 			<div className="border rounded-lg">
 				<Table>
@@ -200,7 +201,7 @@ export function DataTableCampaign() {
 								</TableCell>
 							</TableRow>
 						) : (
-							campaigns.map((campaign) => (
+							campaigns.map((campaign: Campaign) => (
 								<TableRow key={campaign.id}>
 									<TableCell>
 										{campaign.image_url ? (
@@ -226,9 +227,11 @@ export function DataTableCampaign() {
 									<TableCell className="capitalize">
 										{campaign.category}
 									</TableCell>
-									<TableCell>{formatRupiah(campaign.target_amount)}</TableCell>
 									<TableCell>
-										{formatRupiah(campaign.collected_amount)}
+										{formatRupiah(Number(campaign.target_amount) || 0)}
+									</TableCell>
+									<TableCell>
+										{formatRupiah(Number(campaign.collected_amount) || 0)}
 									</TableCell>
 									<TableCell>
 										<div className="flex items-center gap-2">
@@ -237,8 +240,8 @@ export function DataTableCampaign() {
 													className="bg-primary h-2 rounded-full"
 													style={{
 														width: `${Math.min(
-															(campaign.collected_amount /
-																campaign.target_amount) *
+															((Number(campaign.collected_amount) || 0) /
+																(Number(campaign.target_amount) || 1)) *
 																100,
 															100
 														)}%`,
@@ -247,7 +250,8 @@ export function DataTableCampaign() {
 											</div>
 											<span className="text-sm text-nowrap">
 												{(
-													(campaign.collected_amount / campaign.target_amount) *
+													((Number(campaign.collected_amount) || 0) /
+														(Number(campaign.target_amount) || 1)) *
 													100
 												).toFixed(0)}
 												%
@@ -282,6 +286,27 @@ export function DataTableCampaign() {
 													Lihat Detail
 												</DropdownMenuItem>
 												<DropdownMenuItem
+													onClick={() =>
+														(window.location.href = `/dashboard/donasi/${campaign.id}/donors`)
+													}
+												>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="w-4 h-4 mr-2"
+														fill="none"
+														viewBox="0 0 24 24"
+														stroke="currentColor"
+													>
+														<path
+															strokeLinecap="round"
+															strokeLinejoin="round"
+															strokeWidth={2}
+															d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+														/>
+													</svg>
+													Lihat Donatur
+												</DropdownMenuItem>
+												<DropdownMenuItem
 													onClick={() => openEditDialog(campaign)}
 												>
 													<Edit className="w-4 h-4 mr-2" />
@@ -303,7 +328,6 @@ export function DataTableCampaign() {
 					</TableBody>
 				</Table>
 			</div>
-
 			{/* Pagination */}
 			{pagination.total_pages > 1 && (
 				<div className="flex items-center justify-between">
@@ -332,11 +356,10 @@ export function DataTableCampaign() {
 					</div>
 				</div>
 			)}
-
 			{/* Dialogs */}
 			<CampaignFormDialog
 				open={isDialogOpen}
-				onOpenChange={setIsDialogOpen}
+				onOpenChange={handleDialogClose}
 				campaign={selectedCampaign}
 				onSubmit={
 					selectedCampaign
@@ -344,8 +367,7 @@ export function DataTableCampaign() {
 						: handleCreate
 				}
 				onUploadImage={handleUploadImage}
-			/>
-
+			/>{" "}
 			<DeleteCampaignDialog
 				open={isDeleteDialogOpen}
 				onOpenChange={setIsDeleteDialogOpen}
@@ -354,4 +376,7 @@ export function DataTableCampaign() {
 			/>
 		</div>
 	);
-}
+};
+
+export const DataTableCampaign = React.memo(DataTableCampaignComponent);
+

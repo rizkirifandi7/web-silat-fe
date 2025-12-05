@@ -13,8 +13,21 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import KategoriMateriForm from "./kategori-materi-bulk-form";
 
-export default function TambahKategoriMateriDialog() {
+interface TambahKategoriMateriDialogProps {
+	onSuccess?: () => void;
+}
+
+export default function TambahKategoriMateriDialog({
+	onSuccess,
+}: TambahKategoriMateriDialogProps) {
 	const [open, setOpen] = useState(false);
+
+	const handleSuccess = () => {
+		setOpen(false);
+		if (onSuccess) {
+			onSuccess();
+		}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -31,8 +44,9 @@ export default function TambahKategoriMateriDialog() {
 						Isi formulir di bawah ini untuk menambahkan kategori materi baru.
 					</DialogDescription>
 				</DialogHeader>
-				<KategoriMateriForm onSuccess={() => setOpen(false)} />
+				<KategoriMateriForm onSuccess={handleSuccess} />
 			</DialogContent>
 		</Dialog>
 	);
 }
+

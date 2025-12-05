@@ -28,8 +28,8 @@ const data = {
 			icon: IconDashboard,
 		},
 		{
-			title: "Seminar",
-			url: "/dashboard-anggota/seminar",
+			title: "Event Saya",
+			url: "/dashboard-anggota/event",
 			icon: IconCalendarEvent,
 		},
 		{
@@ -74,3 +74,4 @@ export function AppSidebarAnggota({
 		</Sidebar>
 	);
 }
+
