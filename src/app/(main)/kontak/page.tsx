@@ -27,7 +27,7 @@ const PageKontak = () => {
 					toast("Pesan berhasil dikirim!");
 					form.current?.reset();
 				},
-				(error) => {
+				() => {
 					toast("Gagal mengirim pesan. Silakan coba lagi.");
 				}
 			);
@@ -38,12 +38,13 @@ const PageKontak = () => {
 			<div className="container mx-auto px-4 py-16 md:py-24">
 				{/* Header */}
 				<div className="text-center mb-12">
-					<h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+					<h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-4">
 						Hubungi Kami
 					</h1>
-					<p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-						Punya pertanyaan atau ingin bergabung?<br />Jangan ragu untuk mengirim
-						pesan kepada kami.
+					<p className="mt-4 text-sm md:text-base/relaxed text-muted-foreground max-w-2xl mx-auto">
+						Punya pertanyaan atau ingin bergabung?
+						<br />
+						Jangan ragu untuk mengirim pesan kepada kami.
 					</p>
 				</div>
 
@@ -69,7 +70,13 @@ const PageKontak = () => {
 									</div>
 									<div className="flex items-center">
 										<Phone className="w-5 h-5 text-primary mr-4 flex-shrink-0" />
-										<Link target="_blank" href="https://wa.link/hmfqt8" className="text-foreground">(+62) 823-4393-6639</Link>
+										<Link
+											target="_blank"
+											href="https://wa.link/hmfqt8"
+											className="text-foreground"
+										>
+											(+62) 823-4393-6639
+										</Link>
 									</div>
 								</div>
 							</div>
@@ -134,3 +141,4 @@ const PageKontak = () => {
 };
 
 export default PageKontak;
+

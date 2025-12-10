@@ -9,10 +9,10 @@ export default async function GaleriPage() {
 			<div className="container max-w-6xl mx-auto px-4">
 				<div className="flex flex-col items-center justify-center space-y-4 text-center">
 					<div className="space-y-2">
-						<h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+						<h1 className="text-2xl font-bold tracking-tighter sm:text-4xl">
 							Galeri Kegiatan
 						</h1>
-						<p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+						<p className="max-w-[900px] text-muted-foreground text-sm md:text-base/relaxed">
 							Momen-momen terbaik dari kegiatan kami, tertangkap dalam gambar.
 						</p>
 					</div>
@@ -30,3 +30,4 @@ export default async function GaleriPage() {
 		</section>
 	);
 }
+

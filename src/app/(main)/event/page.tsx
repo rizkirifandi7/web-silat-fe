@@ -113,10 +113,10 @@ const PageEvent = () => {
 			<div className="container max-w-7xl mx-auto px-4">
 				{/* Header */}
 				<div className="text-center mb-12 space-y-4">
-					<h1 className="text-xl font-bold tracking-tight sm:text-2xl md:text-4xl">
+					<h1 className="text-2xl font-bold tracking-tight sm:text-2xl md:text-4xl">
 						Event & Seminar
 					</h1>
-					<p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+					<p className="text-sm md:text-base/relaxed text-muted-foreground max-w-3xl mx-auto">
 						Ikuti berbagai seminar, workshop, dan pelatihan pencak silat untuk
 						mengembangkan pengetahuan dan keterampilan Anda
 					</p>

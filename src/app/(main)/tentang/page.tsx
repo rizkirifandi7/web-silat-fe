@@ -79,10 +79,10 @@ const PageTentang = () => {
 				{/* Section Sejarah */}
 				<section id="sejarah">
 					<div className="text-center mb-12">
-						<h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+						<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl">
 							Sejarah Perguruan
 						</h2>
-						<p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+						<p className="mt-4 max-w-3xl mx-auto text-sm md:text-base/relaxed text-muted-foreground">
 							Perjalanan PUSAMADA dari awal berdiri hingga saat ini.
 						</p>
 					</div>
@@ -258,3 +258,4 @@ const PageTentang = () => {
 };
 
 export default PageTentang;
+
