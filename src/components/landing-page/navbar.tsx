@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { Menu, LogOut, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUserContext } from "@/context/user-context";
 import {
@@ -40,6 +40,7 @@ const navLinks = [
 	{ href: "/galeri", label: "Galeri" },
 	{ href: "/katalog", label: "Katalog" },
 	{ href: "/donasi", label: "Donasi" },
+	{ href: "/event", label: "Event" },
 	{ href: "/kontak", label: "Kontak" },
 ];
 
