@@ -40,7 +40,7 @@ const navLinks = [
 	{ href: "/galeri", label: "Galeri" },
 	{ href: "/katalog", label: "Katalog" },
 	{ href: "/donasi", label: "Donasi" },
-	{ href: "/event", label: "Event" },
+	// { href: "/event", label: "Event" }, // Fitur belum dibuat
 	{ href: "/kontak", label: "Kontak" },
 ];
 

@@ -62,7 +62,7 @@ export const fetchCampaignById = async (id: string) => {
 		// We'll get campaign info from the campaigns list or use slug
 		const response = await api.get(`/donasi/campaigns`);
 		const campaigns = response.data.data || response.data || [];
-		const campaign = campaigns.find((c: any) => c.id === parseInt(id));
+		const campaign = campaigns.find((c: { id: number }) => c.id === parseInt(id));
 		return campaign || null;
 	} catch (error) {
 		return null;

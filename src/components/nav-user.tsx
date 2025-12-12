@@ -101,7 +101,9 @@ export function NavUser() {
 								<AvatarImage
 									src={photoUrl}
 									alt={user?.nama}
-									onError={(e) => {}}
+									onError={(_e) => {
+										/* Fallback */
+									}}
 								/>
 								<AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
 									{getInitials(user?.nama)}

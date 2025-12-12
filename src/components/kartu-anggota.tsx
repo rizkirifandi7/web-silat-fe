@@ -35,7 +35,8 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 					link.href = dataUrl;
 					link.click();
 				})
-				.catch((err) => {
+				.catch((_err) => {
+					// Silent catch
 				});
 		}
 	}, [anggota.nama]);
@@ -104,3 +105,4 @@ export function KartuAnggota({ anggota }: KartuAnggotaProps) {
 		</div>
 	);
 }
+

@@ -17,14 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	GraduationCap,
-	MoreVertical,
-	FileVideo,
-	Play,
-	BookOpen,
-	ArrowRight,
-} from "lucide-react";
+import { MoreVertical, FileVideo, BookOpen, ArrowRight } from "lucide-react";
 import { EditKategoriMateriDialog } from "./edit-kategori-materi-dialog";
 import { DeleteKategoriMateriDialog } from "./delete-dialog/delete-kategori-materi-dialog";
 import Link from "next/link";
@@ -38,7 +31,7 @@ export function KategoriMateriCard({
 	kategori,
 	onRefresh,
 }: KategoriMateriCardProps) {
-	// @ts-ignore - materiCount comes from backend
+	// @ts-expect-error - materiCount comes from backend
 	const materiCount = kategori.materiCount || 0;
 
 	return (
