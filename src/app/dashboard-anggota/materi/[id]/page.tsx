@@ -27,17 +27,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useCourses } from "@/hooks/use-courses";
+import { useCourses, type Materi } from "@/hooks/use-courses";
 import { ArrowLeft, Lock, Home } from "lucide-react";
 import { bisaAksesMateri } from "@/lib/sabuk-utils";
-
-interface Materi {
-	id: number;
-	judul: string;
-	tipeKonten: string;
-	konten: string;
-	tingkatan: string;
-}
 
 const MateriDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
 	const { id } = use(params);
@@ -231,7 +223,7 @@ const MateriDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbPage>{selectedCourse.judul}</BreadcrumbPage>
+							<BreadcrumbPage>{selectedCourse.nama_course}</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -240,10 +232,10 @@ const MateriDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
 				<div className="flex items-center justify-between">
 					<div className="space-y-1">
 						<h1 className="text-1xl md:text-2xl font-bold tracking-tight">
-							{selectedCourse.judul}
+							{selectedCourse.nama_course}
 						</h1>
 						<p className="text-sm md:text-base text-muted-foreground">
-							{selectedCourse.deskripsi}
+							{selectedCourse.deskripsi_course}
 						</p>
 					</div>
 					<Button

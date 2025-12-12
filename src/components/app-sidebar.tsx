@@ -6,6 +6,7 @@ import {
 	IconCalendarEvent,
 	IconCashBanknote,
 	IconDashboard,
+	IconInfoCircle,
 	IconLibraryPhoto,
 	IconPlayCard1,
 	IconUsers,
@@ -35,6 +36,11 @@ const data = {
 			title: "Galeri",
 			url: "/dashboard/galeri",
 			icon: IconLibraryPhoto,
+		},
+		{
+			title: "Tentang Kami",
+			url: "/dashboard/tentang",
+			icon: IconInfoCircle,
 		},
 		{
 			title: "Materi",

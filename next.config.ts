@@ -23,8 +23,14 @@ const nextConfig: NextConfig = {
 			{
 				protocol: "https",
 				hostname: "flowbite.s3.amazonaws.com",
+			},
+			{
+				protocol: "https",
+				hostname: "placehold.co",
 			}
 		],
+		dangerouslyAllowSVG: true,
+		contentDispositionType: 'attachment',
 	},
 };
 

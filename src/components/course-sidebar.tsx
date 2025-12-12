@@ -11,21 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { FileText, Video } from "lucide-react";
-
-interface Course {
-	id: number;
-	judul: string;
-	deskripsi: string;
-	Materis: Materi[];
-}
-
-interface Materi {
-	id: number;
-	judul: string;
-	tipeKonten: string;
-	konten: string;
-	tingkatan: string;
-}
+import type { Course, Materi } from "@/hooks/use-courses";
 
 interface CourseSidebarProps {
 	courses: Course[];
@@ -52,7 +38,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 						<AccordionItem value={`course-${course.id}`} key={course.id}>
 							<AccordionTrigger className="px-4 hover:bg-muted/50">
 								<div className="text-left">
-									<p className="font-semibold">{course.judul}</p>
+									<p className="font-semibold">{course.nama_course}</p>
 									<p className="text-sm text-muted-foreground">
 										{materiList.length} materi
 									</p>
@@ -104,3 +90,4 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 };
 
 export default CourseSidebar;
+

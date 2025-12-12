@@ -17,6 +17,7 @@ export const getKategoriMateri = async (): Promise<KategoriMateri[]> => {
 	try {
 		const response = await api.get<CourseResponse>("/course");
 		// Extract data array from paginated response
+		// Backend now includes materiCount in each course
 		return response.data.data;
 	} catch (error) {
 		console.error("Error fetching kategori materi:", error);
@@ -63,6 +64,17 @@ export const updateKategoriMateri = async (
 export const deleteKategoriMateri = async (id: number): Promise<void> => {
 	try {
 		const response = await api.delete(`/course/${id}`);
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const updateKategoriMateriOrder = async (
+	orders: { id: number; urutan: number }[]
+): Promise<void> => {
+	try {
+		const response = await api.put("/course/order", { orders });
 		return response.data;
 	} catch (error) {
 		throw error;

@@ -14,6 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "./ui/textarea";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -25,6 +32,7 @@ import { KategoriMateri } from "@/lib/schema";
 const formSchema = z.object({
 	judul: z.string().min(1, { message: "Judul tidak boleh kosong." }),
 	deskripsi: z.string().min(1, { message: "Deskripsi tidak boleh kosong." }),
+	tingkatan_sabuk: z.string().nullable().optional(),
 });
 
 type KategoriMateriFormValues = z.infer<typeof formSchema>;
@@ -44,6 +52,7 @@ export default function KategoriMateriForm({
 		defaultValues: {
 			judul: kategori?.judul || "",
 			deskripsi: kategori?.deskripsi || "",
+			tingkatan_sabuk: kategori?.tingkatan_sabuk || null,
 		},
 	});
 
@@ -99,6 +108,46 @@ export default function KategoriMateriForm({
 									{...field}
 								/>
 							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="tingkatan_sabuk"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Tingkatan Sabuk (Opsional)</FormLabel>
+							<Select
+								onValueChange={field.onChange}
+								value={field.value || undefined}
+							>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Pilih tingkatan sabuk" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem value="null">Tidak Ada</SelectItem>
+									<SelectItem value="Belum punya">Belum punya</SelectItem>
+									<SelectItem value="LULUS Binfistal">
+										LULUS Binfistal
+									</SelectItem>
+									<SelectItem value="Sabuk Hitam Wiraga 1">
+										Sabuk Hitam Wiraga 1
+									</SelectItem>
+									<SelectItem value="Sabuk Hitam Wiraga 2">
+										Sabuk Hitam Wiraga 2
+									</SelectItem>
+									<SelectItem value="Sabuk Hitam Wiraga 3">
+										Sabuk Hitam Wiraga 3
+									</SelectItem>
+									<SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
+									<SelectItem value="Sabuk Merah">Sabuk Merah</SelectItem>
+									<SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
+									<SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}

@@ -5,6 +5,7 @@ import {
 	getAdmins,
 	updateAdmin,
 } from "@/lib/admin-api";
+import { getAdminStats } from "@/lib/anggota-api";
 import { AdminData, CreateAdminData } from "@/lib/schema";
 import { toast } from "sonner";
 
@@ -69,6 +70,15 @@ export function useAdminCrud() {
 		},
 	});
 
+	const {
+		data: stats,
+		isLoading: isLoadingStats,
+		isError: isErrorStats,
+	} = useQuery({
+		queryKey: ["admin", "stats"],
+		queryFn: getAdminStats,
+	});
+
 	return {
 		admins,
 		isLoadingAdmins,
@@ -79,5 +89,8 @@ export function useAdminCrud() {
 		isEditing,
 		removeAdmin,
 		isDeleting,
+		stats,
+		isLoadingStats,
+		isErrorStats,
 	};
 }

@@ -93,3 +93,38 @@ export const getAnggotaByToken = async (
 		throw new Error("Failed to fetch anggota data");
 	}
 };
+
+export interface AnggotaStats {
+	totalMembers: number;
+	totalAdmins: number;
+	activeMembers: number;
+	inactiveMembers: number;
+	membersWithBelt: number;
+	membersWithoutBelt: number;
+}
+
+export const getAnggotaStats = async (): Promise<AnggotaStats> => {
+	try {
+		const response = await api.get("/anggota/stats");
+		// Backend returns: { status: "success", message: "...", data: {...} }
+		return response.data.data;
+	} catch (error) {
+		handleApiError(error, "Gagal mengambil statistik anggota");
+	}
+};
+
+export interface AdminStats {
+	totalAdmins: number;
+	superAdmins: number;
+	regularAdmins: number;
+	totalMembers: number;
+}
+
+export const getAdminStats = async (): Promise<AdminStats> => {
+	try {
+		const response = await api.get("/anggota/admin-stats");
+		return response.data.data;
+	} catch (error) {
+		handleApiError(error, "Gagal mengambil statistik admin");
+	}
+};

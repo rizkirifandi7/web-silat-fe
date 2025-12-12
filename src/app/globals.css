@@ -277,3 +277,35 @@ body {
 	animation: none;
 	mix-blend-mode: normal;
 }
+
+/* Grid pattern background */
+.bg-grid-white {
+	background-image: linear-gradient(
+			to right,
+			rgba(255, 255, 255, 0.1) 1px,
+			transparent 1px
+		),
+		linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+
+/* Video protection - prevent download and context menu */
+iframe[src*="youtube.com"] {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: auto;
+}
+
+/* Disable right-click on video container */
+.video-container {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Additional protection for embedded content */
+iframe[src*="youtube.com"]::selection {
+	background: transparent;
+}

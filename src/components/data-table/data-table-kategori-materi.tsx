@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table/data-table";
-import TambahKategoriMateriDialog from "../tambah-kategori-materi-dialog";
 
 interface DataTableKategoriMateriProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -17,9 +16,9 @@ export function DataTableKategoriMateri<TData, TValue>({
 		<DataTable
 			columns={columns}
 			data={data}
-			filterColumn="nama"
-			filterPlaceholder="Cari berdasarkan nama..."
-			toolbar={<TambahKategoriMateriDialog />}
+			filterColumn="judul"
+			filterPlaceholder="Cari berdasarkan judul kategori..."
 		/>
 	);
 }
+

@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
 	IconBooks,
-	IconCalendarEvent,
 	IconDashboard,
 } from "@tabler/icons-react";
 
@@ -26,11 +25,6 @@ const data = {
 			title: "Dashboard",
 			url: "/dashboard-anggota/beranda",
 			icon: IconDashboard,
-		},
-		{
-			title: "Event Saya",
-			url: "/dashboard-anggota/event",
-			icon: IconCalendarEvent,
 		},
 		{
 			title: "Materi",

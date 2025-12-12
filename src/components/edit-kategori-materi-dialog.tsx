@@ -42,10 +42,7 @@ export function EditKategoriMateriDialog({
 						Ubah detail kategori materi di bawah ini.
 					</DialogDescription>
 				</DialogHeader>
-				<KategoriMateriForm
-					kategori={kategori}
-					onSuccess={() => setOpen(false)}
-				/>
+				<KategoriMateriForm kategori={kategori} onSuccess={handleSuccess} />
 			</DialogContent>
 		</Dialog>
 	);

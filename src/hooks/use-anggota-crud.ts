@@ -3,6 +3,7 @@ import {
 	createAnggota,
 	deleteAnggota,
 	getAnggotas,
+	getAnggotaStats,
 	updateAnggota,
 } from "@/lib/anggota-api";
 import { Anggota } from "@/lib/schema";
@@ -82,6 +83,15 @@ export function useAnggotaCrud() {
 		},
 	});
 
+	const {
+		data: stats,
+		isLoading: isLoadingStats,
+		isError: isErrorStats,
+	} = useQuery({
+		queryKey: ["anggota", "stats"],
+		queryFn: getAnggotaStats,
+	});
+
 	return {
 		anggotas,
 		isLoadingAnggotas,
@@ -92,5 +102,8 @@ export function useAnggotaCrud() {
 		isEditing,
 		removeAnggota,
 		isDeleting,
+		stats,
+		isLoadingStats,
+		isErrorStats,
 	};
 }

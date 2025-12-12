@@ -48,7 +48,6 @@ export function EditMateriDialog({ materi }: EditMateriDialogProps) {
 			deskripsi: materi.deskripsi || "",
 			tipeKonten: materi.tipeKonten,
 			konten: materi.konten || "",
-			tingkatan: materi.tingkatan,
 			id_course: materi.id_course,
 		},
 	});
@@ -91,45 +90,6 @@ export function EditMateriDialog({ materi }: EditMateriDialogProps) {
 									<FormControl>
 										<Input placeholder="Deskripsi materi" {...field} />
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="tingkatan"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Tingkatan</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Pilih tingkatan" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="Belum punya">Belum punya</SelectItem>
-											<SelectItem value="LULUS Binfistal">
-												LULUS Binfistal
-											</SelectItem>
-											<SelectItem value="Sabuk Putih">Sabuk Putih</SelectItem>
-											<SelectItem value="Sabuk Kuning">Sabuk Kuning</SelectItem>
-											<SelectItem value="Sabuk Hijau">Sabuk Hijau</SelectItem>
-											<SelectItem value="Sabuk Merah">Sabuk Merah</SelectItem>
-											<SelectItem value="Sabuk Hitam Wiraga 1">
-												Sabuk Hitam Wiraga 1
-											</SelectItem>
-											<SelectItem value="Sabuk Hitam Wiraga 2">
-												Sabuk Hitam Wiraga 2
-											</SelectItem>
-											<SelectItem value="Sabuk Hitam Wiraga 3">
-												Sabuk Hitam Wiraga 3
-											</SelectItem>
-										</SelectContent>
-									</Select>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -198,3 +158,4 @@ export function EditMateriDialog({ materi }: EditMateriDialogProps) {
 		</Dialog>
 	);
 }
+

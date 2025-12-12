@@ -93,6 +93,7 @@ export const materiFormSchema = materiSchema
 		id: true,
 		createdAt: true,
 		updatedAt: true,
+		tingkatan: true,
 	})
 	.extend({
 		konten: z.any(),
@@ -105,6 +106,9 @@ export const kategoriMateriSchema = z.object({
 	judul: z.string(),
 	deskripsi: z.string(),
 	materi: z.array(materiSchema).optional(),
+	materialCount: z.number().optional(),
+	urutan: z.number().optional(),
+	tingkatan_sabuk: z.string().nullable().optional(),
 	createdAt: z.string(),
 	updatedAt: z.string(),
 });
