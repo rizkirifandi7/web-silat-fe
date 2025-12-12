@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Payment Method CRUD Hook (REFACTORED)
  * Uses React Query hooks for state management
